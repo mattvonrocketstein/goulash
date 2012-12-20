@@ -51,7 +51,7 @@ def grab(obj,k):
     except: pass
     return getattr(obj, k, ValueNotFound)
 
-class NamespacePartition(object):
+class Namespace(object):
     """ NamespacePartion: introspective operations over dictionary-like objects
 
         NOTE: By default, all operations return dictionaries. Set
@@ -61,12 +61,52 @@ class NamespacePartition(object):
         NOTE: This does not work in-place. (see the copy import up there?)
     """
 
-    def items(self):
-        return self.namespace.items()
-    def values(self):
-        return self.namespace.values()
-    def keys(self):
-        return self.namespace.keys()
+    ## dictionary compatability
+    ############################################################################
+    def items(self): return self.namespace.items()
+    def values(self): return self.namespace.values()
+    def keys(self): return self.namespace.keys()
+    def __iter__(self): return iter(self.namespace)
+    def __getitem__(self,name): return self.namespace[name]
+
+    ## pseudo-dictionary and/or set() compatability
+    ############################################################################
+    def intersection(self, other):
+        if isinstance(other, (dict, NSPart)):
+            other = getattr(other, 'namespace', other)
+            result = [ [k,self[k]] for k in self.namespace if k in other]
+        else:
+            raise RuntimeError,'niy'
+        result = dict(result)
+        return result if self.dictionaries else self.__class__(result, original=self)
+    def __add__(self, other):
+        """ Update this namespace with another.
+
+            works for all combinations of dict+namespace,
+            namespace+dict, namespace+namespace.  if any of the
+            constituents are or want to return dictionaries,
+            return type will be dictionaries.
+        """
+        out = copy(self.namespace)
+        if isinstance(other, Namespace):
+            out.update(other.namespace)
+        elif isinstance(other, dict):
+            out.update(other)
+            return out
+        if self.dictionaries or other.dictionaries:
+            return out
+        else:
+            return Namespace(out, dictionaries=False)
+    def copy(self):
+        """ This can fail for a variety of reasons involving
+            thread safety, etc.. hopefully this approach is
+            somewhat reasonable for the average case though
+        """
+        try:
+            return copy(self.namespace)
+        except TypeError:
+            return dict([[name, self.namespace[name]] for name in self.namespace])
+
 
     def __repr__(self):
         return "Namespace({0})".format(str(self.obj))
@@ -96,46 +136,9 @@ class NamespacePartition(object):
         else:
             self.namespace = obj
             self.obj = obj
-        #self.obj = obj
-        #self.namespace = namespace
 
-
-    def __add__(self, other):
-        """ Update this namespace with another.
-
-            works for all combinations of dict+namespace,
-            namespace+dict, namespace+namespace.  if any of the
-            constituents are or want to return dictionaries,
-            return type will be dictionaries.
-        """
-        out = copy(self.namespace)
-        if isinstance(other, NamespacePartition):
-            out.update(other.namespace)
-        elif isinstance(other,dict):
-            out.update(other)
-            return out
-
-        if self.dictionaries or other.dictionaries:
-            return out
-
-        return NamespacePartition(out, dictionaries=False)
-
-
-
-    def __iter__(self):
-        """ dictionary compat """
-        return iter(self.namespace)
-
-    def doit(self):
-        """ useful after you've invoked this with "dictionaries=False" to chain
-            queries, but, at the end you want a dictionary again.
-        """
-        return self.namespace
-
-    def items(self):
-        """ dictionary compat """
-        return self.namespace.items()
-
+    ## core introspection stuff
+    ############################################################################
     @property
     def nonprivate(self):
         return self._clean()
@@ -183,9 +186,20 @@ class NamespacePartition(object):
         result = dict(result)
         return result if self.dictionaries else NSPart(result)
 
-    def __getitem__(self,name):
-        """ dict compat """
-        return self.namespace[name]
+    ## generic methods
+    ############################################################################
+    @property
+    def subobjects(self):
+        """ just sugar. """
+        return self
+
+    def with_attr(self,name):
+        result=[]
+        for k, v in self.items():
+            if hasattr(v,name):
+                result.append([k,v])
+        result = dict(result)
+        return result if self.dictionaries else self.__class__(result, original=self)
 
     def _clean(self, pattern='_'):
         """ For dictionary-like objects we'll clean out names that start with
@@ -200,15 +214,6 @@ class NamespacePartition(object):
     def startswith(self, string):
         return self.generic_key(lambda k: k.startswith(string))
 
-    def copy(self):
-        """ This can fail for a variety of reasons involving
-            thread safety, etc.. hopefully this approach is
-            somewhat reasonable for the average case though
-        """
-        try:
-            return copy(self.namespace)
-        except TypeError:
-            return dict([[name, self.namespace[name]] for name in self.namespace])
 
     def generic(self, test, value_test=True):
         """ This is the main work-horse everyone else will chain back to. Given
@@ -227,10 +232,10 @@ class NamespacePartition(object):
         return namespace if self.dictionaries else \
                self.__class__(namespace, original=self)
 
-    def generic_key(self,test):
+    def generic_key(self, test):
         return self.generic(test, value_test=False)
 
-    def type_equal(self,thing):
+    def type_equal(self, thing):
         """ filter by type """
         _ty = ( type(thing).__name__=='type' and thing) or type(thing)
         return self.generic(lambda obj: type(obj)==_ty)
@@ -242,15 +247,6 @@ class NamespacePartition(object):
             kls = thing.__class__
         test = lambda obj: issubclass(obj,kls)
         return self.generic(test)
-
-    def intersection(self, other):
-        if isinstance(other, (dict,NSPart)):
-            other = getattr(other, 'namespace', other)
-            result = [ [k,self[k]] for k in self.namespace if k in other]
-        else:
-            raise RuntimeError,'niy'
-        result = dict(result)
-        return result if self.dictionaries else self.__class__(result, original=self)
 
     @property
     def class_variables(self):
@@ -265,7 +261,7 @@ class NamespacePartition(object):
     @property
     def locals(self):
         """ only things that are defined by this object or this object's
-            class.. nothing from superclasses
+            class.. i.e. nothing from superclasses
         """
         keys = set(self.keys())
         kls = self.obj if isclass(self.obj) else self.obj.__class__
@@ -281,7 +277,6 @@ class NamespacePartition(object):
 
 # Begin aliases, shortcuts
 ################################################################################
-NSPart = NamespacePartitioner = NamespacePartition
-clean_namespace = lambda namespace: NamespacePartition(namespace).cleaned
+NSPart = Namespace
+clean_namespace = lambda namespace: Namespace(namespace).cleaned
 Tests = NamespaceTests
-Namespace=NSPart
