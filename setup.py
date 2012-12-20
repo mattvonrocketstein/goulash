@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-""" setup.py for channels
+""" setup.py for goulash
 """
 from setuptools import setup, find_packages
 setup(
-    name        ='namespaces',
+    name        = 'goulash',
     version     = '.1',
     description = 'object namespace partitioner',
     author      = 'mattvonrocketstein, in the gmails',
