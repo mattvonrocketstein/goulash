@@ -216,8 +216,7 @@ class Namespace(object):
 
 
     def generic(self, test, value_test=True):
-        """ This is the main work-horse everyone else will chain back to. Given
-            a test, this partitions the namespace around it.
+        """ Partitions the namespace with respect to a test function.
 
                 TODO: refactor this around inspect.getmemebers()
         """

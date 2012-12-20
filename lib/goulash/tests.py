@@ -3,7 +3,7 @@
 
 from unittest import TestCase, main
 
-from namespaces import Namespace
+from goulash import Namespace
 
 class TestObject(object):
     """ plain object with miscelanous stuff. """
@@ -51,9 +51,8 @@ class TestBasic(TestCase):
                          [TestObject._some_private_property])
 
     def test_locals(self):
-        test_ns2 = Namespace(self.test_obj2)#, dictionaries=False)
+        test_ns2 = Namespace(self.test_obj2)
         tmp = test_ns2.locals
-        #from IPython import Shell; Shell.IPShellEmbed(argv=['-noconfirm_exit'])()
         self.assertEqual(tmp.keys(), ['my_class_variable'])
 
     def test_keys(self):
