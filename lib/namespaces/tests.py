@@ -9,6 +9,7 @@ class TestObject(object):
     """ plain object with miscelanous stuff. """
     class_variable = 'foo'
     def _private_method(self): pass
+    _private_method.test_attr='bar'
 
     @staticmethod
     def public_static_method(foo, bar): pass
@@ -39,6 +40,11 @@ class TestBasic(TestCase):
         self.test_obj = TestObject()
         self.test_obj2 = ComplexTestObject()
         self.test_ns = Namespace(self.test_obj)
+
+    def test_subobject_with_attr(self):
+        self.assertEqual(
+            ['_private_method'],
+            self.test_ns.subobjects.with_attr('test_attr').keys())
 
     def test_properties(self):
         self.assertEqual(self.test_ns.properties.values(),
