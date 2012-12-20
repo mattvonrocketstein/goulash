@@ -25,6 +25,10 @@ class NamespaceTests:
     """
 
     @staticmethod
+    def is_property(obj):
+        return isinstance(obj, property)
+
+    @staticmethod
     def name_startswith(obj, pattern):
         """ """
         return hasattr(obj, '__name__') and obj.__name__.startswith(pattern)
@@ -137,6 +141,12 @@ class NamespacePartition(object):
         return self._clean()
 
     @property
+    def properties(self):
+        this = self if isclass(self.obj) else \
+               self.__class__(self.obj.__class__)
+        return this.generic(NamespaceTests.is_property)
+
+    @property
     def unittest_testcases(self):
         """ Filter unittest test cases """
         return self.generic(NamespaceTests.is_unittest_testcase_class)
@@ -188,16 +198,13 @@ class NamespacePartition(object):
         return namespace if self.dictionaries else self.__class__(namespace, original=self)
 
     def startswith(self, string):
-        """
-        """
-        #test = NamespaceTests.name_startswith
-        #partial = lambda obj: test(obj, string)
-        #return self.generic(partial)
         return self.generic_key(lambda k: k.startswith(string))
 
     def copy(self):
-        """ This can fail for a variety of reasons involving thread safety,
-            etc.. hopefully this approach is reasonable. """
+        """ This can fail for a variety of reasons involving
+            thread safety, etc.. hopefully this approach is
+            somewhat reasonable for the average case though
+        """
         try:
             return copy(self.namespace)
         except TypeError:
@@ -217,7 +224,6 @@ class NamespacePartition(object):
             else: #keytest
                 if not test(key):
                     namespace.pop(key)
-
         return namespace if self.dictionaries else \
                self.__class__(namespace, original=self)
 
