@@ -2,6 +2,7 @@
 """
 
 from unittest import TestCase, main
+
 from namespaces import Namespace
 
 class TestObject(object):
@@ -17,10 +18,13 @@ class ComplexTestObject(TestObject):
 class TestBasic(TestCase):
     def setUp(self):
         self.test_obj = TestObject()
+        self.test_obj2 = ComplexTestObject()
         self.test_ns = Namespace(self.test_obj)
 
     def test_locals(self):
-        pass
+        test_ns2 = Namespace(self.test_obj, dictionaries=False)
+        tmp = test_ns2.locals.class_variables
+        self.assertEqual(tmp.keys(), ['my_class_variable'])
 
     def test_keys(self):
         diff = list(set(self.test_ns.keys()) - set(dir(self.test_obj)))
