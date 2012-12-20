@@ -14,6 +14,15 @@ class TestObject(object):
 
 class ComplexTestObject(TestObject):
     my_class_variable = 'foo'
+class TestRecursive(TestCase):
+    def setUp(self):
+        self.obj = TestObject()
+        self.ns = Namespace(self.obj,dictionaries=False)
+
+    def test_original(self):
+        self.assertEqual(self.obj, self.ns.obj)
+        self.assertEqual(self.obj, self.ns.private.obj)
+        self.assertEqual(self.obj, self.ns.nonprivate.obj)
 
 class TestBasic(TestCase):
     def setUp(self):
@@ -22,8 +31,9 @@ class TestBasic(TestCase):
         self.test_ns = Namespace(self.test_obj)
 
     def test_locals(self):
-        test_ns2 = Namespace(self.test_obj, dictionaries=False)
-        tmp = test_ns2.locals.class_variables
+        test_ns2 = Namespace(self.test_obj2)#, dictionaries=False)
+        tmp = test_ns2.locals
+        #from IPython import Shell; Shell.IPShellEmbed(argv=['-noconfirm_exit'])()
         self.assertEqual(tmp.keys(), ['my_class_variable'])
 
     def test_keys(self):

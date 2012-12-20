@@ -21,7 +21,7 @@ def classname(thing):
 
 class NamespaceTests:
     """ Various boolean tests over objects, packaged thus to be resuable
-          TODO: NamespaceTests(StaticMethodsOnly)
+        TODO: NamespaceTests(StaticMethodsOnly)
     """
 
     @staticmethod
@@ -40,49 +40,61 @@ class NamespaceTests:
         import unittest
         return isclass(obj) and issubclass(obj, unittest.TestCase)
 
+def grab(obj,k):
+    try:
+        if isinstance(getattr(obj.__class__, k, ValueNotFound),
+                      property): return ValueNotFound
+    except: pass
+    return getattr(obj, k, ValueNotFound)
+
 class NamespacePartition(object):
     """ NamespacePartion: introspective operations over dictionary-like objects
 
-          NOTE: By default, all operations return dictionaries. Set
-                dictionaries to False and you can get back another
-                partion object.
+        NOTE: By default, all operations return dictionaries. Set
+            dictionaries to False and you can get back another
+            partion object.
 
-          NOTE: This does not work in-place. (see the copy import up there?)
+        NOTE: This does not work in-place. (see the copy import up there?)
     """
 
+    def items(self):
+        return self.namespace.items()
+    def values(self):
+        return self.namespace.values()
     def keys(self):
         return self.namespace.keys()
 
     def __repr__(self):
         return "Namespace({0})".format(str(self.obj))
 
-    def __init__(self, obj, dictionaries=True):
+    def __init__(self, obj, dictionaries=True, original=None):
         """ """
-        if not NamespaceTests.dictionaryish(obj):
-            if not hasattr(obj,'__dict__'):
+        self.dictionaries = dictionaries
+
+        if original is not None and isinstance(obj, dict):
+            assert isinstance(original, Namespace)
+            self.namespace = obj
+            self.obj = original.obj
+            self.dictionaries = original.dictionaries
+
+        elif not NamespaceTests.dictionaryish(obj):
+            if not hasattr(obj, '__dict__'):
                 err = ("Namespace Partitioner really expects something "
                        "like a dictionary, got {0}".format(type(obj).__name__))
                 raise TypeError, err
-            namespace={}
-            def grab(obj,k):
-                try:
-                    if isinstance(getattr(obj.__class__, k, ValueNotFound),
-                                  property): return ValueNotFound
-                except: pass
-                return getattr(obj, k, ValueNotFound)
-            namespace.update(**dict([[k, grab(obj,k)] for k in dir(obj)]))
-            #namespace.update(**dict([[k, getattr(obj, k, ValueNotFound)] for k in dir(obj)]))
-            #namespace.update(**dict([[k, getattr(obj, k, ValueNotFound)] for k in dir(obj)]))
-            #namespace.update(**dict([[k, getattr(obj, k, ValueNotFound)] for k in dir(obj) \
-            #                         if not isinstance(getattr(obj.__class__,
-            #                                                   k, ValueNotFound),
-            #                                           property)]))
-            namespace.update(obj.__dict__)
+            namespace = {}
+            if not isinstance(obj, dict):
+                namespace.update(**dict([[k, grab(obj,k)] for k in dir(obj)]))
+            else:
+                namespace = obj
+            self.namespace=namespace
+            self.obj=obj
         else:
-            namespace = obj
-        self.obj = obj
-        self.namespace = namespace
-        self.dictionaries = dictionaries
+            self.namespace = obj
+            self.obj = obj
+        #self.obj = obj
+        #self.namespace = namespace
+
 
     def __add__(self, other):
         """ Update this namespace with another.
@@ -173,10 +185,7 @@ class NamespacePartition(object):
         namespace = copy(self.namespace)
         bad_names = [x for x in namespace.keys() if x.startswith(pattern)]
         [ namespace.pop(name) for name in bad_names ]
-        if self.dictionaries:
-            return namespace
-        else:
-            return NamespacePartition(namespace)
+        return namespace if self.dictionaries else self.__class__(namespace, original=self)
 
     def startswith(self, string):
         """
@@ -198,7 +207,7 @@ class NamespacePartition(object):
         """ This is the main work-horse everyone else will chain back to. Given
             a test, this partitions the namespace around it.
 
-              TODO: refactor this around inspect.getmemebers()
+                TODO: refactor this around inspect.getmemebers()
         """
         namespace = self.copy()
         for key, val in namespace.items():
@@ -209,8 +218,8 @@ class NamespacePartition(object):
                 if not test(key):
                     namespace.pop(key)
 
-        if self.dictionaries: return namespace
-        return NamespacePartition(namespace,dictionaries=self.dictionaries)
+        return namespace if self.dictionaries else \
+               self.__class__(namespace, original=self)
 
     def generic_key(self,test):
         return self.generic(test, value_test=False)
@@ -235,7 +244,7 @@ class NamespacePartition(object):
         else:
             raise RuntimeError,'niy'
         result = dict(result)
-        return result if self.dictionaries else self.__class__(result)
+        return result if self.dictionaries else self.__class__(result, original=self)
 
     @property
     def class_variables(self):
@@ -245,7 +254,23 @@ class NamespacePartition(object):
         keys -= set(self.methods.keys())
         keys -= set(self.functions.keys())
         result = dict([[key,self.namespace[key]] for key in keys])
-        return result if self.dictionaries else self.__class__(result)
+        return result if self.dictionaries else self.__class__(result, original=self)
+
+    @property
+    def locals(self):
+        """ only things that are defined by this object or this object's
+            class.. nothing from superclasses
+        """
+        keys = set(self.keys())
+        kls = self.obj if isclass(self.obj) else self.obj.__class__
+        bases = kls.__bases__
+        base_ns = [dir(b) for b in bases]
+        base_ns = set(reduce(lambda x,y: x+y, base_ns))
+        keys = keys - base_ns
+        result = dict([[k, self.namespace[k]] for k in keys])
+        [result.pop(x,None) for x in ('__dict__','__module__','__weakref__')]
+        return result if self.dictionaries else self.__class__(result, original=self)
+
 
 
 # Begin aliases, shortcuts
