@@ -6,14 +6,24 @@ from unittest import TestCase, main
 from namespaces import Namespace
 
 class TestObject(object):
+    """ plain object with miscelanous stuff. """
     class_variable = 'foo'
     def _private_method(self): pass
 
     @staticmethod
     def public_static_method(foo, bar): pass
 
+    @property
+    def _some_private_property(self):
+        return 3
+
 class ComplexTestObject(TestObject):
+    """ this object has some inheritance!
+
+        (that's useful for testing 'local' names.)
+    """
     my_class_variable = 'foo'
+
 class TestRecursive(TestCase):
     def setUp(self):
         self.obj = TestObject()
@@ -29,6 +39,10 @@ class TestBasic(TestCase):
         self.test_obj = TestObject()
         self.test_obj2 = ComplexTestObject()
         self.test_ns = Namespace(self.test_obj)
+
+    def test_properties(self):
+        self.assertEqual(self.test_ns.properties.values(),
+                         [TestObject._some_private_property])
 
     def test_locals(self):
         test_ns2 = Namespace(self.test_obj2)#, dictionaries=False)
