@@ -1,7 +1,8 @@
 
-About
-------
+What IS goulash?
+-----------------
 
+The truth is no one knows.
 
 Running Tests
 --------------

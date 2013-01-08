@@ -45,11 +45,9 @@ class NamespaceTests:
         return isclass(obj) and issubclass(obj, unittest.TestCase)
 
 def grab(obj,k):
-    try:
-        if isinstance(getattr(obj.__class__, k, ValueNotFound),
-                      property): return ValueNotFound
-    except: pass
-    return getattr(obj, k, ValueNotFound)
+    return getattr(obj, k)
+    #               #this is sometimes needed for properties
+    #               getattr(obj.__class__,k))#, ValueNotFound)
 
 class Namespace(object):
     """ NamespacePartion: introspective operations over dictionary-like objects
