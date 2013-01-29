@@ -1,10 +1,10 @@
-""" namespaces
+""" goulash.namespaces
 """
 import types
 from copy import copy
 from inspect import isclass, ismethod, getsource
 from inspect import isfunction, getargvalues
-
+from .classproperty import classproperty
 class ValueNotFound(Exception): pass
 
 def classname(thing):
@@ -44,10 +44,8 @@ class NamespaceTests:
         import unittest
         return isclass(obj) and issubclass(obj, unittest.TestCase)
 
-def grab(obj,k):
+def grab(obj, k):
     return getattr(obj, k)
-    #               #this is sometimes needed for properties
-    #               getattr(obj.__class__,k))#, ValueNotFound)
 
 class Namespace(object):
     """ NamespacePartion: introspective operations over dictionary-like objects
@@ -63,7 +61,7 @@ class Namespace(object):
     ############################################################################
     def items(self): return self.namespace.items()
     def values(self): return self.namespace.values()
-    def keys(self): return self.namespace.keys()
+    def keys(self): return reversed(sorted(self.namespace.keys()))
     def __iter__(self): return iter(self.namespace)
     def __getitem__(self,name): return self.namespace[name]
 
