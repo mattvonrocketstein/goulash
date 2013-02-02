@@ -21,6 +21,7 @@ class META(type):
          *
          *
     """
+
     def __lshift__(kls, my_mixin):
         """ algebra for left-mixin
 
@@ -31,7 +32,7 @@ class META(type):
         my_mixin = copy.copy(my_mixin)
         my_mixin.__metaclass__ = META
         name  = dynamic_name()
-        bases = tuple([my_mixin, kls])
+        bases = (my_mixin, kls)
         return type(name, bases, {})
 
     def __rshift__(kls, my_mixin):
@@ -44,12 +45,12 @@ class META(type):
         my_mixin = copy.copy(my_mixin)
         my_mixin.__metaclass__ = META
         name  = dynamic_name()
-        bases = tuple([kls, my_mixin])
+        bases = (kls, my_mixin)
         return type(name, bases, {})
 
     def subclass(kls, name=None, dct={}, **kargs):
         """ dynamically generate a subclass of this class """
-        dct = copy.copy(dct)#.copy()
+        dct = copy.copy(dct)
         dct.update(kargs)
         if hasattr(kls, '_subclass_hooks'):
             name, dct = kls._subclass_hooks(name=name, **dct)
