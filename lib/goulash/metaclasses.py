@@ -1,6 +1,7 @@
 """ goulash.metaclasses
 """
 import new, copy
+from inspect import isclass
 from collections import defaultdict
 
 from goulash.util import uniq
@@ -29,8 +30,6 @@ class META(type):
               >>>  my_class = my_class << my_mixin
               >>>  class my_class(my_mixin, my_class): pass
         """
-        my_mixin = copy.copy(my_mixin)
-        my_mixin.__metaclass__ = META
         name  = dynamic_name()
         bases = (my_mixin, kls)
         return type(name, bases, {})
@@ -42,8 +41,6 @@ class META(type):
               >>> my_class = my_class >> my_mixin
               >>> class my_class(my_class,my_mixin): pass
         """
-        my_mixin = copy.copy(my_mixin)
-        my_mixin.__metaclass__ = META
         name  = dynamic_name()
         bases = (kls, my_mixin)
         return type(name, bases, {})
@@ -58,6 +55,27 @@ class META(type):
                                          U=uniq())
         # WOAH, this behaves differently than type()
         return new.classobj(name, (kls,), dct)
+
+    def template_from(this_kls, cls_template):
+        """ return a new class that has all the behaviour specified in ``cls_template``
+            as well as at least the minimum requirements of being an abstract Agent.
+
+            ``cls_template`` is a dictionary-like item that has named behaviours
+
+
+        """
+        if not isclass(cls_template):
+            raise TypeError('Expected cls_template would be a class. '
+                            'If you want dictionary-based subclassing, '
+                            'use .subclass()')
+        else:
+            kls = this_kls << cls_template
+            kls.__name__ = '{outer}({inner})'.format(outer=this_kls.__name__,
+                                                     inner=cls_template.__name__)
+            #bases = (cls_template, this_kls)
+            #dct = {}
+            #return type(kls_name, bases, dct)
+            return kls
 
     @staticmethod
     def enumerate_hooks(mcls):
@@ -79,7 +97,7 @@ class META(type):
             hook(mcls, name, bases, dct, class_obj)
         return class_obj
 
-class META1(META):
+class ClassAlgebra(META):
     """ a metaclass that tracks it's subclasses. """
     subclass_registry = defaultdict(lambda:[])
 
@@ -90,18 +108,6 @@ class META1(META):
         """
         mcls.subclass_registry[bases].append(class_obj)
 
-    #@classmethod
-    def template_from(this_kls, cls_template):
-        """ return a new class that has all the behaviour specified in ``cls_template``
-            as well as at least the minimum requirements of being an abstract Agent.
-
-            ``cls_template`` is a dictionary-like item that has named behaviours
-        """
-        kls_name = '{outer}({inner})'.format(outer=this_kls.__name__,
-                                             inner=cls_template.__name__)
-        bases = (cls_template, this_kls)
-        dct = {}
-        return type(kls_name, bases, dct)
 
 def subclass_tracker(*bases, **kargs):
     """ dynamically generates the subclass tracking class that extends ``bases``.
@@ -125,3 +131,4 @@ def subclass_tracker(*bases, **kargs):
         namespace = {}
     name = 'DynamicallyGeneratedClassTracker'
     return META(name, bases, namespace)
+META1 = ClassAlgebra

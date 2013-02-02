@@ -4,7 +4,9 @@
 class TestObject(object):
     """ plain object with some misc stuff. """
     class_variable = 'foo'
+
     def _private_method(self): pass
+
     _private_method.test_attr='bar'
 
     @staticmethod
