@@ -1,34 +1,15 @@
-""" namespaces.tests
+""" goulash.tests.test_namespaces
 """
 
 from unittest import TestCase, main
 
 from goulash import Namespace
-
-class TestObject(object):
-    """ plain object with miscelanous stuff. """
-    class_variable = 'foo'
-    def _private_method(self): pass
-    _private_method.test_attr='bar'
-
-    @staticmethod
-    def public_static_method(foo, bar): pass
-
-    @property
-    def _some_private_property(self):
-        return 3
-
-class ComplexTestObject(TestObject):
-    """ this object has some inheritance!
-
-        (that's useful for testing 'local' names.)
-    """
-    my_class_variable = 'foo'
+from goulash.tests.data import TestObject, ComplexTestObject
 
 class TestRecursive(TestCase):
     def setUp(self):
         self.obj = TestObject()
-        self.ns = Namespace(self.obj,dictionaries=False)
+        self.ns = Namespace(self. obj, dictionaries=False)
 
     def test_original(self):
         self.assertEqual(self.obj, self.ns.obj)
