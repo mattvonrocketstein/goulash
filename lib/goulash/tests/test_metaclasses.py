@@ -27,9 +27,19 @@ class TestClassAlgebrae(TestCase):
         self.assertEqual((TestObject, RandomMixinClass), tmp.__bases__)
 
     def test_subclass(self):
-        tmp = TestObject.subclass(class_variable='overriding_foo')
+        tmp = TestObject.subclass(new_variable='new_variable',
+                                  class_variable='overriding_foo')
         self.assertTrue(isclass(tmp))
         self.assertEqual(tmp.class_variable, 'overriding_foo')
+        self.assertTrue(hasattr(tmp, 'new_variable'))
+        self.assertFalse(hasattr(TestObject,'new_variable'))
+
+    def test_template_from(self):
+        tmp = TestObject.template_from(RandomMixinClass)
+        self.assertTrue(isclass(tmp))
+        self.assertTrue(tmp.__bases__==(RandomMixinClass,TestObject))
+        self.assertTrue(RandomMixinClass.__name__ in tmp.__name__)
+        self.assertTrue(TestObject.__name__ in tmp.__name__)
 
 if __name__=='__main__':
     main()
