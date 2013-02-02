@@ -3,43 +3,66 @@
 from inspect import isclass
 from unittest import TestCase, main
 
-from goulash.metaclasses import META1
+from goulash.mixin import Mixin
+from goulash.metaclasses import ClassAlgebra, supports_class_algebra
 from goulash.tests.data import TestObject as _TestObject
 
-class TestObject(_TestObject):
-    __metaclass__ = META1
-
-class RandomMixinClass(object):
-    random_mixin_class = 1
 
 class TestClassAlgebrae(TestCase):
-    def setUp(self):
-        self.obj = TestObject()
 
-    def test_lshift(self):
-        tmp = TestObject<<RandomMixinClass
+    def setUp(self):
+        class TestObject(_TestObject):
+            __metaclass__ = ClassAlgebra
+
+        #@Mixin.template_from
+        class RandomMixinClass(object):
+            random_mixin_class = 1
+
+        self.obj = TestObject()
+        self.TestObject = TestObject
+        self.RandomMixinClass = RandomMixinClass
+
+    def test_lshift(self,tobject = None):
+        tobject = tobject or self.TestObject
+        tmp = tobject<<self.RandomMixinClass
         self.assertTrue(isclass(tmp))
-        self.assertEqual((RandomMixinClass, TestObject), tmp.__bases__)
+        self.assertEqual((self.RandomMixinClass, tobject), tmp.__bases__)
 
     def test_rshift(self):
-        tmp = TestObject>>RandomMixinClass
+        tmp = self.TestObject>>self.RandomMixinClass
         self.assertTrue(isclass(tmp))
-        self.assertEqual((TestObject, RandomMixinClass), tmp.__bases__)
+        self.assertEqual((self.TestObject, self.RandomMixinClass), tmp.__bases__)
 
-    def test_subclass(self):
-        tmp = TestObject.subclass(new_variable='new_variable',
+    def test_supports_class_algebra1(self):
+        # failing!
+        @supports_class_algebra
+        class Testing(self.RandomMixinClass):
+            pass
+        self.assertTrue(Testing.__metaclass__==ClassAlgebra)
+        self.test_lshift(Testing)
+
+    def test_supports_class_algebra2(self):
+        @supports_class_algebra
+        class Testing(object):
+            pass
+        self.assertTrue(Testing.__metaclass__==ClassAlgebra)
+        self.test_lshift(Testing)
+
+    def test_subclass(self,tobject=None):
+        tobject = tobject or self.TestObject
+        tmp = tobject.subclass(new_variable='new_variable',
                                   class_variable='overriding_foo')
         self.assertTrue(isclass(tmp))
         self.assertEqual(tmp.class_variable, 'overriding_foo')
         self.assertTrue(hasattr(tmp, 'new_variable'))
-        self.assertFalse(hasattr(TestObject, 'new_variable'))
+        self.assertFalse(hasattr(tobject, 'new_variable'))
 
     def test_template_from(self):
-        tmp = TestObject.template_from(RandomMixinClass)
+        tmp = self.TestObject.template_from(self.RandomMixinClass)
         self.assertTrue(isclass(tmp))
-        self.assertTrue(tmp.__bases__==(RandomMixinClass,TestObject))
-        self.assertTrue(RandomMixinClass.__name__ in tmp.__name__)
-        self.assertTrue(TestObject.__name__ in tmp.__name__)
+        self.assertTrue(tmp.__bases__==(self.RandomMixinClass,self.TestObject))
+        self.assertTrue(self.RandomMixinClass.__name__ in tmp.__name__)
+        self.assertTrue(self.TestObject.__name__ in tmp.__name__)
 
 if __name__=='__main__':
     main()
