@@ -1,4 +1,8 @@
 """ goulash.metaclasses
+
+    random experiments with metaclasses.
+
+    you probably don't want to use this stuff :)
 """
 import new, copy
 from inspect import isclass
@@ -30,7 +34,6 @@ class META(type):
           form updated:
 
              subclass_registry[<__bases__ list>] = [<subclass1>, ..]
-
     """
 
     @staticmethod
