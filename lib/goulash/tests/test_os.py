@@ -10,5 +10,7 @@ class TestOS(unittest.TestCase):
         pass
 
     def test_get_mounts(self):
-        tmp=_os.get_mounts_by_type('proc')
-        from IPython import Shell; Shell.IPShellEmbed(argv=['-noconfirm_exit'])()
+        tmp = _os.get_mounts_by_type('proc')
+        for mp in tmp:
+            self.assertTrue('name' in mp)
+            self.assertTrue('mount_point' in mp)
