@@ -4,11 +4,13 @@ What IS goulash?
 
 The truth is no one knows.
 
-Running Tests
+ Running tests
 --------------
 
- $ virtualenv testing # Create a virtualenv
- $ source testing/bin/activate # activate virtual env
- $ python setup.py develop # install this library
- $ python -c"import namespaces; print namespaces" # test installation
- $ python lib/namespaces/testing.py # run the tests
+Type this::
+
+  $ cd goulash
+  $ virtualenv goulash_test
+  $ source goulash_test/bin/activate
+  $ pip install tox
+  $ tox -e py27
