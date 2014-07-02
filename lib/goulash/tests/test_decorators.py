@@ -1,8 +1,8 @@
 """ goulash.tests.test_decorators
 """
 
-from unittest import TestCase, main
-from goulash.decorators import arg_types
+from unittest import TestCase
+from goulash.decorators import arg_types, memoized_property
 
 class TestArgTypesDecorator(TestCase):
     def setUp(self):
@@ -34,5 +34,26 @@ class TestArgTypesDecorator(TestCase):
         tmp = arg_types(list)(self.fxn)
         tmp([])
 
-if __name__=='__main__':
-    main()
+class TestMemoizedProperty(TestCase):
+    def setUp(self):
+        self.call_count = 0
+        class ExampleClass(object):
+            @memoized_property
+            def example(himself):
+                self.call_count += 1
+                return 3
+        self.kls = ExampleClass
+
+    def test_memoized_property(self):
+        tmp1 = self.kls()
+        tmp2 = self.kls()
+        self.assertEqual(tmp1.example, 3)
+        self.assertEqual(self.call_count, 1)
+        self.assertEqual(tmp1.example, 3)
+        self.assertEqual(self.call_count, 1)
+        #note: different instances *should* get fresh calls
+        self.assertEqual(tmp2.example, 3)
+        self.assertEqual(self.call_count, 2)
+        self.assertEqual(tmp1.example, 3)
+        self.assertEqual(tmp2.example, 3)
+        self.assertEqual(self.call_count, 2)
