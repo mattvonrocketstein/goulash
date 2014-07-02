@@ -5,7 +5,7 @@
     you probably don't want to use this stuff :)
 """
 import new, copy
-from inspect import isclass
+
 from collections import defaultdict
 
 from goulash.util import uniq
