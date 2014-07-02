@@ -2,9 +2,7 @@
 
     This is basically a bunch of neat stuff you can do with
     the socket library, and if I need it I dont want to look
-    it up again.
-
-    I've also only tested it in linux, so ymmv
+    it up again.  I've also only tested it in linux, so YMMV
 """
 
 import socket
@@ -30,7 +28,9 @@ def ipaddr_with_LAN(host = "gmail.com"):
     port = 80
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((host, port))
-    return s.getsockname()
+    result = s.getsockname()
+    if len(result)==2:
+        return result[0]
 
 def ipaddr_hosts():
     """ on linux, uses /etc/hosts, returns something like this:

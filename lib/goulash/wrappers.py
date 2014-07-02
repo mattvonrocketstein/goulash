@@ -2,8 +2,8 @@
 """
 
 class JSONWrapper(object):
-    # convenience wrapper thingy that
-    # makes __getattr__ work via __getitem__
+    # convenience wrapper that makes __getattr__
+    # work via __getitem__
     def __init__(self, data):
         self._data = data
 
