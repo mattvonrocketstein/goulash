@@ -3,7 +3,6 @@
     dumb lightweight caching decorator.  this requires werkzeug,
     but at least avoids a memcache dependency.
 """
-import time
 
 from functools import wraps
 

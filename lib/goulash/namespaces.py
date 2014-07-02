@@ -1,12 +1,16 @@
+""" goulash.namespaces
+"""
 import types
 from copy import copy
-from inspect import isclass, ismethod, getsource
-from inspect import isfunction, getargvalues
-from .classproperty import classproperty
+
+from inspect import isfunction, isclass, ismethod
+
 class ValueNotFound(Exception): pass
 
 def classname(thing):
-    "Return the fully-qualified class name of the specified class or object"
+    """ Return the fully-qualified class
+        name of the specified class or object
+    """
     try:
         return thing.__module__ + '.' + thing.__name__
     except:
