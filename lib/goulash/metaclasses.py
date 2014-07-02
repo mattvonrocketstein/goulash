@@ -106,26 +106,9 @@ class ClassAlgebra(META):
             name, dct = kls._subclass_hooks(name=name, **dct)
         name = name or "DynamicSubclassOf{K}_{U}".format(K=kls.__name__,
                                          U=uniq())
-        # WOAH, this behaves differently than type()
+        # why does this behave differently than type() ?
         return new.classobj(name, (kls,), dct)
 
-    def template_from(this_kls, cls_template):
-        """ return a new class that has all the behaviour specified in ``cls_template``
-            as well as at least the minimum requirements of being an abstract Agent.
-
-            ``cls_template`` is a dictionary-like item that has named behaviours
-
-
-        """
-        if not isclass(cls_template):
-            raise TypeError('Expected cls_template would be a class. '
-                            'If you want dictionary-based subclassing, '
-                            'use .subclass()')
-        else:
-            kls = this_kls << cls_template
-            kls.__name__ = '{outer}+{inner}'.format(outer=this_kls.__name__,
-                                                    inner=cls_template.__name__)
-            return kls
 META1 = ClassAlgebra
 
 def supports_class_algebra(kls):

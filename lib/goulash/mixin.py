@@ -1,7 +1,7 @@
 """ goulash.mixin
 """
 
-from .metaclasses import supports_class_algebra
+from goulash.metaclasses import supports_class_algebra
 
 class Mixin(object):
     """ TODO: inversion
