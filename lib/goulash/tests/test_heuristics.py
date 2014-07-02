@@ -1,8 +1,6 @@
 """ goulash.tests.test_heuristics
 """
-
 import unittest
-
 from goulash import heuristics as hx
 
 
