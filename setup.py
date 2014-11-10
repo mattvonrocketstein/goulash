@@ -1,15 +1,16 @@
 #!/usr/bin/env python
 """ setup.py for goulash
 """
-from setuptools import setup, find_packages
+import os
+from setuptools import setup
 setup(
     name         = 'goulash',
     version      = '0.1',
     description  = 'toolbox, random shared stuff from my other projects',
-    author       = 'mattvonrocketstein, in the gmails',
-    url          = 'one of these days',
+    author       = 'mattvonrocketstein',
+    author_email = '$author@gmail',
+    url          = 'http://github.com/mattvonrocketstein/goulash',
     download_url = 'https://github.com/mattvonrocketstein/goulash/tarball/0.1',
-    package_dir  = {'': 'lib'},
-    packages     = find_packages('lib'),
+    packages     = ['goulash'],
     keywords     = ['goulash']
     )
