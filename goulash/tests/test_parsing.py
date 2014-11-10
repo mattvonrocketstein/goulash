@@ -1,4 +1,5 @@
-""" test_parsing """
+""" goulash.tests.test_parsing
+"""
 
 import unittest
 
