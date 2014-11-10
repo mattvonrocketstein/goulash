@@ -1,6 +1,5 @@
 """ goulash.namespaces
 """
-import types
 from copy import copy
 
 from inspect import isfunction, isclass, ismethod
@@ -82,16 +81,16 @@ class Namespace(object):
         except TypeError:
             return dict([[name, self.namespace[name]] for name in self.namespace])
 
-    ## pseudo-dictionary and/or set() compatability
-    ############################################################################
     def intersection(self, other):
         if isinstance(other, (dict, NSPart)):
             other = getattr(other, 'namespace', other)
             result = [ [k,self[k]] for k in self.namespace if k in other]
         else:
-            raise RuntimeError,'niy'
+            raise RuntimeError('niy')
         result = dict(result)
-        return result if self.dictionaries else self.__class__(result, original=self)
+        return result if self.dictionaries \
+               else self.__class__(result, original=self)
+
     def __add__(self, other):
         """ Update this namespace with another.
 
@@ -123,7 +122,8 @@ class Namespace(object):
 
         elif not NamespaceTests.dictionaryish(obj):
             if isinstance(obj,dict):
-                err = ("You gave a dictionary, but maybe the keys aren't strings?")
+                err = ("You gave a dictionary, but "
+                       "maybe the keys aren't strings?")
                 #warning.warn(err)
                 self.obj=obj
                 self.namespace={}
@@ -131,7 +131,7 @@ class Namespace(object):
             if not hasattr(obj, '__dict__'):
                 err = ("Namespace Partitioner really expects something "
                        "like a dictionary, got {0}".format(type(obj).__name__))
-                raise TypeError, err
+                raise TypeError(err)
             namespace = {}
             if not isinstance(obj, dict):
                 namespace.update(**dict([[k, grab(obj,k)] for k in dir(obj)]))

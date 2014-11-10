@@ -4,7 +4,7 @@
 from unittest import TestCase, main
 
 from goulash import Namespace
-from .tests.data import TestObject, ComplexTestObject
+from tests.data import TestObject, ComplexTestObject
 
 class TestRecursive(TestCase):
     def setUp(self):
