@@ -6,12 +6,15 @@
 
 from functools import wraps
 
-from werkzeug.contrib.cache import SimpleCache
-
-cache = SimpleCache()
 
 def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
-    """ adapted from http://flask.pocoo.org/docs/patterns/viewdecorators/ """
+    """ dumb hack adapted from
+        http://flask.pocoo.org/docs/patterns/viewdecorators/ """
+    from werkzeug.contrib.cache import SimpleCache
+    from goulash import cache as c
+    if not getattr(c, 'CACHE'):
+        c.CACHE = SimpleCache()
+    cache=c.CACHE
     if use_request_vars:
         tmp1 = key_or_fxn
         assert isinstance(key_or_fxn, basestring)

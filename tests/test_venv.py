@@ -11,7 +11,7 @@ class TestVenv(unittest.TestCase):
 
     def setUp(self):
         self.venv1 = opj(TEST_DIR, 'fake_venv')
-        self.venv2 = opj(TEST_DIR, 'another_fake_virtual_env')
+        self.venv2 = opj(TEST_DIR, 'another_fake_virtual_environment')
 
     def test_is_venv(self):
         self.assertTrue(venv.is_venv(self.venv1))
@@ -24,4 +24,4 @@ class TestVenv(unittest.TestCase):
             pass
         all_venvs = venv.find_venvs(
             TEST_DIR, report=report,max_venvs=5)
-        self.assertEqual(all_venvs,[])
+        self.assertEqual(len(all_venvs), 2)
