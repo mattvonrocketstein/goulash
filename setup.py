@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name         = 'goulash',
-    version      = '0.1',
+    version      = '0.2',
     description  = 'toolbox, random shared stuff from my other projects',
     author       = 'mattvonrocketstein',
     author_email = '$author@gmail',
