@@ -12,7 +12,7 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
         http://flask.pocoo.org/docs/patterns/viewdecorators/ """
     from werkzeug.contrib.cache import SimpleCache
     from goulash import cache as c
-    if not getattr(c, 'CACHE'):
+    if not getattr(c, 'CACHE', None):
         c.CACHE = SimpleCache()
     cache=c.CACHE
     if use_request_vars:
