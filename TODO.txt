@@ -1,4 +1,0 @@
-namespaces:
-  properties vs attributes partitions
-  data vs functions vs methods
-  filtering by type or contributors
