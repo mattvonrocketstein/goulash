@@ -18,7 +18,7 @@ sys.path.append(os.path.join(this_dir, 'goulash'))
 from version import __version__
 sys.path.pop()
 
-base_url = 'https://github.com/mattvonrocketstein/ghio/'
+base_url = 'https://github.com/mattvonrocketstein/goulash/'
 setup(
     name         = 'goulash',
     version      = __version__,
@@ -28,5 +28,6 @@ setup(
     url          = base_url,
     download_url = base_url+'/tarball/master',
     packages     = ['goulash'],
-    keywords     = ['goulash']
+    keywords     = ['goulash'],
+    install_requires = ['ansi2html']
     )
