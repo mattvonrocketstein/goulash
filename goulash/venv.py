@@ -1,7 +1,7 @@
 """ goulash.venv
 """
 import os
-
+import fnmatch
 from goulash.python import opj, ope, expanduser, abspath
 
 get_path   = lambda: os.environ['PATH']
@@ -30,7 +30,7 @@ def contains_venv(_dir, **kargs):
     venvs = find_venvs(_dir, **kargs)
     return venvs and venvs[0]
 
-def find_venvs(_dir, report=None, max_venvs=None):
+def find_venvs(_dir, report=None, max_venvs=None, ignore_dirs=[]):
     _dir = abspath(expanduser(_dir))
     venvs = []
     if is_venv(_dir):
@@ -46,7 +46,10 @@ def find_venvs(_dir, report=None, max_venvs=None):
             count += 1
             subdir = opj(dirpath, subdir)
             if is_venv(subdir):
-                venvs.append(subdir)
+                if not any([
+                    fnmatch.fnmatch(
+                        subdir, os.path.join('*',d,'*')) for d in ignore_dirs]):
+                    venvs.append(subdir)
 
     if report is not None and not venvs:
         assert callable(report)
