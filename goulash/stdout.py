@@ -1,4 +1,6 @@
 """ goulash.stdout
+
+    (used by corkscrew.comet)
 """
 
 import sys

@@ -14,7 +14,7 @@ def getcaller(level=2):
     try:
         kls  = himself and himself.__class__
     except AttributeError:
-        # python uses himself only by convention, so it's
+        # python uses self only by convention, so it's
         # possible there is a "himself" local but it's
         # not actually an object.
         kls = None
