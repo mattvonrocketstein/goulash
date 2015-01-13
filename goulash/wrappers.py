@@ -25,7 +25,7 @@ class DumbWrapper(object):
             return object.__getattribute__(self, name)
         else:
             tmp = object.__getattribute__(self, '_wrapped')
-            print 'wrap acc',name,tmp
+            print 'wrap acc', name, tmp
             return getattr(tmp,name)
 
     def __iter__(self):

@@ -44,9 +44,44 @@ class Settings(object):
                           help="use config file")
         return parser
 
+    def get_section(self, k, insist=False):
+        try:
+            return self[k]
+        except KeyError:
+            if insist:
+                error = 'Fatal: You need to specify a "{0}" section in {1}'
+                raise SettingsError(error.format(k, self.settings_file))
+            else:
+                return None
+
+    def get_setting(self, k, insist=False, default=None):
+        """ TODO: move into goulash
+            this function returns True for 'true', False for
+            `false` or 'no', any other strings are passed through
+        """
+        _type = 'val'
+        section,var = k.split('.')
+        section_obj = self.get_section(section, insist=insist)
+        try:
+            tmp = section_obj[var]
+        except KeyError:
+            if insist:
+                error = ('Fatal: You need to specify a "{0}" section '
+                             'with an entry like  "{1}=<{2}>" in {3}')
+                raise SettingsError(error.format(
+                    section, var, _type, self.settings_file))
+            elif default:
+                tmp = default
+            else:
+                return None
+        if isinstance(tmp, basestring):
+            test = tmp not in ['0', 'false', 'no', 0]
+            if not test: return test
+        return tmp
+
     @property
     def settings_file(self):
-        if self.options.config:
+        if self.options is not None and self.options.config:
             _file = self.options.config
         else:
             _file = self._init_filename or \
@@ -98,17 +133,17 @@ class Settings(object):
         if self.options.version:
             return self.show_version()
 
-        if self['user']['shell']:
+        if self.get_setting('user.shell'):
             try:
                 from smashlib import embed;
             except ImportError:
                 raise SettingsError("You need smashlib installed "
                                     "if you want to use the shell.")
             else:
-                embed(user_ns=self.shell_namespace())
+                embed(user_ns = self.shell_namespace())
             return True
 
-    def __init__(self, filename=None):
+    def __init__(self, filename=None, use_argv=True):
         """ first load the default config so that overrides don't need
             to mention everything.  update default with the config
             specified by the command line optionparser, then
@@ -116,14 +151,20 @@ class Settings(object):
         """
         self._init_filename = filename
         #super(Settings, self).__init__({})
-        self.options, self.args = self.get_parser().parse_args()
+        if use_argv:
+            self.options, self.args = self.get_parser().parse_args()
+        else:
+            self.options = self.args = None
         self._wrapped = self.load(file=self.settings_file)
         # build a special dynamic section for things the user wants,
         # ie, things that have been passed into the option
         # parser but are not useful in the .ini
-        if 'user' not in self:
+        if not self.get_section('user'):
             self['user'] = {}
-        self['user']['shell'] = self.options.shell and 'true' or ''
+        if self.options is not None:
+            self['user']['shell'] = self.options.shell and 'true' or ''
+        else:
+            self['user']['shell'] = ''
 
     def __contains__(self, other):
         """ dictionary compatability """
@@ -135,9 +176,6 @@ class Settings(object):
 
     def keys(self):
         return self._wrapped.keys()
-
-    def update(self, *args, **kargs):
-        return self._wrapped.update(*args, **kargs)
 
     def __setitem__(self, *args, **kargs):
         return self._wrapped.__setitem__(*args, **kargs)
