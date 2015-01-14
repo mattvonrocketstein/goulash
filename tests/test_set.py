@@ -1,6 +1,7 @@
 """ test_set
 """
 import unittest
+
 from goulash.set import OrderedSet
 
 class TestSet(unittest.TestCase):
