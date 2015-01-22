@@ -1,6 +1,7 @@
 """ goulash._inspect
 """
 import inspect
+from addict import Dict
 
 def getcaller(level=2):
     """ """
@@ -33,5 +34,5 @@ def getcaller(level=2):
                func=func,
                func_name=func_name)
     out.update({'class':kls})
-    return out
+    return Dict(out)
 get_caller = getcaller

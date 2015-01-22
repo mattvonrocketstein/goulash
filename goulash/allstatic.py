@@ -2,6 +2,8 @@
 """
 from types import FunctionType
 
+from goulash.namespaces import Namespace
+
 is_property           = lambda obj: type(obj).__name__=='property'
 is_function           = lambda obj: type(obj)==FunctionType
 is_nonprivatefunction = lambda name, obj: (not name.startswith('_')) and is_function(obj)
@@ -22,7 +24,6 @@ class AllStaticMethods(type):
             NOTE: the 'finished' flag is used for chaining..
                   make sure you know what you're doing if you use it.
         """
-        from goulash import Namespace
         for x, func in Namespace(dct).functions.items():
                 dct[x] = staticmethod(func)
         if finished:

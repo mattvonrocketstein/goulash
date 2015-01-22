@@ -3,7 +3,7 @@
 
 from unittest import TestCase, main
 
-from goulash import Namespace
+from goulash.namespaces import Namespace
 from tests.data import TestObject, ComplexTestObject
 
 class TestRecursive(TestCase):
