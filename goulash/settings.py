@@ -22,16 +22,17 @@ class Settings(object):
     environ_key = None
     #__getitem__ = Dictionaryish.__getitem__
 
-    @classmethod
-    def get_parser(kls):
+    def get_parser(self):
         """ build the default parser """
         from optparse import OptionParser
         parser = OptionParser()
         parser.set_conflict_handler("resolve")
         parser.add_option(
             "-c", default='',dest='cmd',
-            help=("like python -c: \"a program passed in"
-                  " as string (terminates option list)\""))
+            help=("just like python -c or sh -c (pass in a command)"))
+        parser.add_option(
+            "-e", "--exec", default='',dest='execfile',
+            help='a filename to execute')
         parser.add_option(
             "-v", '--version', default=False, dest='version',
             action='store_true',
@@ -128,6 +129,12 @@ class Settings(object):
             ns = globals()
             ns.update(settings=self)
             exec self.options.cmd in self.shell_namespace()
+            return True
+
+        if self.options.execfile:
+            ns = globals()
+            ns.update(settings=self)
+            execfile(self.options.execfile, self.shell_namespace())
             return True
 
         if self.options.version:
