@@ -1,6 +1,18 @@
-""" goulash.util._os
+""" goulash._os
 """
 import os
+
+from goulash.python import get_env, ope
+
+def home():
+    return get_env('HOME')
+get_home = home
+
+def touch_file(_file):
+    """ create _file if it does not exist  """
+    if not ope(_file):
+        with open(_file, 'w'):
+            pass
 
 def which(name):
     return os.popen('which '+name).readlines()[0].strip()
