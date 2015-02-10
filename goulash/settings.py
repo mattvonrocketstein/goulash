@@ -105,7 +105,7 @@ class Settings(object):
         config = config.copy()
         cp = GoulashConfigParser()
         cp.read(file)
-        return cp
+        return cp._sections
 
     def shell_namespace(self):
         """ when --shell is used, the dictionary
