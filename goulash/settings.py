@@ -14,8 +14,7 @@ class SettingsError(Exception):
     pass
 
 class GoulashConfigParser(configparser.ConfigParser):
-    def __getitem__(self, k):
-        return getattr(self, k)
+    pass
 
 class Settings(object):
 
