@@ -14,7 +14,8 @@ class SettingsError(Exception):
     pass
 
 class GoulashConfigParser(configparser.ConfigParser):
-    pass
+    def __getitem__(self, k):
+        return getattr(self, k)
 
 class Settings(object):
 
@@ -47,7 +48,7 @@ class Settings(object):
 
     def get_section(self, k, insist=False):
         try:
-            return self[k]
+            return dict(self._wrapped)[k]
         except KeyError:
             if insist:
                 error = 'Fatal: You need to specify a "{0}" section in {1}'
