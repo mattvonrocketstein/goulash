@@ -9,6 +9,7 @@
 """
 import os
 import configparser
+from argparse import ArgumentParser
 
 class SettingsError(Exception):
     pass
@@ -24,23 +25,23 @@ class Settings(object):
 
     def get_parser(self):
         """ build the default parser """
-        from optparse import OptionParser
-        parser = OptionParser()
-        parser.set_conflict_handler("resolve")
-        parser.add_option(
+        #from optparse import OptionParser
+        parser = ArgumentParser() #OptionParser()
+        #parser.set_conflict_handler("resolve")
+        parser.add_argument(
             "-c", default='',dest='cmd',
             help=("just like python -c or sh -c (pass in a command)"))
-        parser.add_option(
+        parser.add_argument(
             "-e", "--exec", default='',dest='execfile',
             help='a filename to execute')
-        parser.add_option(
+        parser.add_argument(
             "-v", '--version', default=False, dest='version',
             action='store_true',
             help=("show version information"))
-        parser.add_option("--shell", dest="shell",
+        parser.add_argument("--shell", dest="shell",
                           default=False, help="application shell",
                           action='store_true')
-        parser.add_option("--config", dest='config',
+        parser.add_argument("--config", dest='config',
                           default="",
                           help="use config file")
         return parser
@@ -100,10 +101,12 @@ class Settings(object):
             <section>.<option> and the values
         """
         if not os.path.exists(file):
-            err = 'ERROR: config file at "{f}" does not exist'.format(f=file)
+            err = 'ERROR: config file at "{f}" does not exist'
+            err = err.format(f=file)
             raise SettingsError(err)
         config = config.copy()
         cp = GoulashConfigParser()
+        from smashlib import embed; embed()
         cp.read(file)
         return cp._sections
 
@@ -159,7 +162,8 @@ class Settings(object):
         self._init_filename = filename
         #super(Settings, self).__init__({})
         if use_argv:
-            self.options, self.args = self.get_parser().parse_args()
+            #self.options, self.args = self.get_parser().parse_args()
+            self.options, self.args = [self.get_parser().parse_args()]*2
         else:
             self.options = self.args = None
         self._wrapped = self.load(file=self.settings_file)

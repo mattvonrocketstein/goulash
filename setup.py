@@ -29,5 +29,7 @@ setup(
     download_url = base_url+'/tarball/master',
     packages     = ['goulash'],
     keywords     = ['goulash'],
-    install_requires = ['ansi2html', 'configparser', 'addict']
+    install_requires = [
+        'ansi2html', 'configparser',
+        'addict', 'argparse', ]
     )

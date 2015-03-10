@@ -25,7 +25,7 @@ def strip_tags(html):
 
 def smart_split(x):
     """ splits on most delims """
-    return [x for x in R_SPLIT_DELIM.split(x) if x]
+    return [y for y in R_SPLIT_DELIM.split(x) if y]
 
 def sanitize_txt(x):
     """ make text suitable for href linking, etc """

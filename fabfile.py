@@ -10,13 +10,11 @@
 #
 #   * fab pypi_repackage: update this package on pypi
 #
-import os, re, sys
+import os, sys
 
-from fabric.api import env, run
 from fabric.colors import red
-from fabric.api import lcd, local, quiet, settings
+from fabric.api import lcd, local, settings
 from fabric.contrib.console import confirm
-from fabric.colors import red
 
 _ope = os.path.exists
 _mkdir = os.mkdir
@@ -75,7 +73,6 @@ if __name__ == '__main__':
     #
     # the .index() manipulation below should make this work regardless of
     # whether this is invoked from shell as "./foo.py" or "python foo.py"
-    import sys
     from fabric.main import main as fmain
     patched_argv = ['fab', '-f', __file__,] + \
                    sys.argv[sys.argv.index(__file__)+1:]
