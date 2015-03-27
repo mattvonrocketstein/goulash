@@ -1,7 +1,8 @@
 """ goulash.cache
 
     dumb lightweight caching decorator.  this requires werkzeug,
-    but at least avoids a memcache dependency.
+    but at least avoids a memcache dependency. see also:
+    goulash.decorators for memoization, etc
 """
 
 from functools import wraps
