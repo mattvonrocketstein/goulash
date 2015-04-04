@@ -31,5 +31,6 @@ setup(
     keywords     = ['goulash'],
     install_requires = [
         'ansi2html', 'configparser',
+        'werkzeug', # used for caching
         'addict', 'argparse', ]
     )
