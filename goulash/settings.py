@@ -106,7 +106,6 @@ class Settings(object):
             raise SettingsError(err)
         config = config.copy()
         cp = GoulashConfigParser()
-        from smashlib import embed; embed()
         cp.read(file)
         return cp._sections
 
@@ -160,9 +159,7 @@ class Settings(object):
             update that with any other overrides delivered to the parser.
         """
         self._init_filename = filename
-        #super(Settings, self).__init__({})
         if use_argv:
-            #self.options, self.args = self.get_parser().parse_args()
             self.options, self.args = [self.get_parser().parse_args()]*2
         else:
             self.options = self.args = None
