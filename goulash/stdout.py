@@ -1,6 +1,6 @@
 """ goulash.stdout
 
-    (used by corkscrew.comet)
+    NB: used by corkscrew.comet, others
 """
 
 import sys

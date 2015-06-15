@@ -1,4 +1,4 @@
-""" goulash.tests.test_allstatic
+""" tests.test_allstatic
 """
 
 import unittest

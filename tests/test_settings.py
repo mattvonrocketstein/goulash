@@ -4,6 +4,7 @@
 """
 import unittest
 import mock
+from argparse import ArgumentParser
 from goulash.python import dirname, opj
 from goulash.settings import Settings, SettingsError
 
@@ -16,8 +17,7 @@ class TestSettings(unittest.TestCase):
 
     def test_get_parser(self):
         parser = self.settings.get_parser()
-        # contrary to duck typing but let's agree this is a good idea..
-        self.assertEqual(str(parser.__class__), 'optparse.OptionParser')
+        self.assertTrue(isinstance(parser, ArgumentParser))
 
     def test_get_setting(self):
         self.assertEqual(self.settings.get_setting('section1.undefined'), None)
@@ -46,7 +46,6 @@ class TestSettings(unittest.TestCase):
 
     def test_implied_dynamic_keys(self):
         self.assertTrue('user' in self.settings)
-        self.assertTrue('DEFAULT' in self.settings)
 
     def test_dict_compat(self):
         self.assertTrue('section1' in self.settings)

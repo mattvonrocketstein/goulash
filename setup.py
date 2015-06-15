@@ -30,7 +30,11 @@ setup(
     packages     = ['goulash'],
     keywords     = ['goulash'],
     install_requires = [
-        'ansi2html', 'configparser',
-        'werkzeug', # used for caching
-        'addict', 'argparse', ]
+        'addict',    #
+        'ansi2html', # required for ..
+        'werkzeug',  # used for caching helpers
+        'fabric',    #
+        # command line option-parsing, .ini configurations
+        'argparse', 'configparser',
+         ]
     )
