@@ -1,4 +1,5 @@
 #
-#
+# doc-build requirements
 #
 epydoc==3.0.1
+mkdocs

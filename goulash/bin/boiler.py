@@ -65,11 +65,11 @@ def create_docs(DOCS_ROOT=None, **ctx):
 def _refresh_api_docs(
     PROJECT_NAME=None, DOCS_API_ROOT=None, DOCS_SITE_DIR=None, **ctx):
     cmd = ('epydoc ./{0} --html -q -o {1} '
-           '--name report --css blue '
+           '--name {2} --css blue '
            '--show-imports --inheritance listed')
     default_md5 = '6bc2c4f724ccc3bacbb77cf8a46963d1'
     assert PROJECT_NAME is not None, 'refresh requires --project'
-    cmd = cmd.format(PROJECT_NAME, DOCS_API_ROOT)
+    cmd = cmd.format(PROJECT_NAME, DOCS_API_ROOT, PROJECT_NAME)
     api.local(cmd)
     with api.lcd(DOCS_API_ROOT):
         md5_cmd = 'md5sum {0}'.format('epydoc.css')
