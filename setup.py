@@ -30,11 +30,19 @@ setup(
     packages     = ['goulash'],
     keywords     = ['goulash'],
     install_requires = [
-        'addict',    #
-        'ansi2html', # required for ..
-        'werkzeug',  # used for caching helpers
-        'fabric',    #
-        # command line option-parsing, .ini configurations
-        'argparse', 'configparser',
-         ]
+        'addict',       # dictionary utility
+        'ansi2html',    # required for goulash.ansi
+        'werkzeug',     # used for caching helpers
+        'fabric',       # misc. automation
+        'argparse',     # command line option-parsing,
+        'configparser', # .ini configurations
+         ],
+    entry_points = dict(
+        console_scripts=[
+            'goulash-boiler = goulash.bin.boiler:entry',
+            'goulash-serve = goulash.bin.serv:entry',
+            'goulash-docs = goulash.bin.docs:entry',
+            ]),
+    package_data={'': ['*.*', 'goulash/data/*.*']},
+    include_package_data=True,
     )

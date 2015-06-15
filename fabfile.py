@@ -13,7 +13,7 @@
 import os, sys
 
 from fabric.colors import red
-from fabric.api import lcd, local, settings
+from fabric import api
 from fabric.contrib.console import confirm
 
 _ope = os.path.exists
@@ -24,6 +24,15 @@ _dirname = os.path.dirname
 ldir = _dirname(__file__)
 
 VERSION_DELTA = .01
+PROJECT_NAME = 'goulash'
+SRC_ROOT = os.path.dirname(__file__)
+DOCS_URL = 'http://localhost:8000'
+DOCS_ROOT = os.path.join(SRC_ROOT, 'docs')
+DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
+DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
+
+if os.getcwd()!=os.path.dirname(SRC_ROOT):
+    os.chdir(SRC_ROOT)
 
 def pypi_repackage():
     ldir = _dirname(__file__)
@@ -31,12 +40,13 @@ def pypi_repackage():
                              " master and bumped version string")
     ans = confirm('proceed with pypi update in "{0}"?'.format(ldir))
     if not ans: return
-    with lcd(ldir):
-        with settings(warn_only=True):
-            local("git checkout -b pypi") # in case this has never been done before
-        local("git reset --hard master")
-        local("python setup.py register -r pypi")
-        local("python setup.py sdist upload -r pypi")
+    with api.lcd(ldir):
+        with api.settings(warn_only=True):
+            # in case this has never been done before
+            api.local("git checkout -b pypi")
+        api.local("git reset --hard master")
+        api.local("python setup.py register -r pypi")
+        api.local("python setup.py sdist upload -r pypi")
 
 def version_bump():
     """ bump the version number """
@@ -62,6 +72,21 @@ def version_bump():
     with open(version_file,'w') as fhandle:
         fhandle.write(new_file)
         print 'version has been rewritten.'
+
+def show_docs():
+    import addict
+    from goulash.bin.docs import gen_docs
+    gen_docs(addict.Dict(dir='.', project=PROJECT_NAME))
+    #if 'docs' in os.listdir(DOCS_ROOT):
+    import webbrowser
+    if 'docs' in os.listdir(DOCS_ROOT):
+        print red('.. found read-the-docs style documentation')
+        with api.lcd('docs'):
+            webbrowser.open(DOCS_URL)
+            from goulash.bin.serv import run_server
+            run_server(dir=DOCS_SITE_DIR)
+    else:
+        print red("Not sure what to do with this style of documentation")
 
 if __name__ == '__main__':
     # a neat hack that makes this file a "self-hosting" fabfile,
