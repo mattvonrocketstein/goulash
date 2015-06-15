@@ -56,6 +56,9 @@ def create_docs(DOCS_ROOT=None, **ctx):
     else:
         msg = '.. docs root already exists:'
         print red(msg) + ' {0}'.format(DOCS_ROOT)
+    shutil.copy(
+        os.path.join(goulash_data, 'docs_requirements.txt'),
+        os.path.join(DOCS_ROOT, 'requirements.txt'))
     _create_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     _create_api_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
 

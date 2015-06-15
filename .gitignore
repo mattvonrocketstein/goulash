@@ -8,3 +8,5 @@ dist/*
 *#*
 .coverage
 *venv*/*
+docs/site
+docs/docs
