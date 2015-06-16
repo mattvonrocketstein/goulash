@@ -9,7 +9,7 @@
         
         <link rel="shortcut icon" href="../img/favicon.ico">
 
-	<title>API Reference - goulash</title>
+	<title>Commands - goulash</title>
 
         <link href="../css/bootstrap-3.0.3.min.css" rel="stylesheet">
         <link href="../css/font-awesome-4.0.3.css" rel="stylesheet">
@@ -56,8 +56,8 @@
             
             
             
-                <li >
-                    <a href="../commands/">Commands</a>
+                <li class="active">
+                    <a href="./">Commands</a>
                 </li>
             
             
@@ -68,8 +68,8 @@
             
             
             
-                <li class="active">
-                    <a href="./">API Reference</a>
+                <li >
+                    <a href="../api/">API Reference</a>
                 </li>
             
             
@@ -78,12 +78,12 @@
             <!-- Search, Navigation and Repo links -->
             <ul class="nav navbar-nav navbar-right">
                 <li >
-                    <a rel="next" href="../decorators/">
+                    <a rel="next" href="..">
                         <i class="fa fa-arrow-left"></i> Previous
                     </a>
                 </li>
-                <li class="disabled">
-                    <a rel="prev" >
+                <li >
+                    <a rel="prev" href="../decorators/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
@@ -106,11 +106,74 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
+        <li class="main active"><a href="#command-and-scripts">Command and Scripts</a></li>
+        
+    
+        <li class="main "><a href="#commands">Commands</a></li>
+        
+            <li><a href="#boilerplate-generators">Boilerplate generators</a></li>
+        
+            <li><a href="#documentation-helpers">Documentation helpers</a></li>
+        
+    
     </ul>
 </div></div>
             <div class="col-md-9" role="main">
 
-</div>
+<h1 id="command-and-scripts"><a href=#scripts>Command and Scripts</a></h1>
+<p>Goulash contains several utility scripts which you may find useful.</p>
+<h1 id="commands">Commands</h1>
+<h3 id="boilerplate-generators">Boilerplate generators</h3>
+<p>Under the <code>goulash/data</code> directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source <a href="#">here</a>, or you can use the commands in the table below to install the boilerplate in place.</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>goulash-boiler --docs</strong> <em>src_root</em></td>
+<td>Create documentation boilerplate in directory <em>src_root</em></td>
+</tr>
+<tr>
+<td><strong>goulash-boiler --tox</strong> <em>src_root</em></td>
+<td>Create tox boilerplate in directory <em>src_root</em></td>
+</tr>
+<tr>
+<td><strong>goulash-boiler --fabric</strong> <em>src_root</em></td>
+<td>Creates fabric boilerplate in directory <em>src_root</em></td>
+</tr>
+<tr>
+<td><strong>goulash-boiler --project</strong> <em>src_root</em></td>
+<td>Creates project boilerplate in directory <em>src_root</em></td>
+</tr>
+<tr>
+<td><strong>goulash-boiler --python</strong> <em>src_root</em></td>
+<td>Create python source project boilerplate in directory <em>src_root</em></td>
+</tr>
+</tbody>
+</table>
+<h3 id="documentation-helpers">Documentation helpers</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em><em>goulash-docs --boilerplate </em>doc_root</em></td>
+<td>Same as <strong>goulash-boiler --docs *doc_root&gt;/..</strong></td>
+</tr>
+<tr>
+<td><em><em>goulash-docs --refresh </em>doc_root</em></td>
+<td>Refresh and rebuild documentation in directory <em>doc_root</em></td>
+</tr>
+</tbody>
+</table></div>
         </div>
 
 	<footer class="col-md-12">

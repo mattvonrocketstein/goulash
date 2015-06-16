@@ -2,7 +2,7 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Introduction to Goulash\n\n\nWhat IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.\n\n\nDetailed API is available \nhere\n, read on for the highlights.\n\n\nInstalling goulash\n\n\nInstall with ipython:\n\n\n   $ pip install goulash\n\n\n\n\nOr try the bleeding edge:\n\n\n   $ git clone https://github.com/mattvonrocketstein/goulash.git\n   $ cd goulash\n   $ virtualenv venv\n   $ source venv/bin/activate\n   $ python setup.py develop\n\n\n\n\nCommands\n\n\nBoilerplate generators\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-boiler --docs\n \nsrc_root\n\n\nCreate documentation boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --tox\n \nsrc_root\n\n\nCreate tox boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --fabric\n \nsrc_root\n\n\nCreates fabric boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --project\n \nsrc_root\n\n\nCreates project boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --python\n \nsrc_root\n\n\nCreate python source project boilerplate in directory \nsrc_root\n\n\n\n\n\n\n\n\nDocumentation helpers\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-docs --boilerplate \ndoc_root\n\n\nSame as \ngoulash-boiler --docs *doc_root\n/..\n\n\n\n\n\n\ngoulash-docs --refresh \ndoc_root\n\n\nRefresh and rebuild documentation in directory \ndoc_root\n\n\n\n\n\n\n\n\nContributing\n\n\nPull requests welcome.  You might like to run the tests:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox\n\n\n\n\nTo rebuild the documentation:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ goulash-docs --refresh", 
+            "text": "Introduction to Goulash\n\n\nWhat IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.\n\n\nDetailed API is available \nhere\n, read on for the highlights.\n\n\nInstalling goulash\n\n\nInstall with ipython:\n\n\n   $ pip install goulash\n\n\n\n\nOr try the bleeding edge:\n\n\n   $ git clone https://github.com/mattvonrocketstein/goulash.git\n   $ cd goulash\n   $ virtualenv venv\n   $ source venv/bin/activate\n   $ python setup.py develop\n\n\n\n\nContributing\n\n\nPull requests welcome.  You might like to run the tests:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox\n\n\n\n\nTo rebuild the documentation:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ goulash-docs --refresh", 
             "title": "Home"
         }, 
         {
@@ -16,14 +16,34 @@
             "title": "Installing goulash"
         }, 
         {
-            "location": "/#commands", 
-            "text": "Boilerplate generators     Command  Description      goulash-boiler --docs   src_root  Create documentation boilerplate in directory  src_root    goulash-boiler --tox   src_root  Create tox boilerplate in directory  src_root    goulash-boiler --fabric   src_root  Creates fabric boilerplate in directory  src_root    goulash-boiler --project   src_root  Creates project boilerplate in directory  src_root    goulash-boiler --python   src_root  Create python source project boilerplate in directory  src_root     Documentation helpers     Command  Description      goulash-docs --boilerplate  doc_root  Same as  goulash-boiler --docs *doc_root /..    goulash-docs --refresh  doc_root  Refresh and rebuild documentation in directory  doc_root", 
-            "title": "Commands"
-        }, 
-        {
             "location": "/#contributing", 
             "text": "Pull requests welcome.  You might like to run the tests:    $ cd goulash\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox  To rebuild the documentation:    $ cd goulash\n  $ source venv/bin/activate\n  $ goulash-docs --refresh", 
             "title": "Contributing"
+        }, 
+        {
+            "location": "/commands/", 
+            "text": "Command and Scripts\n\n\nGoulash contains several utility scripts which you may find useful.\n\n\nCommands\n\n\nBoilerplate generators\n\n\nUnder the \ngoulash/data\n directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source \nhere\n, or you can use the commands in the table below to install the boilerplate in place.\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-boiler --docs\n \nsrc_root\n\n\nCreate documentation boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --tox\n \nsrc_root\n\n\nCreate tox boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --fabric\n \nsrc_root\n\n\nCreates fabric boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --project\n \nsrc_root\n\n\nCreates project boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash-boiler --python\n \nsrc_root\n\n\nCreate python source project boilerplate in directory \nsrc_root\n\n\n\n\n\n\n\n\nDocumentation helpers\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-docs --boilerplate \ndoc_root\n\n\nSame as \ngoulash-boiler --docs *doc_root\n/..\n\n\n\n\n\n\ngoulash-docs --refresh \ndoc_root\n\n\nRefresh and rebuild documentation in directory \ndoc_root", 
+            "title": "Commands"
+        }, 
+        {
+            "location": "/commands/#command-and-scripts", 
+            "text": "Goulash contains several utility scripts which you may find useful.", 
+            "title": "Command and Scripts"
+        }, 
+        {
+            "location": "/commands/#commands", 
+            "text": "Boilerplate generators  Under the  goulash/data  directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source  here , or you can use the commands in the table below to install the boilerplate in place.     Command  Description      goulash-boiler --docs   src_root  Create documentation boilerplate in directory  src_root    goulash-boiler --tox   src_root  Create tox boilerplate in directory  src_root    goulash-boiler --fabric   src_root  Creates fabric boilerplate in directory  src_root    goulash-boiler --project   src_root  Creates project boilerplate in directory  src_root    goulash-boiler --python   src_root  Create python source project boilerplate in directory  src_root     Documentation helpers     Command  Description      goulash-docs --boilerplate  doc_root  Same as  goulash-boiler --docs *doc_root /..    goulash-docs --refresh  doc_root  Refresh and rebuild documentation in directory  doc_root", 
+            "title": "Commands"
+        }, 
+        {
+            "location": "/decorators/", 
+            "text": "Decorators", 
+            "title": "Decorators"
+        }, 
+        {
+            "location": "/decorators/#decorators", 
+            "text": "", 
+            "title": "Decorators"
         }, 
         {
             "location": "/api/", 
