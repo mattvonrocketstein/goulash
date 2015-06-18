@@ -1,18 +1,35 @@
 """ goulash._os
 """
-import os
+import os, errno
 
 from goulash.python import get_env, ope
+
+# copy-tree with overwrites (unlike shutil.copytree)
+from distutils.dir_util import copy_tree # NOQA
 
 def home():
     return get_env('HOME')
 get_home = home
 
-def touch_file(_file):
-    """ create _file if it does not exist  """
-    if not ope(_file):
-        with open(_file, 'w'):
+def touch(fname, times=None):
+    """ similar to shell command 'touch' """
+    with open(fname, 'a'):
+        os.utime(fname, times)
+touch_file = touch
+
+#http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+def mkdir_p(path):
+    """ os.makedirs() is a constant annoyance since it is
+        close to having this functionality, but always dies
+        if the argument already exists
+    """
+    try:
+        os.makedirs(path)
+    except OSError as exc: # Python >2.5
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
+        else: raise
+makedirs = mkdirs = mkdir_p
 
 def which(name):
     return os.popen('which '+name).readlines()[0].strip()
