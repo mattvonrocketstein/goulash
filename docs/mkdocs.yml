@@ -1,6 +1,6 @@
 site_name: goulash
 theme: bootstrap
-repo_url: https://github.com/mattvonrocketstein/placeholder.git
+repo_url: https://github.com/mattvonrocketstein/goulash.git
 site_author: mvr
 pages:
 - 'Home': 'index.md'
