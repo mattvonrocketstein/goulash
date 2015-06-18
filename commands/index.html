@@ -106,10 +106,7 @@
             <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
     <ul class="nav bs-sidenav">
     
-        <li class="main active"><a href="#command-and-scripts">Command and Scripts</a></li>
-        
-    
-        <li class="main "><a href="#commands">Commands</a></li>
+        <li class="main active"><a href="#commands">Commands</a></li>
         
             <li><a href="#boilerplate-generators">Boilerplate generators</a></li>
         
@@ -120,9 +117,8 @@
 </div></div>
             <div class="col-md-9" role="main">
 
-<h1 id="command-and-scripts"><a href=#scripts>Command and Scripts</a></h1>
-<p>Goulash contains several utility scripts which you may find useful.</p>
 <h1 id="commands">Commands</h1>
+<p>Goulash contains several utility scripts which you may find useful.</p>
 <h3 id="boilerplate-generators">Boilerplate generators</h3>
 <p>Under the <code>goulash/data</code> directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source <a href="#">here</a>, or you can use the commands in the table below to install the boilerplate in place.</p>
 <table>
@@ -134,28 +130,13 @@
 </thead>
 <tbody>
 <tr>
-<td><strong>goulash-boiler --docs</strong> <em>src_root</em></td>
+<td><code>goulash-boiler --docs $src_root</code></td>
 <td>Create documentation boilerplate in directory <em>src_root</em></td>
-</tr>
-<tr>
-<td><strong>goulash-boiler --tox</strong> <em>src_root</em></td>
-<td>Create tox boilerplate in directory <em>src_root</em></td>
-</tr>
-<tr>
-<td><strong>goulash-boiler --fabric</strong> <em>src_root</em></td>
-<td>Creates fabric boilerplate in directory <em>src_root</em></td>
-</tr>
-<tr>
-<td><strong>goulash-boiler --project</strong> <em>src_root</em></td>
-<td>Creates project boilerplate in directory <em>src_root</em></td>
-</tr>
-<tr>
-<td><strong>goulash-boiler --python</strong> <em>src_root</em></td>
-<td>Create python source project boilerplate in directory <em>src_root</em></td>
 </tr>
 </tbody>
 </table>
 <h3 id="documentation-helpers">Documentation helpers</h3>
+<p>Goulash can help with documentation, and it builds clean, static documentation similar to the page you are looking at now.  By default it combines epydoc (for API documentation) and mkdocs (for markdown-based static pages).</p>
 <table>
 <thead>
 <tr>
@@ -165,12 +146,16 @@
 </thead>
 <tbody>
 <tr>
-<td><em><em>goulash-docs --boilerplate </em>doc_root</em></td>
-<td>Same as <strong>goulash-boiler --docs *doc_root&gt;/..</strong></td>
+<td><code>goulash-docs --boilerplate $doc_root</code></td>
+<td>Same as <code>goulash-boiler --docs doc_root</code></td>
 </tr>
 <tr>
-<td><em><em>goulash-docs --refresh </em>doc_root</em></td>
+<td><code>goulash-docs --refresh doc_root</code></td>
 <td>Refresh and rebuild documentation in directory <em>doc_root</em></td>
+</tr>
+<tr>
+<td><code>goulash-docs --show doc_root</code></td>
+<td>Rebuild documentation, launch server, open in webbrowser</td>
 </tr>
 </tbody>
 </table></div>
