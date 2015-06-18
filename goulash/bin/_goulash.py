@@ -3,8 +3,7 @@
 import os
 from argparse import ArgumentParser
 
-from fabric.colors import red
-from fabric.contrib.console import confirm
+#from fabric.colors import red
 
 from goulash import version
 
@@ -51,45 +50,9 @@ def get_parser():
 
     return parser
 
-VERSION_DELTA = .01
-
-def version_bump(pkg_root):
-    """ bump the version number.
-
-        to work, this function requires your version file to work like so:
-
-            1. pkg/version.py exists
-            2. pkg/version.py contains a '__version__' variable
-            3. __version__ should be a number, not a string
-            4. __version__ should be defined on the last line of the file
-    """
-    sandbox = {}
-    version_file = os.path.join(pkg_root, 'version.py')
-    err = 'Version file not found in expected location: ' + version_file
-    if not os.path.exists(version_file):
-        raise SystemExit(err)
-    execfile(version_file, sandbox)
-    current_version = sandbox['__version__']
-    new_version = current_version + VERSION_DELTA
-    with open(version_file, 'r') as fhandle:
-        version_file_contents = [x for x in fhandle.readlines() if x.strip()]
-    new_file = version_file_contents[:-1] + \
-               ["__version__ = version = {0}".format(new_version)]
-    new_file = '\n'.join(new_file)
-    print red("warning:") + " version will be changed to {0}".format(new_version)
-    print
-    print red("new version file will look like this:\n")
-    print new_file
-    ans = confirm('proceed with version change?')
-    if not ans:
-        print 'aborting.'
-        return
-    with open(version_file, 'w') as fhandle:
-        fhandle.write(new_file)
-        print 'version has been rewritten.'
 
 from goulash.fileserver import main as fileserver
-
+from goulash.projects import version_bump
 def project_handler(args):
     if args.version_bump:
         version_bump(args.version_bump)
@@ -99,7 +62,7 @@ def project_handler(args):
 def entry():
     parser = get_parser()
     args = parser.parse_args()
-    if args.subcommand in ['version','help']:
+    if args.subcommand in ['version', 'help']:
         if args.subcommand == 'version':
             print version.__version__
         if args.subcommand == 'help':

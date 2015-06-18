@@ -25,14 +25,12 @@ class Settings(object):
 
     def get_parser(self):
         """ build the default parser """
-        #from optparse import OptionParser
-        parser = ArgumentParser() #OptionParser()
-        #parser.set_conflict_handler("resolve")
+        parser = ArgumentParser()
         parser.add_argument(
-            "-c", default='',dest='cmd',
+            "-c", default='', dest='cmd',
             help=("just like python -c or sh -c (pass in a command)"))
         parser.add_argument(
-            "-e", "--exec", default='',dest='execfile',
+            "-e", "--exec", default='', dest='execfile',
             help='a filename to execute')
         parser.add_argument(
             "-v", '--version', default=False, dest='version',
@@ -145,12 +143,12 @@ class Settings(object):
 
         if self.get_setting('user.shell'):
             try:
-                from smashlib import embed;
+                from smashlib import embed
             except ImportError:
                 raise SettingsError("You need smashlib installed "
                                     "if you want to use the shell.")
             else:
-                embed(user_ns = self.shell_namespace())
+                embed(user_ns=self.shell_namespace())
             return True
 
     def __init__(self, filename=None, use_argv=True):
@@ -161,7 +159,7 @@ class Settings(object):
         """
         self._init_filename = filename
         if use_argv:
-            self.options, self.args = [self.get_parser().parse_args()]*2
+            self.options, self.args = [self.get_parser().parse_args()] * 2
         else:
             self.options = self.args = None
         self._wrapped = self.load(file=self.settings_file)

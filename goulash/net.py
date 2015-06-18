@@ -16,7 +16,7 @@ def is_port_open(port, ip):
     except:
         return False
 
-def ipaddr_with_LAN(host = "gmail.com"):
+def ipaddr_with_LAN(host="gmail.com"):
     """ you need to make an outbound connection to get
         an ip-address on a particular interface.. so this
         function requires interwebs.

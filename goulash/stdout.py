@@ -7,7 +7,7 @@ import sys
 import threading
 from Queue import Queue, Empty
 
-class ThreadedStdout(object): # pragma: no-cover
+class ThreadedStdout(object): #  pragma: no-cover
     """ Replacement for sys.stdout where every thread gets it's own
         queue.  Useful for capturing printed output from functions
         that are run in threads.  This is a toy, and not really a

@@ -2,7 +2,9 @@
 """
 
 import os
+
 from fabric.colors import red
+from fabric.contrib.console import confirm
 
 VERSION_DELTA = .01
 
@@ -19,7 +21,7 @@ def project_search(fname, start=None):
         if fname in os.listdir(now):
             return os.path.join(now, fname)
         if os.path.dirname(now) == now:
-            return None # reached the root
+            return None  # reached the root
         now = os.path.dirname(now)
 
 def version_bump(pkg_root):
@@ -43,16 +45,22 @@ def version_bump(pkg_root):
     with open(version_file, 'r') as fhandle:
         version_file_contents = [x for x in fhandle.readlines() if x.strip()]
     new_file = version_file_contents[:-1] + \
-               ["__version__ = version = {0}".format(new_version)]
+               ["__version__ = version = {0}\n".format(new_version)]
     new_file = '\n'.join(new_file)
-    print red("warning:") + " version will be changed to {0}".format(new_version)
-    print
-    print red("new version file will look like this:\n")
-    print new_file
-    ans = confirm('proceed with version change?')
-    if not ans:
+    msg = red("warning:")
+    msg += " version will be changed to {0}\n".format(new_version)
+    msg += red("new version file will look like this:\n\n")
+    msg += new_file + '\n'
+    print msg
+    try:
+        ans = confirm('proceed with version change?')
+    except KeyboardInterrupt:
         print 'aborting.'
         return
-    with open(version_file, 'w') as fhandle:
-        fhandle.write(new_file)
-        print 'version has been rewritten.'
+    else:
+        if not ans:
+            print 'aborting.'
+            return
+        with open(version_file, 'w') as fhandle:
+            fhandle.write(new_file)
+            print 'version has been rewritten.'

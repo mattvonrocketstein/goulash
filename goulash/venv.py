@@ -14,7 +14,7 @@ def is_venv(dir):
     """ naive.. but seems to work
         TODO: find a canonical version of this function or refine it
     """
-    if ope( opj(dir, 'bin', 'activate_this.py')):
+    if ope(opj(dir, 'bin', 'activate_this.py')):
         return dir
 
 
@@ -46,9 +46,11 @@ def find_venvs(_dir, report=None, max_venvs=None, ignore_dirs=[]):
             count += 1
             subdir = opj(dirpath, subdir)
             if is_venv(subdir):
-                if not any([
+                tmp = [
                     fnmatch.fnmatch(
-                        subdir, os.path.join('*',d,'*')) for d in ignore_dirs]):
+                        subdir, os.path.join('*', d, '*'))
+                    for d in ignore_dirs]
+                if not any(tmp):
                     venvs.append(subdir)
 
     if report is not None and not venvs:

@@ -45,7 +45,7 @@ class META(type):
         matches = [ x for x in dir(mcls) if \
                     getattr(getattr(mcls, x, None),
                             'metaclass_hook', False) ]
-        return dict( [ [match, getattr(mcls, match)] for match in matches ] )
+        return dict([[match, getattr(mcls, match)] for match in matches])
 
     @metaclass_hook
     def metaclass_class_registration_hook(mcls, name, bases, dct, class_obj):
@@ -62,8 +62,8 @@ class META(type):
             class_obj = type.__new__(mcls, name, bases, dct)
         except TypeError,e:
             # probably the cannot create consistent MRO error
-            print dict( [ [b.__name__,
-                           getattr(b,'__metaclass__',None)] for b in bases])
+            print dict([[b.__name__,
+                         getattr(b, '__metaclass__',None)] for b in bases])
             raise e
         hooks = mcls.metaclass_hooks if hasattr(mcls, 'metaclass_hooks') else \
                 mcls.enumerate_metaclass_hooks(mcls)
@@ -117,7 +117,7 @@ def supports_class_algebra(kls):
     if hasattr(kls,'__metaclass__'):
         if kls.__metaclass__!=ClassAlgebra:
             raise TypeError("{0} already has a metaclass: '{1}'".
-                            format(kls,kls.__metaclass__))
+                            format(kls, kls.__metaclass__))
         else:
             return kls
     else:

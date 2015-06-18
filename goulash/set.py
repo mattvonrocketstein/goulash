@@ -1,16 +1,17 @@
 """ goulash.set
 
-    Ordered set implementation adapted from:
-        http://code.activestate.com/recipes/576694/
 """
 import collections
 
+# SOURCE:
+#   Ordered set implementation adapted from original at:
+#   http://code.activestate.com/recipes/576694/
 class OrderedSet(collections.MutableSet, list):
 
     def __init__(self, iterable=None):
         self.end = end = []
-        end += [None, end, end]         # sentinel node for doubly linked list
-        self.map = {}                   # key --> [key, prev, next]
+        end += [None, end, end]  #  sentinel node for doubly linked list
+        self.map = {}            #  key --> [key, prev, next]
         if iterable is not None:
             self |= iterable
 
@@ -32,7 +33,7 @@ class OrderedSet(collections.MutableSet, list):
 
     def insert(self, i, x):
         tmp = list(self)
-        tmp.insert(i,x)
+        tmp.insert(i, x)
         for x in self:
             self.remove(x)
         self.__init__(tmp)

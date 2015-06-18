@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 """ goulash.bin.pybpgen
 """
-
-import os
 import shutil
-from argparse import ArgumentParser
+import os, sys
+import logging
+import argparse
+
 from fabric.colors import red
 from fabric import api
 
@@ -13,8 +14,6 @@ from goulash import goulash_data
 from goulash._fabric import require_bin
 from goulash._os import touch, makedirs, copy_tree
 
-import sys
-import logging
 root = logging.getLogger()
 root.setLevel(logging.DEBUG)
 ch = logging.StreamHandler(sys.stdout)
@@ -25,7 +24,7 @@ root.addHandler(ch)
 
 def get_parser():
     """ build the default parser """
-    parser = ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument(
         "--docs", default=False, dest='docs',
         action='store_true',
@@ -76,7 +75,7 @@ def _refresh_api_docs(
     DOCS_ROOT=None,
     DOCS_API_ROOT=None,
     DOCS_SITE_DIR=None, **ctx):
-    if os.environ.get('GOULASH_DOCS_API', 'true').lower()=='false':
+    if os.environ.get('GOULASH_DOCS_API', 'true').lower() == 'false':
         print red('skipping API documentation')
         return
     err = ('Missing required command.  '
@@ -148,7 +147,9 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     print red(".. finished with mkdocs")
 
 def _create_api_docs(DOCS_API_ROOT=None, **ctx):
-    print red("..generating api documentation to")+" {0}".format(DOCS_API_ROOT)
+    msg = red("..generating api documentation to")
+    msg += " {0}".format(DOCS_API_ROOT)
+    print msg
     if not os.path.exists(DOCS_API_ROOT):
         msg = red('.. api dir at "{0}" '.format(DOCS_API_ROOT))
         msg += red(' does not exist, creating it')
@@ -189,5 +190,6 @@ def entry():
         raise SystemExit()
     elif args.docs:
         gen_docs(args)
+
 if __name__ == '__main__':
     entry()

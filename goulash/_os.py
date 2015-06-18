@@ -17,7 +17,8 @@ def touch(fname, times=None):
         os.utime(fname, times)
 touch_file = touch
 
-#http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+# SOURCE:
+#  http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
 def mkdir_p(path):
     """ os.makedirs() is a constant annoyance since it is
         close to having this functionality, but always dies

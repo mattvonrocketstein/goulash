@@ -4,7 +4,8 @@ from copy import copy
 
 from inspect import isfunction, isclass, ismethod
 
-class ValueNotFound(Exception): pass
+class ValueNotFound(Exception):
+    pass
 
 def classname(thing):
     """ Return the fully-qualified class
@@ -18,7 +19,7 @@ def classname(thing):
         return thing.__module__ + '.' + thing.__class__.__name__
     except:
         _ty = str(type(thing))
-        raise AssertionError('Must pass class or instance object, got'+_ty)
+        raise AssertionError('Must pass class or instance object, got' + _ty)
 
 class NamespaceTests:
     """ Various boolean tests over objects, packaged thus to be resuable
@@ -60,17 +61,26 @@ class Namespace(object):
         NOTE: This does not work in-place. (see the copy import up there?)
     """
 
-
     def __repr__(self):
         return "Namespace({0})".format(str(self.obj))
 
     ## dictionary compatability
     ############################################################################
-    def items(self): return self.namespace.items()
-    def values(self): return self.namespace.values()
-    def keys(self): return reversed(sorted(self.namespace.keys()))
-    def __iter__(self): return iter(self.namespace)
-    def __getitem__(self,name): return self.namespace[name]
+    def items(self):
+        return self.namespace.items()
+
+    def values(self):
+        return self.namespace.values()
+
+    def keys(self):
+        return reversed(sorted(self.namespace.keys()))
+
+    def __iter__(self):
+        return iter(self.namespace)
+
+    def __getitem__(self, name):
+        return self.namespace[name]
+
     def copy(self):
         """ This can fail for a variety of reasons involving
             thread safety, etc.. hopefully this approach is
@@ -84,7 +94,7 @@ class Namespace(object):
     def intersection(self, other):
         if isinstance(other, (dict, NSPart)):
             other = getattr(other, 'namespace', other)
-            result = [ [k,self[k]] for k in self.namespace if k in other]
+            result = [ [k, self[k]] for k in self.namespace if k in other]
         else:
             raise RuntimeError('niy')
         result = dict(result)
@@ -125,8 +135,8 @@ class Namespace(object):
                 err = ("You gave a dictionary, but "
                        "maybe the keys aren't strings?")
                 #warning.warn(err)
-                self.obj=obj
-                self.namespace={}
+                self.obj = obj
+                self.namespace = {}
                 return
             if not hasattr(obj, '__dict__'):
                 err = ("Namespace Partitioner really expects something "
@@ -134,11 +144,11 @@ class Namespace(object):
                 raise TypeError(err)
             namespace = {}
             if not isinstance(obj, dict):
-                namespace.update(**dict([[k, grab(obj,k)] for k in dir(obj)]))
+                namespace.update(**dict([[k, grab(obj, k)] for k in dir(obj)]))
             else:
                 namespace = obj
-            self.namespace=namespace
-            self.obj=obj
+            self.namespace = namespace
+            self.obj = obj
         else:
             self.namespace = obj
             self.obj = obj
@@ -187,8 +197,8 @@ class Namespace(object):
         tmp = NSPart(self.copy())
         tmp.dictionaries = False
         tmp = tmp.nonprivate
-        result = [ [x, self.namespace[x]] for x in tmp if x not in tmp.methods ]
-        result = [ [x[0],x[1]] for x in result if not isclass(x[1]) ]
+        result = [[x, self.namespace[x]] for x in tmp if x not in tmp.methods]
+        result = [[x[0], x[1]] for x in result if not isclass(x[1])]
         result = dict(result)
         return result if self.dictionaries else NSPart(result)
 
@@ -199,13 +209,14 @@ class Namespace(object):
         """ just sugar. """
         return self
 
-    def with_attr(self,name):
+    def with_attr(self, name):
         result=[]
         for k, v in self.items():
-            if hasattr(v,name):
-                result.append([k,v])
+            if hasattr(v, name):
+                result.append([k, v])
         result = dict(result)
-        return result if self.dictionaries else self.__class__(result, original=self)
+        return result if self.dictionaries else \
+               self.__class__(result, original=self)
 
     def _clean(self, pattern='_'):
         """ For dictionary-like objects we'll clean out names that start with
@@ -214,12 +225,12 @@ class Namespace(object):
         """
         namespace = copy(self.namespace)
         bad_names = [x for x in namespace.keys() if x.startswith(pattern)]
-        [ namespace.pop(name) for name in bad_names ]
-        return namespace if self.dictionaries else self.__class__(namespace, original=self)
+        [namespace.pop(name) for name in bad_names]
+        return namespace if self.dictionaries else \
+               self.__class__(namespace, original=self)
 
     def startswith(self, string):
         return self.generic_key(lambda k: k.startswith(string))
-
 
     def generic(self, test, value_test=True):
         """ Partitions the namespace with respect to a test function.
@@ -231,7 +242,7 @@ class Namespace(object):
             if value_test:
                 if not test(val):
                     namespace.pop(key)
-            else: #keytest
+            else:  # keytest
                 if not test(key):
                     namespace.pop(key)
         return namespace if self.dictionaries else \
@@ -242,15 +253,15 @@ class Namespace(object):
 
     def type_equal(self, thing):
         """ filter by type """
-        _ty = ( type(thing).__name__=='type' and thing) or type(thing)
-        return self.generic(lambda obj: type(obj)==_ty)
+        _ty = (type(thing).__name__ == 'type' and thing) or type(thing)
+        return self.generic(lambda obj: type(obj) == _ty)
 
     def subclasses_of(self, thing, strict=True):
         """ filter by subclass """
         kls = thing
         if not isclass(thing):
             kls = thing.__class__
-        test = lambda obj: issubclass(obj,kls)
+        test = lambda obj: issubclass(obj, kls)
         return self.generic(test)
 
     @property
@@ -260,8 +271,9 @@ class Namespace(object):
         keys = set(self.namespace.keys())
         keys -= set(self.methods.keys())
         keys -= set(self.functions.keys())
-        result = dict([[key,self.namespace[key]] for key in keys])
-        return result if self.dictionaries else self.__class__(result, original=self)
+        result = dict([[key, self.namespace[key]] for key in keys])
+        return result if self.dictionaries else \
+               self.__class__(result, original=self)
 
     @property
     def locals(self):
@@ -277,13 +289,12 @@ class Namespace(object):
         base_ns = [dir(b) for b in bases]
         #except TypeError: result = {}
         #else:
-        base_ns = set(reduce(lambda x,y: x+y, base_ns))
+        base_ns = set(reduce(lambda x, y: x + y, base_ns))
         keys = keys - base_ns
         result = dict([[k, self.namespace[k]] for k in keys])
-        [result.pop(x,None) for x in ('__dict__','__module__','__weakref__')]
-        return result if self.dictionaries else self.__class__(result, original=self)
-
-
+        [result.pop(x, None) for x in ('__dict__', '__module__', '__weakref__')]
+        return result if self.dictionaries else \
+               self.__class__(result, original=self)
 
 # Begin aliases, shortcuts
 ################################################################################
