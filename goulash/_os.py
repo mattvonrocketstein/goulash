@@ -2,7 +2,7 @@
 """
 import os, errno
 
-from goulash.python import get_env, ope
+from goulash.python import get_env
 
 # copy-tree with overwrites (unlike shutil.copytree)
 from distutils.dir_util import copy_tree # NOQA

@@ -1,4 +1,4 @@
-""" tests.test_fabric
+""" tests/test_fabric
 """
 
 import unittest

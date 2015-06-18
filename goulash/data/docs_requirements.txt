@@ -2,5 +2,5 @@
 # doc-build requirements
 #
 -r ../requirements.txt
-epydoc==3.0.1
+pdoc
 mkdocs==0.14.0

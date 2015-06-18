@@ -2,21 +2,30 @@
 """ goulash.bin.pybpgen
 """
 
+import os
 import shutil
-import os, sys
-
 from argparse import ArgumentParser
 from fabric.colors import red
 from fabric import api
 
 from goulash import version
 from goulash import goulash_data
-from goulash.decorators import require_module
+from goulash._fabric import require_bin
+from goulash._os import touch, makedirs, copy_tree
+
+import sys
+import logging
+root = logging.getLogger()
+root.setLevel(logging.DEBUG)
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
+ch.setFormatter(formatter)
+root.addHandler(ch)
 
 def get_parser():
     """ build the default parser """
     parser = ArgumentParser()
-    #parser.set_conflict_handler("resolve")
     parser.add_argument(
         "--docs", default=False, dest='docs',
         action='store_true',
@@ -48,11 +57,11 @@ def gen_docs(args):
 def create_docs(DOCS_ROOT=None, **ctx):
     """ """
     if not os.path.exists(DOCS_ROOT):
-        msg = red('..docs root ')+\
-              '"{0}"'.format(DOCS_ROOT)+ \
+        msg = red('..docs root ') +\
+              '"{0}"'.format(DOCS_ROOT) + \
               red(' does not exist, creating it')
         print msg
-        os.mkdir(DOCS_ROOT)
+        api.local('mkdir -p "{0}"'.format(DOCS_ROOT))
     else:
         msg = '.. docs root already exists:'
         print red(msg) + ' {0}'.format(DOCS_ROOT)
@@ -64,39 +73,36 @@ def create_docs(DOCS_ROOT=None, **ctx):
 
 def _refresh_api_docs(
     PROJECT_NAME=None,
+    DOCS_ROOT=None,
     DOCS_API_ROOT=None,
     DOCS_SITE_DIR=None, **ctx):
     if os.environ.get('GOULASH_DOCS_API', 'true').lower()=='false':
         print red('skipping API documentation')
         return
-    cmd = ('epydoc ./{0} --html -q -o {1} '
-           '--name {2} --css blue '
-           '--show-imports --inheritance listed')
-    default_md5 = '6bc2c4f724ccc3bacbb77cf8a46963d1'
-    assert PROJECT_NAME is not None, 'refresh requires --project'
-    cmd = cmd.format(PROJECT_NAME, DOCS_API_ROOT, PROJECT_NAME)
-    api.local(cmd)
+    err = ('Missing required command.  '
+           '"pip install pdoc" and try again')
+    require_bin('pdoc', err)
+    cmd = 'pdoc {0} --html --overwrite'
+    err = 'refresh requires --project'
+    assert PROJECT_NAME is not None, err
+    cmd = cmd.format(PROJECT_NAME)
     with api.lcd(DOCS_API_ROOT):
-        md5_cmd = 'md5sum {0}'.format('epydoc.css')
-        md5_val = api.local(md5_cmd, capture=True).strip().split()[0]
-        if md5_val == default_md5:
-            print red(' .. found default epydoc.css, '
-                'copying standard boilerplate')
-            shutil.copy(
-                os.path.join(goulash_data, 'epydoc.css'),
-                os.path.join(DOCS_API_ROOT,'epydoc.css'))
-        else:
-            red(" .. standard epydoc.css boilerplate has already been fetched")
+        api.local(cmd)
+        src = os.path.join(DOCS_API_ROOT, PROJECT_NAME)
+        copy_tree(src, DOCS_API_ROOT)
+        shutil.rmtree(os.path.join(DOCS_API_ROOT, PROJECT_NAME))
     if os.path.exists(DOCS_SITE_DIR):
-        shutil.rmtree(os.path.join(DOCS_SITE_DIR, 'api'))
-        api.local('mv {0} {1}'.format(
-            DOCS_API_ROOT, DOCS_SITE_DIR))
-    print red(".. finished generating epydoc")
+        print red(str([DOCS_API_ROOT, DOCS_SITE_DIR]))
+        src = DOCS_API_ROOT
+        dest = os.path.join(DOCS_SITE_DIR, 'api')
+        copy_tree(src, dest)
+        dest = os.path.join(DOCS_ROOT, 'docs', 'api')
+        copy_tree(src, dest)
+    print red(".. finished generating api docs")
 
-#@require_module('mkdocs', exception=RuntimeError)
 def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     mkdocs_config = os.path.join(DOCS_ROOT, 'mkdocs.yml')
-    assert PROJECT_NAME
+    assert PROJECT_NAME is not None
     def dl_bp():
         shutil.copy(
             os.path.join(goulash_data,
@@ -106,8 +112,9 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
             tmp = fhandle.read().format(project_name=PROJECT_NAME)
         with open(mkdocs_config, 'w') as fhandle:
             fhandle.write(tmp)
-
-    print red(".. generating mkdocs: ")+DOCS_ROOT
+    require_bin('mkdocs',
+                'Missing required command.  "pip install mkdocs" and try again')
+    print red(".. generating mkdocs: ") + DOCS_ROOT
     if not os.path.exists(DOCS_ROOT):
         msg = red('.. mkdocs dir at "{0}" '.format(DOCS_ROOT)) + \
               red(' does not exist, creating it')
@@ -115,47 +122,72 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
         os.mkdir(DOCS_ROOT)
     cmd = ('mkdocs new {0}').format(DOCS_ROOT)
     api.local(cmd)
-    with api.lcd(DOCS_ROOT):
-        api.local('mkdir -p docs/api')
-        api.local('touch docs/api/index.html')
+
+    print red("creating placeholder for API documentation..")
+    makedirs(os.path.join(DOCS_ROOT, 'docs', 'api'))
+    touch(os.path.join(DOCS_ROOT, 'docs', 'api', 'index.html'))
+
     if not os.path.exists(mkdocs_config):
         print red(' .. {0} not found '.format(mkdocs_config))
-        print red(' .. no config for docs, downloading standard boilerplate')
+        print red(' .. no config for docs, using standard boilerplate')
         dl_bp()
     with open(mkdocs_config, 'r') as fhandle:
         if fhandle.read().strip().endswith('My Docs'):
-            print red(' .. brand new docs!')+\
-                  ' downloading standard boilerplate'
-            default_config = True
+            msg = red(' .. brand new docs!')
+            msg += ' using standard boilerplate'
+            print msg
+            #default_config = True
             dl_bp()
-    print red(".. triggering first docs build")
+    print red(".. copying custom mkdocs theme")
+    from goulash._os import copy_tree
+    src = os.path.join(goulash_data, 'glsh')
+    dest = os.path.join(DOCS_ROOT, 'glsh')
+    copy_tree(src, dest)
+    print red(".. refreshing docs")
     _refresh_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
-    print red(".. finished generating mkdocs")
+    print red(".. finished with mkdocs")
 
 def _create_api_docs(DOCS_API_ROOT=None, **ctx):
-    print red("..generating epydoc to")+" {0}".format(DOCS_API_ROOT)
+    print red("..generating api documentation to")+" {0}".format(DOCS_API_ROOT)
     if not os.path.exists(DOCS_API_ROOT):
-        msg = red('..epydoc dir at "{0}" '.format(DOCS_API_ROOT)) + \
-              red(' does not exist, creating it')
+        msg = red('.. api dir at "{0}" '.format(DOCS_API_ROOT))
+        msg += red(' does not exist, creating it')
         print msg
         os.mkdir(DOCS_API_ROOT)
     _refresh_api_docs(DOCS_API_ROOT=DOCS_API_ROOT, **ctx)
 
 def _refresh_docs(DOCS_ROOT=None, **ctx):
     with api.lcd(DOCS_ROOT):
-        api.local('mkdocs build')
+        api.local('mkdocs build --clean')
 
 def docs_refresh(**ctx):
     _refresh_docs(**ctx)
     _refresh_api_docs(**ctx)
 
+def docs_deploy(DOCS_ROOT=None, **ctx):
+    """ """
+    import mkdocs
+    from mkdocs.config import load_config
+    from mkdocs.gh_deploy import gh_deploy
+    mkdocs_config = os.path.join(DOCS_ROOT, 'mkdocs.yml')
+    assert os.path.exists(mkdocs_config)
+    os.chdir(DOCS_ROOT)
+    try:
+        config = load_config(
+            config_file=mkdocs_config,
+        )
+        gh_deploy(config)
+    except mkdocs.exceptions.ConfigurationError as e:
+        # Avoid ugly, unhelpful traceback
+        raise SystemExit('\n' + str(e))
+
 def entry():
     parser = get_parser()
-    options, args = [get_parser().parse_args()]*2
+    options, args = [parser.parse_args()] * 2
     if args.version:
         print version.__version__
         raise SystemExit()
     elif args.docs:
         gen_docs(args)
-if __name__=='__main__':
+if __name__ == '__main__':
     entry()

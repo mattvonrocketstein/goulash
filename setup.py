@@ -36,12 +36,15 @@ setup(
         'fabric',       # misc. automation
         'argparse',     # command line option-parsing
         'configparser', # .ini configurations
+        'mkdocs',       # static docs generation
+        'epydoc',       # static docs generation
          ],
     entry_points = dict(
         console_scripts=[
             'goulash-boiler = goulash.bin.boiler:entry',
             'goulash-serve = goulash.bin.serv:entry',
             'goulash-docs = goulash.bin.docs:entry',
+            'goulash = goulash.bin._goulash:entry',
             ]),
     package_data={'': ['*.*', 'goulash/data/*.*']},
     include_package_data=True,

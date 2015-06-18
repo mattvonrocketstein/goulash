@@ -2,7 +2,17 @@
 """
 
 from unittest import TestCase
-from goulash.decorators import arg_types, memoized_property
+
+from goulash.decorators import (
+    arg_types, memoized_property, classproperty)
+
+class TestClass(object):
+    @classproperty
+    def test(kls): return 3
+
+class TestClassProperty(unittest.TestCase):
+    def test_classproperty(self):
+        self.assertEqual(TestClass.test, 3)
 
 class TestArgTypesDecorator(TestCase):
     def setUp(self):

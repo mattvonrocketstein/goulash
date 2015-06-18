@@ -1,9 +1,10 @@
 """ goulash.decorators
 """
-import inspect
 import sys
+import inspect
 
-#based on http://code.activestate.com/recipes/578852-decorator-to-check-if-needed-modules-for-method-ar/
+# SOURCE:
+#  http://code.activestate.com/recipes/578852-decorator-to-check-if-needed-modules-for-method-ar/
 def require_module(names, exception=None):
     """
     Check if needed modules imported before run method
@@ -62,12 +63,10 @@ class arg_types(object):
             return self.fxn(*args, **kargs)
         return wrapped
 
+# SOURCE:
+#   http://www.reddit.com/r/Python/comments/ejp25/cached_property_decorator_that_is_memory_friendly/
 class memoized_property(object):
-    """
-    A read-only @property that is only evaluated once.
-
-    From: http://www.reddit.com/r/Python/comments/ejp25/cached_property_decorator_that_is_memory_friendly/
-    """
+    """ A read-only @property that is only evaluated once. """
     def __init__(self, fget, doc=None):
         self.fget = fget
         self.__doc__ = doc or fget.__doc__
@@ -78,3 +77,23 @@ class memoized_property(object):
             return self
         obj.__dict__[self.__name__] = result = self.fget(obj)
         return result
+
+# SOURCE:
+#  http://stackoverflow.com/questions/128573/using-property-on-classmethods
+class classproperty(property):
+    """
+        USAGE:
+          class constants:
+              @classproperty
+              def lazy(kls):
+                  return "whatevs"
+    """
+    def __init__(self, func):
+        return super(classproperty, self).__init__(classmethod(func))
+
+    def __get__(self, obj, type_):
+        return self.fget.__get__(None, type_)()
+
+    def __set__(self, obj, value):
+        cls = type(obj)
+        return self.fset.__get__(None, cls)(value)

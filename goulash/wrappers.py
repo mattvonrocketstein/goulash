@@ -26,7 +26,7 @@ class DumbWrapper(object):
         else:
             tmp = object.__getattribute__(self, '_wrapped')
             print 'wrap acc', name, tmp
-            return getattr(tmp,name)
+            return getattr(tmp, name)
 
     def __iter__(self):
         return iter(self._wrapped)
@@ -37,7 +37,7 @@ class Dictionaryish(DumbWrapper):
         """ dictionary compatability """
         return other in self._wrapped
 
-    def __getitem__(self,k):
+    def __getitem__(self, k):
         """ dictionary compatability """
         return self._wrapped[k]
 

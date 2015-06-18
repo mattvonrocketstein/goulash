@@ -62,14 +62,14 @@ class Settings(object):
             `false` or 'no', any other strings are passed through
         """
         _type = 'val'
-        section,var = k.split('.')
+        section, var = k.split('.')
         section_obj = self.get_section(section, insist=insist)
         try:
             tmp = section_obj[var]
         except KeyError:
             if insist:
                 error = ('Fatal: You need to specify a "{0}" section '
-                             'with an entry like  "{1}=<{2}>" in {3}')
+                         'with an entry like  "{1}=<{2}>" in {3}')
                 raise SettingsError(error.format(
                     section, var, _type, self.settings_file))
             elif default:
@@ -78,7 +78,8 @@ class Settings(object):
                 return None
         if isinstance(tmp, basestring):
             test = tmp not in ['0', 'false', 'no', 0]
-            if not test: return test
+            if not test:
+                return test
         return tmp
 
     @property
@@ -178,7 +179,7 @@ class Settings(object):
         """ dictionary compatability """
         return other in self._wrapped
 
-    def __getitem__(self,k):
+    def __getitem__(self, k):
         """ dictionary compatability """
         return self._wrapped[k]
 

@@ -1,6 +1,11 @@
 ##<a href=#intro>What IS goulash?</a>
 
-What IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.
+What IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library: it contains random odds and ends, common tools and patterns shared by other projects.  More specifically there's a lot of library and command-line helpers forthings like:
+
+  * documentation and python-project boilerplate generation,
+  * conspicuously missing utilities from the `os` and `fabric` libraries
+  * common decorator patterns nicked from places like stackoverflow
+  * tools for project management, and lots of other misc. stuff
 
 Detailed API is available [here](/api), read on for the highlights.
 
