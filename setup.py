@@ -34,7 +34,7 @@ setup(
         'ansi2html',    # required for goulash.ansi
         'werkzeug',     # used for caching helpers
         'fabric',       # misc. automation
-        'argparse',     # command line option-parsing,
+        'argparse',     # command line option-parsing
         'configparser', # .ini configurations
          ],
     entry_points = dict(

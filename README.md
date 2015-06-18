@@ -1,5 +1,3 @@
-[installation](#installation) | [testing](#testing)
-
 
 ##<a href=#intro>What IS goulash?</a>
 
@@ -10,25 +8,20 @@ and ends, common tools and patterns shared by my other projects.  See the autoge
 
 ## <a href=#installation>Installing goulash</a>
 
-Clone the most recent:
-
-```shell
-   $ git clone https://github.com/mattvonrocketstein/goulash.git
-```
-
-Or, install with ipython:
+Install with pypi:
 
 ```shell
    $ pip install goulash
 ```
 
-
-## <a href=#testing>Testing goulash</a>
-
-Running tests:
+Or try the bleeding edge:
 
 ```shell
-  $ cd goulash
-  $ pip install tox
-  $ tox
+   $ git clone https://github.com/mattvonrocketstein/goulash.git
+   $ cd goulash
+   $ virtualenv venv
+   $ source venv/bin/activate
+   $ python setup.py develop
 ```
+
+You can find the primary documentation and API reference [here](http://mattvonrocketstein.github.io/goulash/).

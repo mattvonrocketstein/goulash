@@ -63,7 +63,12 @@ def create_docs(DOCS_ROOT=None, **ctx):
     _create_api_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
 
 def _refresh_api_docs(
-    PROJECT_NAME=None, DOCS_API_ROOT=None, DOCS_SITE_DIR=None, **ctx):
+    PROJECT_NAME=None,
+    DOCS_API_ROOT=None,
+    DOCS_SITE_DIR=None, **ctx):
+    if os.environ.get('GOULASH_DOCS_API', 'true').lower()=='false':
+        print red('skipping API documentation')
+        return
     cmd = ('epydoc ./{0} --html -q -o {1} '
            '--name {2} --css blue '
            '--show-imports --inheritance listed')
@@ -75,8 +80,8 @@ def _refresh_api_docs(
         md5_cmd = 'md5sum {0}'.format('epydoc.css')
         md5_val = api.local(md5_cmd, capture=True).strip().split()[0]
         if md5_val == default_md5:
-            red(' .. found default epydoc.css, '
-                'downloading new boilerplate')
+            print red(' .. found default epydoc.css, '
+                'copying standard boilerplate')
             shutil.copy(
                 os.path.join(goulash_data, 'epydoc.css'),
                 os.path.join(DOCS_API_ROOT,'epydoc.css'))
