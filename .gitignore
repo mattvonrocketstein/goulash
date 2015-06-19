@@ -10,3 +10,5 @@ dist/*
 *venv*/*
 docs/site
 docs/docs
+docs/api
+docs/glsh

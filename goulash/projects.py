@@ -2,10 +2,11 @@
 """
 
 import os
-
-from fabric.colors import red
+from fabric import api
+from fabric.colors import red, cyan
 from fabric.contrib.console import confirm
-
+from goulash._inspect import _main_package
+from goulash._fabric import require_bin
 VERSION_DELTA = .01
 
 def project_search(fname, start=None):
@@ -24,7 +25,48 @@ def project_search(fname, start=None):
             return None  # reached the root
         now = os.path.dirname(now)
 
-def version_bump(pkg_root):
+def pypi_publish(pkg_root=None, src_root='.'):
+    """ """
+    pkg_root = pkg_root or _main_package(src_root)
+    sandbox = dict()
+    execfile(os.path.join(pkg_root, 'version.py'), sandbox)
+    version_info = sandbox['version']
+    msg = [
+        cyan("refreshing pypi for {0}=={1}".format(
+            pkg_root, version_info)),
+        red("you should have already bumped the "
+            "versions and commited to master!"),]
+    print '\n'.join(msg)
+    user = os.environ.get('USER')
+    home = os.environ.get('HOME')
+    assert user and home # sometimes tox doesnt pass this
+    err = 'To continue, try "pip install {0}" and try again'
+    err = err.format('git+https://github.com/pypa/twine.git')
+    require_bin('twine', err)
+    try:
+        ans = confirm(red('proceed with pypi update?'))
+    except KeyboardInterrupt:
+        print 'aborting.'
+        return
+    if not ans:
+        print 'aborting.'
+        return
+    _pypi_publish(pkg_root, version_info)
+
+def _pypi_publish(pkg_root, version_info):
+    """ """
+    api.local('git checkout -b pypi || git checkout pypi')
+    api.local('git reset --hard master')
+    api.local('python setup.py sdist')
+    api.local('python setup.py register -r pypi')
+    fname = os.path.join(
+        'dist','{0}-{1}.tar.gz'.format(
+            pkg_root,version_info))
+    assert os.path.exists(fname),'no such file: '+fname
+    api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
+    #python setup.py sdist upload -r pypi
+
+def version_bump(pkg_root=None, src_root='.'):
     """ bump the version number.
 
         to work, this function requires your version file to work like so:
@@ -34,6 +76,9 @@ def version_bump(pkg_root):
             3. __version__ should be a number, not a string
             4. __version__ should be defined on the last line of the file
     """
+    pkg_root = pkg_root or _main_package(src_root)
+    print red('bumping version number for package "{0}"'.format(
+            pkg_root))
     sandbox = {}
     version_file = os.path.join(pkg_root, 'version.py')
     err = 'Version file not found in expected location: ' + version_file
@@ -47,13 +92,13 @@ def version_bump(pkg_root):
     new_file = version_file_contents[:-1] + \
                ["__version__ = version = {0}\n".format(new_version)]
     new_file = '\n'.join(new_file)
-    msg = red("warning:")
-    msg += " version will be changed to {0}\n".format(new_version)
+    msg = "the current version will be changed to "
+    msg = red(msg)+cyan("{0}\n".format(new_version))
     msg += red("new version file will look like this:\n\n")
-    msg += new_file + '\n'
+    msg += cyan(new_file) + '\n'
     print msg
     try:
-        ans = confirm('proceed with version change?')
+        ans = confirm(red('proceed with version change?'))
     except KeyboardInterrupt:
         print 'aborting.'
         return

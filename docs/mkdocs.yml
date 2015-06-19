@@ -1,9 +1,10 @@
 site_name: goulash
-theme: bootstrap
+theme_dir: glsh
 repo_url: https://github.com/mattvonrocketstein/goulash.git
 site_author: mvr
+markdown_extensions: [markdown.extensions.footnotes]
 pages:
 - 'Home': 'index.md'
-- 'Commands': 'commands.md'
-- 'Decorators': 'decorators.md'
-- 'API Reference': 'api/index.html'
+- 'Commands': 'usage.md'
+- 'Library Usage': 'library.md'
+- 'API Reference': 'API.md'
