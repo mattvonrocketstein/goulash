@@ -1,0 +1,2988 @@
+<!doctype html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
+    <title>goulash.settings API documentation</title>
+    <meta name="description" content="goulash.settings
+
+Standard configuration parser suitable to inherit
+for all kinds of applications.  ..." />
+
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
+  
+  <style type="text/css">
+  
+* {
+  box-sizing: border-box;
+}
+/*! normalize.css v1.1.1 | MIT License | git.io/normalize */
+
+/* ==========================================================================
+   HTML5 display definitions
+   ========================================================================== */
+
+/**
+ * Correct `block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+nav,
+section,
+summary {
+    display: block;
+}
+
+/**
+ * Correct `inline-block` display not defined in IE 6/7/8/9 and Firefox 3.
+ */
+
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Firefox 3, and Safari 4.
+ * Known issue: no IE 6 support.
+ */
+
+[hidden] {
+    display: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+/**
+ * 1. Prevent system color scheme's background color being used in Firefox, IE,
+ *    and Opera.
+ * 2. Prevent system color scheme's text color being used in Firefox, IE, and
+ *    Opera.
+ * 3. Correct text resizing oddly in IE 6/7 when body `font-size` is set using
+ *    `em` units.
+ * 4. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+
+html {
+    background: #fff; /* 1 */
+    color: #000; /* 2 */
+    font-size: 100%; /* 3 */
+    -webkit-text-size-adjust: 100%; /* 4 */
+    -ms-text-size-adjust: 100%; /* 4 */
+}
+
+/**
+ * Address `font-family` inconsistency between `textarea` and other form
+ * elements.
+ */
+
+html,
+button,
+input,
+select,
+textarea {
+    font-family: sans-serif;
+}
+
+/**
+ * Address margins handled incorrectly in IE 6/7.
+ */
+
+body {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Links
+   ========================================================================== */
+
+/**
+ * Address `outline` inconsistency between Chrome and other browsers.
+ */
+
+a:focus {
+    outline: thin dotted;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+
+a:active,
+a:hover {
+    outline: 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+/**
+ * Address font sizes and margins set differently in IE 6/7.
+ * Address font sizes within `section` and `article` in Firefox 4+, Safari 5,
+ * and Chrome.
+ */
+
+h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin: 0.83em 0;
+}
+
+h3 {
+    font-size: 1.17em;
+    margin: 1em 0;
+}
+
+h4 {
+    font-size: 1em;
+    margin: 1.33em 0;
+}
+
+h5 {
+    font-size: 0.83em;
+    margin: 1.67em 0;
+}
+
+h6 {
+    font-size: 0.67em;
+    margin: 2.33em 0;
+}
+
+/**
+ * Address styling not present in IE 7/8/9, Safari 5, and Chrome.
+ */
+
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 3+, Safari 4/5, and Chrome.
+ */
+
+b,
+strong {
+    font-weight: bold;
+}
+
+blockquote {
+    margin: 1em 40px;
+}
+
+/**
+ * Address styling not present in Safari 5 and Chrome.
+ */
+
+dfn {
+    font-style: italic;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ * Known issue: no IE 6/7 normalization.
+ */
+
+hr {
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    height: 0;
+}
+
+/**
+ * Address styling not present in IE 6/7/8/9.
+ */
+
+mark {
+    background: #ff0;
+    color: #000;
+}
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+p,
+pre {
+    margin: 1em 0;
+}
+
+/**
+ * Correct font family set oddly in IE 6, Safari 4/5, and Chrome.
+ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: monospace, serif;
+    _font-family: 'courier new', monospace;
+    font-size: 1em;
+}
+
+/**
+ * Improve readability of pre-formatted text in all browsers.
+ */
+
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/**
+ * Address CSS quotes not supported in IE 6/7.
+ */
+
+q {
+    quotes: none;
+}
+
+/**
+ * Address `quotes` property not supported in Safari 4.
+ */
+
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+
+small {
+    font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+
+sub,
+sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* ==========================================================================
+   Lists
+   ========================================================================== */
+
+/**
+ * Address margins set differently in IE 6/7.
+ */
+
+dl,
+menu,
+ol,
+ul {
+    margin: 1em 0;
+}
+
+dd {
+    margin: 0 0 0 40px;
+}
+
+/**
+ * Address paddings set differently in IE 6/7.
+ */
+
+menu,
+ol,
+ul {
+    padding: 0 0 0 40px;
+}
+
+/**
+ * Correct list images handled incorrectly in IE 7.
+ */
+
+nav ul,
+nav ol {
+    list-style: none;
+    list-style-image: none;
+}
+
+/* ==========================================================================
+   Embedded content
+   ========================================================================== */
+
+/**
+ * 1. Remove border when inside `a` element in IE 6/7/8/9 and Firefox 3.
+ * 2. Improve image quality when scaled in IE 7.
+ */
+
+img {
+    border: 0; /* 1 */
+    -ms-interpolation-mode: bicubic; /* 2 */
+}
+
+/**
+ * Correct overflow displayed oddly in IE 9.
+ */
+
+svg:not(:root) {
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Figures
+   ========================================================================== */
+
+/**
+ * Address margin not present in IE 6/7/8/9, Safari 5, and Opera 11.
+ */
+
+figure {
+    margin: 0;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+/**
+ * Correct margin displayed oddly in IE 6/7.
+ */
+
+form {
+    margin: 0;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct color not being inherited in IE 6/7/8/9.
+ * 2. Correct text not wrapping in Firefox 3.
+ * 3. Correct alignment displayed oddly in IE 6/7.
+ */
+
+legend {
+    border: 0; /* 1 */
+    padding: 0;
+    white-space: normal; /* 2 */
+    *margin-left: -7px; /* 3 */
+}
+
+/**
+ * 1. Correct font size not being inherited in all browsers.
+ * 2. Address margins set differently in IE 6/7, Firefox 3+, Safari 5,
+ *    and Chrome.
+ * 3. Improve appearance and consistency in all browsers.
+ */
+
+button,
+input,
+select,
+textarea {
+    font-size: 100%; /* 1 */
+    margin: 0; /* 2 */
+    vertical-align: baseline; /* 3 */
+    *vertical-align: middle; /* 3 */
+}
+
+/**
+ * Address Firefox 3+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+
+button,
+input {
+    line-height: normal;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Chrome, Safari 5+, and IE 6+.
+ * Correct `select` style inheritance in Firefox 4+ and Opera.
+ */
+
+button,
+select {
+    text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ * 4. Remove inner spacing in IE 7 without affecting normal text inputs.
+ *    Known issue: inner spacing remains in IE 6.
+ */
+
+button,
+html input[type="button"], /* 1 */
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button; /* 2 */
+    cursor: pointer; /* 3 */
+    *overflow: visible;  /* 4 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+
+button[disabled],
+html input[disabled] {
+    cursor: default;
+}
+
+/**
+ * 1. Address box sizing set to content-box in IE 8/9.
+ * 2. Remove excess padding in IE 8/9.
+ * 3. Remove excess padding in IE 7.
+ *    Known issue: excess padding remains in IE 6.
+ */
+
+input[type="checkbox"],
+input[type="radio"] {
+    box-sizing: border-box; /* 1 */
+    padding: 0; /* 2 */
+    *height: 13px; /* 3 */
+    *width: 13px; /* 3 */
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari 5 and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari 5 and Chrome
+ *    (include `-moz` to future-proof).
+ */
+
+input[type="search"] {
+    -webkit-appearance: textfield; /* 1 */
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box; /* 2 */
+    box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari 5 and Chrome
+ * on OS X.
+ */
+
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/**
+ * Remove inner padding and border in Firefox 3+.
+ */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+/**
+ * 1. Remove default vertical scrollbar in IE 6/7/8/9.
+ * 2. Improve readability and alignment in all browsers.
+ */
+
+textarea {
+    overflow: auto; /* 1 */
+    vertical-align: top; /* 2 */
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+/**
+ * Remove most spacing between table cells.
+ */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+  </style>
+
+  <style type="text/css">
+  
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  body {
+    background: #fff;
+    font-family: "Source Sans Pro", "Helvetica Neueue", Helvetica, sans;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 1.6em;
+  }
+  #content {
+    width: 70%;
+    max-width: 850px;
+    float: left;
+    padding: 30px 60px;
+    border-left: 1px solid #ddd;
+  }
+  #sidebar {
+    width: 25%;
+    float: left;
+    padding: 30px;
+    overflow: hidden;
+  }
+  #nav {
+    font-size: 130%;
+    margin: 0 0 15px 0;
+  }
+
+  #top {
+    display: block;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    font-size: .85em;
+    text-transform: uppercase;
+  }
+
+  #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right;
+  }
+    #footer p {
+      margin: 0 0 0 30px;
+      display: inline-block;
+    }
+
+  h1, h2, h3, h4, h5 {
+    font-weight: 300;
+  }
+  h1 {
+    font-size: 2.5em;
+    line-height: 1.1em;
+    margin: 0 0 .50em 0;
+  }
+
+  h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0;
+  }
+
+  h3 {
+    margin: 25px 0 10px 0;
+  }
+
+  h4 {
+    margin: 0;
+    font-size: 105%;
+  }
+
+  a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out;
+  }
+
+  a:hover {
+    color: #e08524;
+    transition: color .3s ease-in-out;
+  }
+
+  pre, code, .mono, .name {
+    font-family: "Ubuntu Mono", "Cousine", "DejaVu Sans Mono", monospace;
+  }
+
+  .title .name {
+    font-weight: bold;
+  }
+  .section-title {
+    margin-top: 2em;
+  }
+  .ident {
+    color: #900;
+  }
+
+  code {
+    background: #f9f9f9;
+  } 
+
+  pre {
+    background: #fefefe;
+    border: 1px solid #ddd;
+    box-shadow: 2px 2px 0 #f3f3f3;
+    margin: 0 30px;
+    padding: 15px 30px;
+  }
+
+  .codehilite {
+    margin: 0 30px 10px 30px;
+  }
+
+    .codehilite pre {
+      margin: 0;
+    }
+    .codehilite .err { background: #ff3300; color: #fff !important; } 
+
+  table#module-list {
+    font-size: 110%;
+  }
+
+    table#module-list tr td:first-child {
+      padding-right: 10px;
+      white-space: nowrap;
+    }
+
+    table#module-list td {
+      vertical-align: top;
+      padding-bottom: 8px;
+    }
+
+      table#module-list td p {
+        margin: 0 0 7px 0;
+      }
+
+  .def {
+    display: table;
+  }
+
+    .def p {
+      display: table-cell;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .def p:first-child {
+      white-space: nowrap;
+    }
+
+    .def p:last-child {
+      width: 100%;
+    }
+
+
+  #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+    ul#index .class_name {
+      /* font-size: 110%; */
+      font-weight: bold;
+    }
+    #index ul {
+      margin: 0;
+    }
+
+  .item {
+    margin: 0 0 15px 0;
+  }
+
+    .item .class {
+      margin: 0 0 25px 30px;
+    }
+
+      .item .class ul.class_list {
+        margin: 0 0 20px 0;
+      }
+
+    .item .name {
+      background: #fafafa;
+      margin: 0;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 3px;
+      display: inline-block;
+      min-width: 40%;
+    }
+      .item .name:hover {
+        background: #f6f6f6;
+      }
+
+    .item .empty_desc {
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
+
+    .item .inheritance {
+      margin: 3px 0 0 30px;
+    }
+
+    .item .inherited {
+      color: #666;
+    }
+
+    .item .desc {
+      padding: 0 8px;
+      margin: 0;
+    }
+
+      .item .desc p {
+        margin: 0 0 10px 0;
+      }
+
+    .source_cont {
+      margin: 0;
+      padding: 0;
+    }
+
+    .source_link a {
+      background: #ffc300;
+      font-weight: 400;
+      font-size: .75em;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 1px 1px 0 #f4b700;
+      
+      padding: 3px 8px;
+      border-radius: 2px;
+      transition: background .3s ease-in-out;
+    }
+      .source_link a:hover {
+        background: #FF7200;
+        text-shadow: none;
+        transition: background .3s ease-in-out;
+      }
+
+    .source {
+      display: none;
+      max-height: 600px;
+      overflow-y: scroll;
+      margin-bottom: 15px;
+    }
+
+      .source .codehilite {
+        margin: 0;
+      }
+
+  .desc h1, .desc h2, .desc h3 {
+    font-size: 100% !important;
+  }
+  .clear {
+    clear: both;
+  }
+
+  @media all and (max-width: 950px) {
+    #sidebar {
+      width: 35%;
+    }
+    #content {
+      width: 65%;
+    }
+  }
+  @media all and (max-width: 650px) {
+    #top {
+      display: none;
+    }
+    #sidebar {
+      float: none;
+      width: auto;
+    }
+    #content {
+      float: none;
+      width: auto;
+      padding: 30px;
+    }
+
+    #index ul {
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    #index ul li {
+      display: inline-block;
+      margin-right: 30px;
+    }
+    #footer {
+      text-align: left;
+    }
+    #footer p {
+      display: block;
+      margin: inherit;
+    }
+  }
+
+  /*****************************/
+
+  </style>
+
+
+  <style type="text/css">
+  
+/* ==========================================================================
+   EXAMPLE Media Queries for Responsive Design.
+   These examples override the primary ('mobile first') styles.
+   Modify as content requires.
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+    /* Style adjustments for viewports that meet the condition */
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+    /* Style adjustments for high resolution devices */
+}
+
+/* ==========================================================================
+   Print styles.
+   Inlined to avoid required HTTP connection: h5bp.com/r
+   ========================================================================== */
+
+@media print {
+    * {
+        background: transparent !important;
+        color: #000 !important; /* Black prints faster: h5bp.com/s */
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    /*
+     * Don't show links for images, or javascript/internal links
+     */
+
+    .ir a:after,
+    a[href^="javascript:"]:after,
+    a[href^="#"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group; /* h5bp.com/t */
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    @page {
+        margin: 0.5cm;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
+
+  </style>
+
+  <script type="text/javascript">
+  function toggle(id, $link) {
+    $node = document.getElementById(id);
+    if (!$node)
+    return;
+    if (!$node.style.display || $node.style.display == 'none') {
+    $node.style.display = 'block';
+    $link.innerHTML = 'Hide source &nequiv;';
+    } else {
+    $node.style.display = 'none';
+    $link.innerHTML = 'Show source &equiv;';
+    }
+  }
+  </script>
+</head>
+<body>
+<a href="#" id="top">Top</a>
+
+<div id="container">
+    
+  
+  <div id="sidebar">
+    <h1>Index</h1>
+    <ul id="index">
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#goulash.settings.GoulashConfigParser">GoulashConfigParser</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.__init__">__init__</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.add_section">add_section</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.clear">clear</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.defaults">defaults</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.get">get</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.getboolean">getboolean</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.getfloat">getfloat</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.getint">getint</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.has_option">has_option</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.has_section">has_section</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.items">items</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.iteritems">iteritems</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.iterkeys">iterkeys</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.itervalues">itervalues</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.keys">keys</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.options">options</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.optionxform">optionxform</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.pop">pop</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.popitem">popitem</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.read">read</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.read_dict">read_dict</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.read_file">read_file</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.read_string">read_string</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.readfp">readfp</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.remove_option">remove_option</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.remove_section">remove_section</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.sections">sections</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.set">set</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.setdefault">setdefault</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.update">update</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.values">values</a></li>
+    <li class="mono"><a href="#goulash.settings.GoulashConfigParser.write">write</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#goulash.settings.Settings">Settings</a></span>
+        
+          
+  <ul>
+    <li class="mono"><a href="#goulash.settings.Settings.__init__">__init__</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.get_parser">get_parser</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.get_section">get_section</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.get_setting">get_setting</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.keys">keys</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.load">load</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.pre_run">pre_run</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.run">run</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.shell_namespace">shell_namespace</a></li>
+    <li class="mono"><a href="#goulash.settings.Settings.show_version">show_version</a></li>
+  </ul>
+
+        </li>
+        <li class="mono">
+        <span class="class_name"><a href="#goulash.settings.SettingsError">SettingsError</a></span>
+        
+        </li>
+      </ul>
+    </li>
+
+    </ul>
+  </div>
+
+    <article id="content">
+      
+  
+
+  
+
+
+  <header id="section-intro">
+  <h1 class="title"><span class="name">goulash.settings</span> module</h1>
+  <p>goulash.settings</p>
+<p>Standard configuration parser suitable to inherit
+for all kinds of applications.  This parses ini files
+and command line options, then combines the information.
+As a result of having all the information it is convenient
+(if not exactly correct) to treat the settings object
+as an "entry point".</p>
+  
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings" class="source">
+    <pre><code>""" goulash.settings
+
+    Standard configuration parser suitable to inherit
+    for all kinds of applications.  This parses ini files
+    and command line options, then combines the information.
+    As a result of having all the information it is convenient
+    (if not exactly correct) to treat the settings object
+    as an "entry point".
+"""
+import os
+import configparser
+from argparse import ArgumentParser
+
+class SettingsError(Exception):
+    pass
+
+class GoulashConfigParser(configparser.ConfigParser):
+    pass
+
+class Settings(object):
+
+    default_file = None
+    environ_key = None
+    #__getitem__ = Dictionaryish.__getitem__
+
+    def get_parser(self):
+        """ build the default parser """
+        parser = ArgumentParser()
+        parser.add_argument(
+            "-c", default='', dest='cmd',
+            help=("just like python -c or sh -c (pass in a command)"))
+        parser.add_argument(
+            "-e", "--exec", default='', dest='execfile',
+            help='a filename to execute')
+        parser.add_argument(
+            "-v", '--version', default=False, dest='version',
+            action='store_true',
+            help=("show version information"))
+        parser.add_argument("--shell", dest="shell",
+                          default=False, help="application shell",
+                          action='store_true')
+        parser.add_argument("--config", dest='config',
+                          default="",
+                          help="use config file")
+        return parser
+
+    def get_section(self, k, insist=False):
+        try:
+            return dict(self._wrapped)[k]
+        except KeyError:
+            if insist:
+                error = 'Fatal: You need to specify a "{0}" section in {1}'
+                raise SettingsError(error.format(k, self.settings_file))
+            else:
+                return None
+
+    def get_setting(self, k, insist=False, default=None):
+        """ TODO: move into goulash
+            this function returns True for 'true', False for
+            `false` or 'no', any other strings are passed through
+        """
+        _type = 'val'
+        section, var = k.split('.')
+        section_obj = self.get_section(section, insist=insist)
+        try:
+            tmp = section_obj[var]
+        except KeyError:
+            if insist:
+                error = ('Fatal: You need to specify a "{0}" section '
+                         'with an entry like  "{1}=<{2}>" in {3}')
+                raise SettingsError(error.format(
+                    section, var, _type, self.settings_file))
+            elif default:
+                tmp = default
+            else:
+                return None
+        if isinstance(tmp, basestring):
+            test = tmp not in ['0', 'false', 'no', 0]
+            if not test:
+                return test
+        return tmp
+
+    @property
+    def settings_file(self):
+        if self.options is not None and self.options.config:
+            _file = self.options.config
+        else:
+            _file = self._init_filename or \
+                    os.environ.get(self.environ_key) or \
+                    self.default_file
+        _file = os.path.expanduser(_file)
+        return _file
+
+    def pre_run(self):
+        """ hook for subclassers.. """
+        pass
+
+    def load(self, file, config={}):
+        """ returns a dictionary with key's of the form
+            <section>.<option> and the values
+        """
+        if not os.path.exists(file):
+            err = 'ERROR: config file at "{f}" does not exist'
+            err = err.format(f=file)
+            raise SettingsError(err)
+        config = config.copy()
+        cp = GoulashConfigParser()
+        cp.read(file)
+        return cp._sections
+
+    def shell_namespace(self):
+        """ when --shell is used, the dictionary
+            returned by this function populates
+            all the shell variables """
+        return {}
+
+    def show_version(self):
+        """ subclassers should call super
+            and then print their own junk """
+        from goulash import __version__
+        print 'goulash=={0}'.format(__version__)
+
+    def run(self, *args, **kargs):
+        """ this is a thing that probably does not belong in a
+            settings abstraction, but it is very useful..
+        """
+        self.pre_run()
+
+        if self.options.cmd:
+            ns = globals()
+            ns.update(settings=self)
+            exec self.options.cmd in self.shell_namespace()
+            return True
+
+        if self.options.execfile:
+            ns = globals()
+            ns.update(settings=self)
+            execfile(self.options.execfile, self.shell_namespace())
+            return True
+
+        if self.options.version:
+            return self.show_version()
+
+        if self.get_setting('user.shell'):
+            try:
+                from smashlib import embed
+            except ImportError:
+                raise SettingsError("You need smashlib installed "
+                                    "if you want to use the shell.")
+            else:
+                embed(user_ns=self.shell_namespace())
+            return True
+
+    def __init__(self, filename=None, use_argv=True):
+        """ first load the default config so that overrides don't need
+            to mention everything.  update default with the config
+            specified by the command line optionparser, then
+            update that with any other overrides delivered to the parser.
+        """
+        self._init_filename = filename
+        if use_argv:
+            self.options, self.args = [self.get_parser().parse_args()] * 2
+        else:
+            self.options = self.args = None
+        self._wrapped = self.load(file=self.settings_file)
+        # build a special dynamic section for things the user wants,
+        # ie, things that have been passed into the option
+        # parser but are not useful in the .ini
+        if not self.get_section('user'):
+            self['user'] = {}
+        if self.options is not None:
+            self['user']['shell'] = self.options.shell and 'true' or ''
+        else:
+            self['user']['shell'] = ''
+
+    def __contains__(self, other):
+        """ dictionary compatability """
+        return other in self._wrapped
+
+    def __getitem__(self, k):
+        """ dictionary compatability """
+        return self._wrapped[k]
+
+    def keys(self):
+        return self._wrapped.keys()
+
+    def __setitem__(self, *args, **kargs):
+        return self._wrapped.__setitem__(*args, **kargs)
+</code></pre>
+  </div>
+
+  </header>
+
+  <section id="section-items">
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
+      
+      <div class="item">
+      <p id="goulash.settings.GoulashConfigParser" class="name">class <span class="ident">GoulashConfigParser</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser" class="source">
+    <pre><code>class GoulashConfigParser(configparser.ConfigParser):
+    pass
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#goulash.settings.GoulashConfigParser">GoulashConfigParser</a></li>
+          <li>backports.configparser.ConfigParser</li>
+          <li>backports.configparser.RawConfigParser</li>
+          <li>_abcoll.MutableMapping</li>
+          <li>_abcoll.Mapping</li>
+          <li>_abcoll.Sized</li>
+          <li>_abcoll.Iterable</li>
+          <li>_abcoll.Container</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="goulash.settings.GoulashConfigParser.BOOLEAN_STATES" class="name">var <span class="ident">BOOLEAN_STATES</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.GoulashConfigParser.NONSPACECRE" class="name">var <span class="ident">NONSPACECRE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.GoulashConfigParser.OPTCRE" class="name">var <span class="ident">OPTCRE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.GoulashConfigParser.OPTCRE_NV" class="name">var <span class="ident">OPTCRE_NV</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.GoulashConfigParser.SECTCRE" class="name">var <span class="ident">SECTCRE</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, defaults=None, dict_type=&lt;class &#39;collections.OrderedDict&#39;&gt;, allow_no_value=False, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.__init__" class="source">
+    <pre><code>def __init__(self, defaults=None, dict_type=_default_dict,
+             allow_no_value=False, **kwargs):
+    # keyword-only arguments
+    delimiters = kwargs.get('delimiters', ('=', ':'))
+    comment_prefixes = kwargs.get('comment_prefixes', ('#', ';'))
+    inline_comment_prefixes = kwargs.get('inline_comment_prefixes', None)
+    strict = kwargs.get('strict', True)
+    empty_lines_in_values = kwargs.get('empty_lines_in_values', True)
+    default_section = kwargs.get('default_section', DEFAULTSECT)
+    interpolation = kwargs.get('interpolation', _UNSET)
+    self._dict = dict_type
+    self._sections = self._dict()
+    self._defaults = self._dict()
+    self._proxies = self._dict()
+    self._proxies[default_section] = SectionProxy(self, default_section)
+    if defaults:
+        for key, value in defaults.items():
+            self._defaults[self.optionxform(key)] = value
+    self._delimiters = tuple(delimiters)
+    if delimiters == ('=', ':'):
+        self._optcre = self.OPTCRE_NV if allow_no_value else self.OPTCRE
+    else:
+        d = "|".join(re.escape(d) for d in delimiters)
+        if allow_no_value:
+            self._optcre = re.compile(self._OPT_NV_TMPL.format(delim=d),
+                                      re.VERBOSE)
+        else:
+            self._optcre = re.compile(self._OPT_TMPL.format(delim=d),
+                                      re.VERBOSE)
+    self._comment_prefixes = tuple(comment_prefixes or ())
+    self._inline_comment_prefixes = tuple(inline_comment_prefixes or ())
+    self._strict = strict
+    self._allow_no_value = allow_no_value
+    self._empty_lines_in_values = empty_lines_in_values
+    self.default_section=default_section
+    self._interpolation = interpolation
+    if self._interpolation is _UNSET:
+        self._interpolation = self._DEFAULT_INTERPOLATION
+    if self._interpolation is None:
+        self._interpolation = Interpolation()
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.add_section">
+    <p>def <span class="ident">add_section</span>(</p><p>self, section)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Create a new section in the configuration.  Extends
+RawConfigParser.add_section by validating if the section name is
+a string.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.add_section', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.add_section" class="source">
+    <pre><code>def add_section(self, section):
+    """Create a new section in the configuration.  Extends
+    RawConfigParser.add_section by validating if the section name is
+    a string."""
+    section, _, _ = self._validate_value_types(section=section)
+    super(ConfigParser, self).add_section(section)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.clear">
+    <p>def <span class="ident">clear</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.clear() -&gt; None.  Remove all items from D.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.clear', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.clear" class="source">
+    <pre><code>def clear(self):
+    'D.clear() -> None.  Remove all items from D.'
+    try:
+        while True:
+            self.popitem()
+    except KeyError:
+        pass
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.defaults">
+    <p>def <span class="ident">defaults</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.defaults', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.defaults" class="source">
+    <pre><code>def defaults(self):
+    return self._defaults
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.get">
+    <p>def <span class="ident">get</span>(</p><p>self, section, option, **kwargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Get an option value for a given section.</p>
+<p>If <code>vars' is provided, it must be a dictionary. The option is looked up
+in</code>vars' (if provided), <code>section', and in</code>DEFAULTSECT' in that order.
+If the key is not found and <code>fallback' is provided, it is used as
+a fallback value.</code>None' can be provided as a `fallback' value.</p>
+<p>If interpolation is enabled and the optional argument `raw' is False,
+all interpolations are expanded in the return values.</p>
+<p>Arguments <code>raw',</code>vars', and `fallback' are keyword only.</p>
+<p>The section DEFAULT is special.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.get', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.get" class="source">
+    <pre><code>def get(self, section, option, **kwargs):
+    """Get an option value for a given section.
+    If `vars' is provided, it must be a dictionary. The option is looked up
+    in `vars' (if provided), `section', and in `DEFAULTSECT' in that order.
+    If the key is not found and `fallback' is provided, it is used as
+    a fallback value. `None' can be provided as a `fallback' value.
+    If interpolation is enabled and the optional argument `raw' is False,
+    all interpolations are expanded in the return values.
+    Arguments `raw', `vars', and `fallback' are keyword only.
+    The section DEFAULT is special.
+    """
+    # keyword-only arguments
+    raw = kwargs.get('raw', False)
+    vars = kwargs.get('vars', None)
+    fallback = kwargs.get('fallback', _UNSET)
+    try:
+        d = self._unify_values(section, vars)
+    except NoSectionError:
+        if fallback is _UNSET:
+            raise
+        else:
+            return fallback
+    option = self.optionxform(option)
+    try:
+        value = d[option]
+    except KeyError:
+        if fallback is _UNSET:
+            raise NoOptionError(option, section)
+        else:
+            return fallback
+    if raw or value is None:
+        return value
+    else:
+        return self._interpolation.before_get(self, section, option, value,
+                                              d)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.getboolean">
+    <p>def <span class="ident">getboolean</span>(</p><p>self, section, option, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.getboolean', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.getboolean" class="source">
+    <pre><code>def getboolean(self, section, option, **kwargs):
+    # keyword-only arguments
+    raw = kwargs.get('raw', False)
+    vars = kwargs.get('vars', None)
+    fallback = kwargs.get('fallback', _UNSET)
+    try:
+        return self._get(section, self._convert_to_boolean, option,
+                         raw=raw, vars=vars)
+    except (NoSectionError, NoOptionError):
+        if fallback is _UNSET:
+            raise
+        else:
+            return fallback
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.getfloat">
+    <p>def <span class="ident">getfloat</span>(</p><p>self, section, option, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.getfloat', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.getfloat" class="source">
+    <pre><code>def getfloat(self, section, option, **kwargs):
+    # keyword-only arguments
+    raw = kwargs.get('raw', False)
+    vars = kwargs.get('vars', None)
+    fallback = kwargs.get('fallback', _UNSET)
+    try:
+        return self._get(section, float, option, raw=raw, vars=vars)
+    except (NoSectionError, NoOptionError):
+        if fallback is _UNSET:
+            raise
+        else:
+            return fallback
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.getint">
+    <p>def <span class="ident">getint</span>(</p><p>self, section, option, **kwargs)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.getint', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.getint" class="source">
+    <pre><code>def getint(self, section, option, **kwargs):
+    # keyword-only arguments
+    raw = kwargs.get('raw', False)
+    vars = kwargs.get('vars', None)
+    fallback = kwargs.get('fallback', _UNSET)
+    try:
+        return self._get(section, int, option, raw=raw, vars=vars)
+    except (NoSectionError, NoOptionError):
+        if fallback is _UNSET:
+            raise
+        else:
+            return fallback
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.has_option">
+    <p>def <span class="ident">has_option</span>(</p><p>self, section, option)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Check for the existence of a given option in a given section.
+If the specified <code>section' is None or an empty string, DEFAULT is
+assumed. If the specified</code>section' does not exist, returns False.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.has_option', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.has_option" class="source">
+    <pre><code>def has_option(self, section, option):
+    """Check for the existence of a given option in a given section.
+    If the specified `section' is None or an empty string, DEFAULT is
+    assumed. If the specified `section' does not exist, returns False."""
+    if not section or section == self.default_section:
+        option = self.optionxform(option)
+        return option in self._defaults
+    elif section not in self._sections:
+        return False
+    else:
+        option = self.optionxform(option)
+        return (option in self._sections[section]
+                or option in self._defaults)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.has_section">
+    <p>def <span class="ident">has_section</span>(</p><p>self, section)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Indicate whether the named section is present in the configuration.</p>
+<p>The DEFAULT section is not acknowledged.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.has_section', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.has_section" class="source">
+    <pre><code>def has_section(self, section):
+    """Indicate whether the named section is present in the configuration.
+    The DEFAULT section is not acknowledged.
+    """
+    return section in self._sections
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.items">
+    <p>def <span class="ident">items</span>(</p><p>self, section=&lt;object object at 0xb74755d8&gt;, raw=False, vars=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return a list of (name, value) tuples for each option in a section.</p>
+<p>All % interpolations are expanded in the return values, based on the
+defaults passed into the constructor, unless the optional argument
+<code>raw' is true.  Additional substitutions may be provided using the</code>vars' argument, which must be a dictionary whose contents overrides
+any pre-existing defaults.</p>
+<p>The section DEFAULT is special.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.items', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.items" class="source">
+    <pre><code>def items(self, section=_UNSET, raw=False, vars=None):
+    """Return a list of (name, value) tuples for each option in a section.
+    All % interpolations are expanded in the return values, based on the
+    defaults passed into the constructor, unless the optional argument
+    `raw' is true.  Additional substitutions may be provided using the
+    `vars' argument, which must be a dictionary whose contents overrides
+    any pre-existing defaults.
+    The section DEFAULT is special.
+    """
+    if section is _UNSET:
+        return super(RawConfigParser, self).items()
+    d = self._defaults.copy()
+    try:
+        d.update(self._sections[section])
+    except KeyError:
+        if section != self.default_section:
+            raise NoSectionError(section)
+    # Update with the entry specific variables
+    if vars:
+        for key, value in vars.items():
+            d[self.optionxform(key)] = value
+    value_getter = lambda option: self._interpolation.before_get(self,
+        section, option, d[option], d)
+    if raw:
+        value_getter = lambda option: d[option]
+    return [(option, value_getter(option)) for option in d.keys()]
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.iteritems">
+    <p>def <span class="ident">iteritems</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.iteritems() -&gt; an iterator over the (key, value) items of D</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.iteritems', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.iteritems" class="source">
+    <pre><code>def iteritems(self):
+    'D.iteritems() -> an iterator over the (key, value) items of D'
+    for key in self:
+        yield (key, self[key])
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.iterkeys">
+    <p>def <span class="ident">iterkeys</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.iterkeys() -&gt; an iterator over the keys of D</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.iterkeys', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.iterkeys" class="source">
+    <pre><code>def iterkeys(self):
+    'D.iterkeys() -> an iterator over the keys of D'
+    return iter(self)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.itervalues">
+    <p>def <span class="ident">itervalues</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.itervalues() -&gt; an iterator over the values of D</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.itervalues', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.itervalues" class="source">
+    <pre><code>def itervalues(self):
+    'D.itervalues() -> an iterator over the values of D'
+    for key in self:
+        yield self[key]
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.keys">
+    <p>def <span class="ident">keys</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.keys() -&gt; list of D's keys</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.keys', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.keys" class="source">
+    <pre><code>def keys(self):
+    "D.keys() -> list of D's keys"
+    return list(self)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.options">
+    <p>def <span class="ident">options</span>(</p><p>self, section)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return a list of option names for the given section name.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.options', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.options" class="source">
+    <pre><code>def options(self, section):
+    """Return a list of option names for the given section name."""
+    try:
+        opts = self._sections[section].copy()
+    except KeyError:
+        raise from_none(NoSectionError(section))
+    opts.update(self._defaults)
+    return list(opts.keys())
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.optionxform">
+    <p>def <span class="ident">optionxform</span>(</p><p>self, optionstr)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.optionxform', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.optionxform" class="source">
+    <pre><code>def optionxform(self, optionstr):
+    return optionstr.lower()
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.pop">
+    <p>def <span class="ident">pop</span>(</p><p>self, key, default=&lt;object object at 0xb7475048&gt;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.pop(k[,d]) -&gt; v, remove specified key and return the corresponding value.
+If key is not found, d is returned if given, otherwise KeyError is raised.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.pop', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.pop" class="source">
+    <pre><code>def pop(self, key, default=__marker):
+    '''D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
+      If key is not found, d is returned if given, otherwise KeyError is raised.
+    '''
+    try:
+        value = self[key]
+    except KeyError:
+        if default is self.__marker:
+            raise
+        return default
+    else:
+        del self[key]
+        return value
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.popitem">
+    <p>def <span class="ident">popitem</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Remove a section from the parser and return it as
+a (section_name, section_proxy) tuple. If no section is present, raise
+KeyError.</p>
+<p>The section DEFAULT is never returned because it cannot be removed.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.popitem', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.popitem" class="source">
+    <pre><code>def popitem(self):
+    """Remove a section from the parser and return it as
+    a (section_name, section_proxy) tuple. If no section is present, raise
+    KeyError.
+    The section DEFAULT is never returned because it cannot be removed.
+    """
+    for key in self.sections():
+        value = self[key]
+        del self[key]
+        return key, value
+    raise KeyError
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.read">
+    <p>def <span class="ident">read</span>(</p><p>self, filenames, encoding=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Read and parse a filename or a list of filenames.</p>
+<p>Files that cannot be opened are silently ignored; this is
+designed so that you can specify a list of potential
+configuration file locations (e.g. current directory, user's
+home directory, systemwide directory), and all existing
+configuration files in the list will be read.  A single
+filename may also be given.</p>
+<p>Return list of successfully read files.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.read', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.read" class="source">
+    <pre><code>def read(self, filenames, encoding=None):
+    """Read and parse a filename or a list of filenames.
+    Files that cannot be opened are silently ignored; this is
+    designed so that you can specify a list of potential
+    configuration file locations (e.g. current directory, user's
+    home directory, systemwide directory), and all existing
+    configuration files in the list will be read.  A single
+    filename may also be given.
+    Return list of successfully read files.
+    """
+    if PY2 and isinstance(filenames, bytes):
+        # we allow for a little unholy magic for Python 2 so that
+        # people not using unicode_literals can still use the library
+        # conveniently
+        warnings.warn(
+            "You passed a bytestring as `filenames`. This will not work"
+            " on Python 3. Use `cp.read_file()` or switch to using Unicode"
+            " strings across the board.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        filenames = [filenames]
+    elif isinstance(filenames, str):
+        filenames = [filenames]
+    read_ok = []
+    for filename in filenames:
+        try:
+            with open(filename, encoding=encoding) as fp:
+                self._read(fp, filename)
+        except IOError:
+            continue
+        read_ok.append(filename)
+    return read_ok
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.read_dict">
+    <p>def <span class="ident">read_dict</span>(</p><p>self, dictionary, source=u&#39;&lt;dict&gt;&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Read configuration from a dictionary.</p>
+<p>Keys are section names, values are dictionaries with keys and values
+that should be present in the section. If the used dictionary type
+preserves order, sections and their keys will be added in order.</p>
+<p>All types held in the dictionary are converted to strings during
+reading, including section names, option names and keys.</p>
+<p>Optional second argument is the `source' specifying the name of the
+dictionary being read.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.read_dict', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.read_dict" class="source">
+    <pre><code>def read_dict(self, dictionary, source='<dict>'):
+    """Read configuration from a dictionary.
+    Keys are section names, values are dictionaries with keys and values
+    that should be present in the section. If the used dictionary type
+    preserves order, sections and their keys will be added in order.
+    All types held in the dictionary are converted to strings during
+    reading, including section names, option names and keys.
+    Optional second argument is the `source' specifying the name of the
+    dictionary being read.
+    """
+    elements_added = set()
+    for section, keys in dictionary.items():
+        section = str(section)
+        try:
+            self.add_section(section)
+        except (DuplicateSectionError, ValueError):
+            if self._strict and section in elements_added:
+                raise
+        elements_added.add(section)
+        for key, value in keys.items():
+            key = self.optionxform(str(key))
+            if value is not None:
+                value = str(value)
+            if self._strict and (section, key) in elements_added:
+                raise DuplicateOptionError(section, key, source)
+            elements_added.add((section, key))
+            self.set(section, key, value)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.read_file">
+    <p>def <span class="ident">read_file</span>(</p><p>self, f, source=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Like read() but the argument must be a file-like object.</p>
+<p>The <code>f' argument must be iterable, returning one line at a time.
+Optional second argument is the</code>source' specifying the name of the
+file being read. If not given, it is taken from f.name. If <code>f' has no</code>name' attribute, `&lt;???&gt;' is used.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.read_file', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.read_file" class="source">
+    <pre><code>def read_file(self, f, source=None):
+    """Like read() but the argument must be a file-like object.
+    The `f' argument must be iterable, returning one line at a time.
+    Optional second argument is the `source' specifying the name of the
+    file being read. If not given, it is taken from f.name. If `f' has no
+    `name' attribute, `<???>' is used.
+    """
+    if source is None:
+        try:
+            source = f.name
+        except AttributeError:
+            source = '<???>'
+    self._read(f, source)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.read_string">
+    <p>def <span class="ident">read_string</span>(</p><p>self, string, source=u&#39;&lt;string&gt;&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Read configuration from a given string.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.read_string', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.read_string" class="source">
+    <pre><code>def read_string(self, string, source='<string>'):
+    """Read configuration from a given string."""
+    sfile = io.StringIO(string)
+    self.read_file(sfile, source)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.readfp">
+    <p>def <span class="ident">readfp</span>(</p><p>self, fp, filename=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Deprecated, use read_file instead.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.readfp', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.readfp" class="source">
+    <pre><code>def readfp(self, fp, filename=None):
+    """Deprecated, use read_file instead."""
+    warnings.warn(
+        "This method will be removed in future versions.  "
+        "Use 'parser.read_file()' instead.",
+        DeprecationWarning, stacklevel=2
+    )
+    self.read_file(fp, source=filename)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.remove_option">
+    <p>def <span class="ident">remove_option</span>(</p><p>self, section, option)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Remove an option.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.remove_option', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.remove_option" class="source">
+    <pre><code>def remove_option(self, section, option):
+    """Remove an option."""
+    if not section or section == self.default_section:
+        sectdict = self._defaults
+    else:
+        try:
+            sectdict = self._sections[section]
+        except KeyError:
+            raise from_none(NoSectionError(section))
+    option = self.optionxform(option)
+    existed = option in sectdict
+    if existed:
+        del sectdict[option]
+    return existed
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.remove_section">
+    <p>def <span class="ident">remove_section</span>(</p><p>self, section)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Remove a file section.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.remove_section', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.remove_section" class="source">
+    <pre><code>def remove_section(self, section):
+    """Remove a file section."""
+    existed = section in self._sections
+    if existed:
+        del self._sections[section]
+        del self._proxies[section]
+    return existed
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.sections">
+    <p>def <span class="ident">sections</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Return a list of section names, excluding [DEFAULT]</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.sections', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.sections" class="source">
+    <pre><code>def sections(self):
+    """Return a list of section names, excluding [DEFAULT]"""
+    # self._sections will never have [DEFAULT] in it
+    return list(self._sections.keys())
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.set">
+    <p>def <span class="ident">set</span>(</p><p>self, section, option, value=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Set an option.  Extends RawConfigParser.set by validating type and
+interpolation syntax on the value.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.set', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.set" class="source">
+    <pre><code>def set(self, section, option, value=None):
+    """Set an option.  Extends RawConfigParser.set by validating type and
+    interpolation syntax on the value."""
+    _, option, value = self._validate_value_types(option=option, value=value)
+    super(ConfigParser, self).set(section, option, value)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.setdefault">
+    <p>def <span class="ident">setdefault</span>(</p><p>self, key, default=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.setdefault(k[,d]) -&gt; D.get(k,d), also set D[k]=d if k not in D</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.setdefault', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.setdefault" class="source">
+    <pre><code>def setdefault(self, key, default=None):
+    'D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D'
+    try:
+        return self[key]
+    except KeyError:
+        self[key] = default
+    return default
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.update">
+    <p>def <span class="ident">update</span>(</p><p>*args, **kwds)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.update([E, ]**F) -&gt; None.  Update D from mapping/iterable E and F.
+If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+In either case, this is followed by: for k, v in F.items(): D[k] = v</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.update', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.update" class="source">
+    <pre><code>def update(*args, **kwds):
+    ''' D.update([E, ]**F) -> None.  Update D from mapping/iterable E and F.
+        If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+        If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+        In either case, this is followed by: for k, v in F.items(): D[k] = v
+    '''
+    if len(args) > 2:
+        raise TypeError("update() takes at most 2 positional "
+                        "arguments ({} given)".format(len(args)))
+    elif not args:
+        raise TypeError("update() takes at least 1 argument (0 given)")
+    self = args[0]
+    other = args[1] if len(args) >= 2 else ()
+    if isinstance(other, Mapping):
+        for key in other:
+            self[key] = other[key]
+    elif hasattr(other, "keys"):
+        for key in other.keys():
+            self[key] = other[key]
+    else:
+        for key, value in other:
+            self[key] = value
+    for key, value in kwds.items():
+        self[key] = value
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.values">
+    <p>def <span class="ident">values</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>D.values() -&gt; list of D's values</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.values', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.values" class="source">
+    <pre><code>def values(self):
+    "D.values() -> list of D's values"
+    return [self[key] for key in self]
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.GoulashConfigParser.write">
+    <p>def <span class="ident">write</span>(</p><p>self, fp, space_around_delimiters=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>Write an .ini-format representation of the configuration state.</p>
+<p>If `space_around_delimiters' is True (the default), delimiters
+between keys and values are surrounded by spaces.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.GoulashConfigParser.write', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.GoulashConfigParser.write" class="source">
+    <pre><code>def write(self, fp, space_around_delimiters=True):
+    """Write an .ini-format representation of the configuration state.
+    If `space_around_delimiters' is True (the default), delimiters
+    between keys and values are surrounded by spaces.
+    """
+    if space_around_delimiters:
+        d = " {0} ".format(self._delimiters[0])
+    else:
+        d = self._delimiters[0]
+    if self._defaults:
+        self._write_section(fp, self.default_section,
+                                self._defaults.items(), d)
+    for section in self._sections:
+        self._write_section(fp, section,
+                            self._sections[section].items(), d)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="goulash.settings.Settings" class="name">class <span class="ident">Settings</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings" class="source">
+    <pre><code>class Settings(object):
+
+    default_file = None
+    environ_key = None
+    #__getitem__ = Dictionaryish.__getitem__
+
+    def get_parser(self):
+        """ build the default parser """
+        parser = ArgumentParser()
+        parser.add_argument(
+            "-c", default='', dest='cmd',
+            help=("just like python -c or sh -c (pass in a command)"))
+        parser.add_argument(
+            "-e", "--exec", default='', dest='execfile',
+            help='a filename to execute')
+        parser.add_argument(
+            "-v", '--version', default=False, dest='version',
+            action='store_true',
+            help=("show version information"))
+        parser.add_argument("--shell", dest="shell",
+                          default=False, help="application shell",
+                          action='store_true')
+        parser.add_argument("--config", dest='config',
+                          default="",
+                          help="use config file")
+        return parser
+
+    def get_section(self, k, insist=False):
+        try:
+            return dict(self._wrapped)[k]
+        except KeyError:
+            if insist:
+                error = 'Fatal: You need to specify a "{0}" section in {1}'
+                raise SettingsError(error.format(k, self.settings_file))
+            else:
+                return None
+
+    def get_setting(self, k, insist=False, default=None):
+        """ TODO: move into goulash
+            this function returns True for 'true', False for
+            `false` or 'no', any other strings are passed through
+        """
+        _type = 'val'
+        section, var = k.split('.')
+        section_obj = self.get_section(section, insist=insist)
+        try:
+            tmp = section_obj[var]
+        except KeyError:
+            if insist:
+                error = ('Fatal: You need to specify a "{0}" section '
+                         'with an entry like  "{1}=<{2}>" in {3}')
+                raise SettingsError(error.format(
+                    section, var, _type, self.settings_file))
+            elif default:
+                tmp = default
+            else:
+                return None
+        if isinstance(tmp, basestring):
+            test = tmp not in ['0', 'false', 'no', 0]
+            if not test:
+                return test
+        return tmp
+
+    @property
+    def settings_file(self):
+        if self.options is not None and self.options.config:
+            _file = self.options.config
+        else:
+            _file = self._init_filename or \
+                    os.environ.get(self.environ_key) or \
+                    self.default_file
+        _file = os.path.expanduser(_file)
+        return _file
+
+    def pre_run(self):
+        """ hook for subclassers.. """
+        pass
+
+    def load(self, file, config={}):
+        """ returns a dictionary with key's of the form
+            <section>.<option> and the values
+        """
+        if not os.path.exists(file):
+            err = 'ERROR: config file at "{f}" does not exist'
+            err = err.format(f=file)
+            raise SettingsError(err)
+        config = config.copy()
+        cp = GoulashConfigParser()
+        cp.read(file)
+        return cp._sections
+
+    def shell_namespace(self):
+        """ when --shell is used, the dictionary
+            returned by this function populates
+            all the shell variables """
+        return {}
+
+    def show_version(self):
+        """ subclassers should call super
+            and then print their own junk """
+        from goulash import __version__
+        print 'goulash=={0}'.format(__version__)
+
+    def run(self, *args, **kargs):
+        """ this is a thing that probably does not belong in a
+            settings abstraction, but it is very useful..
+        """
+        self.pre_run()
+
+        if self.options.cmd:
+            ns = globals()
+            ns.update(settings=self)
+            exec self.options.cmd in self.shell_namespace()
+            return True
+
+        if self.options.execfile:
+            ns = globals()
+            ns.update(settings=self)
+            execfile(self.options.execfile, self.shell_namespace())
+            return True
+
+        if self.options.version:
+            return self.show_version()
+
+        if self.get_setting('user.shell'):
+            try:
+                from smashlib import embed
+            except ImportError:
+                raise SettingsError("You need smashlib installed "
+                                    "if you want to use the shell.")
+            else:
+                embed(user_ns=self.shell_namespace())
+            return True
+
+    def __init__(self, filename=None, use_argv=True):
+        """ first load the default config so that overrides don't need
+            to mention everything.  update default with the config
+            specified by the command line optionparser, then
+            update that with any other overrides delivered to the parser.
+        """
+        self._init_filename = filename
+        if use_argv:
+            self.options, self.args = [self.get_parser().parse_args()] * 2
+        else:
+            self.options = self.args = None
+        self._wrapped = self.load(file=self.settings_file)
+        # build a special dynamic section for things the user wants,
+        # ie, things that have been passed into the option
+        # parser but are not useful in the .ini
+        if not self.get_section('user'):
+            self['user'] = {}
+        if self.options is not None:
+            self['user']['shell'] = self.options.shell and 'true' or ''
+        else:
+            self['user']['shell'] = ''
+
+    def __contains__(self, other):
+        """ dictionary compatability """
+        return other in self._wrapped
+
+    def __getitem__(self, k):
+        """ dictionary compatability """
+        return self._wrapped[k]
+
+    def keys(self):
+        return self._wrapped.keys()
+
+    def __setitem__(self, *args, **kargs):
+        return self._wrapped.__setitem__(*args, **kargs)
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#goulash.settings.Settings">Settings</a></li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="goulash.settings.Settings.default_file" class="name">var <span class="ident">default_file</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.Settings.environ_key" class="name">var <span class="ident">environ_key</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="goulash.settings.Settings.settings_file" class="name">var <span class="ident">settings_file</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, filename=None, use_argv=True)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>first load the default config so that overrides don't need
+to mention everything.  update default with the config
+specified by the command line optionparser, then
+update that with any other overrides delivered to the parser.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.__init__" class="source">
+    <pre><code>def __init__(self, filename=None, use_argv=True):
+    """ first load the default config so that overrides don't need
+        to mention everything.  update default with the config
+        specified by the command line optionparser, then
+        update that with any other overrides delivered to the parser.
+    """
+    self._init_filename = filename
+    if use_argv:
+        self.options, self.args = [self.get_parser().parse_args()] * 2
+    else:
+        self.options = self.args = None
+    self._wrapped = self.load(file=self.settings_file)
+    # build a special dynamic section for things the user wants,
+    # ie, things that have been passed into the option
+    # parser but are not useful in the .ini
+    if not self.get_section('user'):
+        self['user'] = {}
+    if self.options is not None:
+        self['user']['shell'] = self.options.shell and 'true' or ''
+    else:
+        self['user']['shell'] = ''
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.get_parser">
+    <p>def <span class="ident">get_parser</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>build the default parser</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.get_parser', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.get_parser" class="source">
+    <pre><code>def get_parser(self):
+    """ build the default parser """
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-c", default='', dest='cmd',
+        help=("just like python -c or sh -c (pass in a command)"))
+    parser.add_argument(
+        "-e", "--exec", default='', dest='execfile',
+        help='a filename to execute')
+    parser.add_argument(
+        "-v", '--version', default=False, dest='version',
+        action='store_true',
+        help=("show version information"))
+    parser.add_argument("--shell", dest="shell",
+                      default=False, help="application shell",
+                      action='store_true')
+    parser.add_argument("--config", dest='config',
+                      default="",
+                      help="use config file")
+    return parser
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.get_section">
+    <p>def <span class="ident">get_section</span>(</p><p>self, k, insist=False)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.get_section', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.get_section" class="source">
+    <pre><code>def get_section(self, k, insist=False):
+    try:
+        return dict(self._wrapped)[k]
+    except KeyError:
+        if insist:
+            error = 'Fatal: You need to specify a "{0}" section in {1}'
+            raise SettingsError(error.format(k, self.settings_file))
+        else:
+            return None
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.get_setting">
+    <p>def <span class="ident">get_setting</span>(</p><p>self, k, insist=False, default=None)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>TODO: move into goulash
+this function returns True for 'true', False for
+<code>false</code> or 'no', any other strings are passed through</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.get_setting', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.get_setting" class="source">
+    <pre><code>def get_setting(self, k, insist=False, default=None):
+    """ TODO: move into goulash
+        this function returns True for 'true', False for
+        `false` or 'no', any other strings are passed through
+    """
+    _type = 'val'
+    section, var = k.split('.')
+    section_obj = self.get_section(section, insist=insist)
+    try:
+        tmp = section_obj[var]
+    except KeyError:
+        if insist:
+            error = ('Fatal: You need to specify a "{0}" section '
+                     'with an entry like  "{1}=<{2}>" in {3}')
+            raise SettingsError(error.format(
+                section, var, _type, self.settings_file))
+        elif default:
+            tmp = default
+        else:
+            return None
+    if isinstance(tmp, basestring):
+        test = tmp not in ['0', 'false', 'no', 0]
+        if not test:
+            return test
+    return tmp
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.keys">
+    <p>def <span class="ident">keys</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.keys', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.keys" class="source">
+    <pre><code>def keys(self):
+    return self._wrapped.keys()
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.load">
+    <p>def <span class="ident">load</span>(</p><p>self, file, config={})</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>returns a dictionary with key's of the form
+<section>.<option> and the values</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.load', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.load" class="source">
+    <pre><code>def load(self, file, config={}):
+    """ returns a dictionary with key's of the form
+        <section>.<option> and the values
+    """
+    if not os.path.exists(file):
+        err = 'ERROR: config file at "{f}" does not exist'
+        err = err.format(f=file)
+        raise SettingsError(err)
+    config = config.copy()
+    cp = GoulashConfigParser()
+    cp.read(file)
+    return cp._sections
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.pre_run">
+    <p>def <span class="ident">pre_run</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>hook for subclassers..</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.pre_run', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.pre_run" class="source">
+    <pre><code>def pre_run(self):
+    """ hook for subclassers.. """
+    pass
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.run">
+    <p>def <span class="ident">run</span>(</p><p>self, *args, **kargs)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>this is a thing that probably does not belong in a
+settings abstraction, but it is very useful..</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.run', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.run" class="source">
+    <pre><code>def run(self, *args, **kargs):
+    """ this is a thing that probably does not belong in a
+        settings abstraction, but it is very useful..
+    """
+    self.pre_run()
+    if self.options.cmd:
+        ns = globals()
+        ns.update(settings=self)
+        exec self.options.cmd in self.shell_namespace()
+        return True
+    if self.options.execfile:
+        ns = globals()
+        ns.update(settings=self)
+        execfile(self.options.execfile, self.shell_namespace())
+        return True
+    if self.options.version:
+        return self.show_version()
+    if self.get_setting('user.shell'):
+        try:
+            from smashlib import embed
+        except ImportError:
+            raise SettingsError("You need smashlib installed "
+                                "if you want to use the shell.")
+        else:
+            embed(user_ns=self.shell_namespace())
+        return True
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.shell_namespace">
+    <p>def <span class="ident">shell_namespace</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>when --shell is used, the dictionary
+returned by this function populates
+all the shell variables</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.shell_namespace', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.shell_namespace" class="source">
+    <pre><code>def shell_namespace(self):
+    """ when --shell is used, the dictionary
+        returned by this function populates
+        all the shell variables """
+    return {}
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+            
+  <div class="item">
+    <div class="name def" id="goulash.settings.Settings.show_version">
+    <p>def <span class="ident">show_version</span>(</p><p>self)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>subclassers should call super
+and then print their own junk</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.Settings.show_version', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.Settings.show_version" class="source">
+    <pre><code>def show_version(self):
+    """ subclassers should call super
+        and then print their own junk """
+    from goulash import __version__
+    print 'goulash=={0}'.format(__version__)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
+      </div>
+      </div>
+      
+      <div class="item">
+      <p id="goulash.settings.SettingsError" class="name">class <span class="ident">SettingsError</span></p>
+      
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.settings.SettingsError', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.settings.SettingsError" class="source">
+    <pre><code>class SettingsError(Exception):
+    pass
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#goulash.settings.SettingsError">SettingsError</a></li>
+          <li>exceptions.Exception</li>
+          <li>exceptions.BaseException</li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Class variables</h3>
+            <div class="item">
+            <p id="goulash.settings.SettingsError.args" class="name">var <span class="ident">args</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+            <div class="item">
+            <p id="goulash.settings.SettingsError.message" class="name">var <span class="ident">message</span></p>
+            
+
+            
+  
+  <div class="source_cont">
+</div>
+
+            </div>
+      </div>
+      </div>
+
+  </section>
+
+    </article>
+  <div class="clear"> </div>
+  <footer id="footer">
+    <p>
+      Documentation generated by
+      <a href="https://github.com/BurntSushi/pdoc">pdoc 0.3.1</a>
+    </p>
+
+    <p>pdoc is in the public domain with the
+      <a href="http://unlicense.org">UNLICENSE</a></p>
+
+    <p>Design by <a href="http://nadh.in">Kailash Nadh</a></p>
+  </footer>
+</div>
+</body>
+</html>

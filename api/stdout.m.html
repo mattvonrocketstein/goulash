@@ -3,8 +3,10 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>goulash API documentation</title>
-    <meta name="description" content="goulash" />
+    <title>goulash.stdout API documentation</title>
+    <meta name="description" content="goulash.stdout
+
+NB: used by corkscrew.comet, others" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -969,43 +971,26 @@ table {
   <div id="sidebar">
     <h1>Index</h1>
     <ul id="index">
-    <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
-      
+
+
+    <li class="set"><h3><a href="#header-classes">Classes</a></h3>
+      <ul>
+        <li class="mono">
+        <span class="class_name"><a href="#goulash.stdout.ThreadedStdout">ThreadedStdout</a></span>
+        
+          
   <ul>
-    <li class="mono"><a href="#goulash.goulash_data">goulash_data</a></li>
-    <li class="mono"><a href="#goulash.goulash_root">goulash_root</a></li>
+    <li class="mono"><a href="#goulash.stdout.ThreadedStdout.__init__">__init__</a></li>
+    <li class="mono"><a href="#goulash.stdout.ThreadedStdout.install">install</a></li>
+    <li class="mono"><a href="#goulash.stdout.ThreadedStdout.read_all">read_all</a></li>
+    <li class="mono"><a href="#goulash.stdout.ThreadedStdout.register">register</a></li>
+    <li class="mono"><a href="#goulash.stdout.ThreadedStdout.write">write</a></li>
   </ul>
 
-    </li>
-
-
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="allstatic.m.html">goulash.allstatic</a></li>
-        <li class="mono"><a href="ansi.m.html">goulash.ansi</a></li>
-        <li class="mono"><a href="bin/index.html">goulash.bin</a></li>
-        <li class="mono"><a href="cache.m.html">goulash.cache</a></li>
-        <li class="mono"><a href="data/index.html">goulash.data</a></li>
-        <li class="mono"><a href="decorators.m.html">goulash.decorators</a></li>
-        <li class="mono"><a href="fileserver.m.html">goulash.fileserver</a></li>
-        <li class="mono"><a href="heuristics.m.html">goulash.heuristics</a></li>
-        <li class="mono"><a href="metaclasses.m.html">goulash.metaclasses</a></li>
-        <li class="mono"><a href="namespaces.m.html">goulash.namespaces</a></li>
-        <li class="mono"><a href="net.m.html">goulash.net</a></li>
-        <li class="mono"><a href="parsing.m.html">goulash.parsing</a></li>
-        <li class="mono"><a href="projects.m.html">goulash.projects</a></li>
-        <li class="mono"><a href="python.m.html">goulash.python</a></li>
-        <li class="mono"><a href="reflect.m.html">goulash.reflect</a></li>
-        <li class="mono"><a href="set.m.html">goulash.set</a></li>
-        <li class="mono"><a href="settings.m.html">goulash.settings</a></li>
-        <li class="mono"><a href="stdout.m.html">goulash.stdout</a></li>
-        <li class="mono"><a href="util.m.html">goulash.util</a></li>
-        <li class="mono"><a href="venv.m.html">goulash.venv</a></li>
-        <li class="mono"><a href="version.m.html">goulash.version</a></li>
-        <li class="mono"><a href="wrappers.m.html">goulash.wrappers</a></li>
+        </li>
       </ul>
     </li>
+
     </ul>
   </div>
 
@@ -1017,217 +1002,272 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">goulash</span> module</h1>
-  <p>goulash</p>
+  <h1 class="title"><span class="name">goulash.stdout</span> module</h1>
+  <p>goulash.stdout</p>
+<p>NB: used by corkscrew.comet, others</p>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash', this);">Show source &equiv;</a></p>
-  <div id="source-goulash" class="source">
-    <pre><code>""" goulash
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout" class="source">
+    <pre><code>""" goulash.stdout
+
+    NB: used by corkscrew.comet, others
 """
-from .version import __version__
-import os
-goulash_root = os.path.dirname(__file__)
-goulash_data = os.path.join(goulash_root, 'data')
+
+import sys
+import threading
+from Queue import Queue, Empty
+
+class ThreadedStdout(object): #  pragma: no-cover
+    """ Replacement for sys.stdout where every thread gets it's own
+        queue.  Useful for capturing printed output from functions
+        that are run in threads.  This is a toy, and not really a
+        great idea to use except in short-lived programs.  See usage
+        in corkscrew.comet
+    """
+    def __init__(self, stdout=None):
+        self.stdout = stdout if stdout is not None else sys.stdout
+        self.registry = {}
+
+    def install(self):
+        if sys.stdout != self:
+            sys.stdout = self
+
+    def __getattr__(self, x):
+        return getattr(self.stdout, x)
+
+    def register(self, thread):
+        q = Queue()
+        self.registry[thread] = q
+        return q
+
+    def read_all(self, thread):
+        result = ""
+        q = self.registry[thread]
+        while q.qsize():
+            try:
+                result += q.get(block=False)
+            except Empty:
+                pass
+        return result
+
+    def write(self, data):
+        this = threading.current_thread()
+        if this in self.registry:
+            self.registry[this].put(data)
+        else:
+            self.stdout.write(data)
 </code></pre>
   </div>
 
   </header>
 
   <section id="section-items">
-    <h2 class="section-title" id="header-variables">Module variables</h2>
-      <div class="item">
-      <p id="goulash.goulash_data" class="name">var <span class="ident">goulash_data</span></p>
+
+
+    <h2 class="section-title" id="header-classes">Classes</h2>
       
+      <div class="item">
+      <p id="goulash.stdout.ThreadedStdout" class="name">class <span class="ident">ThreadedStdout</span></p>
+      
+  
+    <div class="desc"><p>Replacement for sys.stdout where every thread gets it's own
+queue.  Useful for capturing printed output from functions
+that are run in threads.  This is a toy, and not really a
+great idea to use except in short-lived programs.  See usage
+in corkscrew.comet</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout" class="source">
+    <pre><code>class ThreadedStdout(object): #  pragma: no-cover
+    """ Replacement for sys.stdout where every thread gets it's own
+        queue.  Useful for capturing printed output from functions
+        that are run in threads.  This is a toy, and not really a
+        great idea to use except in short-lived programs.  See usage
+        in corkscrew.comet
+    """
+    def __init__(self, stdout=None):
+        self.stdout = stdout if stdout is not None else sys.stdout
+        self.registry = {}
+
+    def install(self):
+        if sys.stdout != self:
+            sys.stdout = self
+
+    def __getattr__(self, x):
+        return getattr(self.stdout, x)
+
+    def register(self, thread):
+        q = Queue()
+        self.registry[thread] = q
+        return q
+
+    def read_all(self, thread):
+        result = ""
+        q = self.registry[thread]
+        while q.qsize():
+            try:
+                result += q.get(block=False)
+            except Empty:
+                pass
+        return result
+
+    def write(self, data):
+        this = threading.current_thread()
+        if this in self.registry:
+            self.registry[this].put(data)
+        else:
+            self.stdout.write(data)
+</code></pre>
+  </div>
+</div>
+
+
+      <div class="class">
+          <h3>Ancestors (in MRO)</h3>
+          <ul class="class_list">
+          <li><a href="#goulash.stdout.ThreadedStdout">ThreadedStdout</a></li>
+          <li>__builtin__.object</li>
+          </ul>
+          <h3>Instance variables</h3>
+            <div class="item">
+            <p id="goulash.stdout.ThreadedStdout.registry" class="name">var <span class="ident">registry</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
-      </div>
-      <div class="item">
-      <p id="goulash.goulash_root" class="name">var <span class="ident">goulash_root</span></p>
-      
+            </div>
+            <div class="item">
+            <p id="goulash.stdout.ThreadedStdout.stdout" class="name">var <span class="ident">stdout</span></p>
+            
+
+            
   
   <div class="source_cont">
 </div>
 
-      </div>
+            </div>
+          <h3>Methods</h3>
+            
+  <div class="item">
+    <div class="name def" id="goulash.stdout.ThreadedStdout.__init__">
+    <p>def <span class="ident">__init__</span>(</p><p>self, stdout=None)</p>
+    </div>
+    
 
-
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="allstatic.m.html">goulash.allstatic</a></p>
-      
+    
   
-    <div class="desc"><p>goulash</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout.__init__', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout.__init__" class="source">
+    <pre><code>def __init__(self, stdout=None):
+    self.stdout = stdout if stdout is not None else sys.stdout
+    self.registry = {}
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="ansi.m.html">goulash.ansi</a></p>
-      
+  </div>
   
-    <div class="desc"><p>goulash.ansi</p></div>
+            
+  <div class="item">
+    <div class="name def" id="goulash.stdout.ThreadedStdout.install">
+    <p>def <span class="ident">install</span>(</p><p>self)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="bin/index.html">goulash.bin</a></p>
-      
+    
   
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout.install', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout.install" class="source">
+    <pre><code>def install(self):
+    if sys.stdout != self:
+        sys.stdout = self
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="cache.m.html">goulash.cache</a></p>
-      
+  </div>
   
-    <div class="desc"><p>goulash.cache</p>
-<p>dumb lightweight caching decorators, etc.</p>
-<p><code>cached</code> requires werkzeug, but at least avoids a
-memcache dependency.</p>
-<p>see also: goulash.decorators for memoization, etc</p></div>
+            
+  <div class="item">
+    <div class="name def" id="goulash.stdout.ThreadedStdout.read_all">
+    <p>def <span class="ident">read_all</span>(</p><p>self, thread)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="data/index.html">goulash.data</a></p>
-      
+    
   
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout.read_all', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout.read_all" class="source">
+    <pre><code>def read_all(self, thread):
+    result = ""
+    q = self.registry[thread]
+    while q.qsize():
+        try:
+            result += q.get(block=False)
+        except Empty:
+            pass
+    return result
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="decorators.m.html">goulash.decorators</a></p>
-      
+  </div>
   
-    <div class="desc"><p>goulash.decorators</p></div>
+            
+  <div class="item">
+    <div class="name def" id="goulash.stdout.ThreadedStdout.register">
+    <p>def <span class="ident">register</span>(</p><p>self, thread)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="fileserver.m.html">goulash.fileserver</a></p>
-      
+    
   
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout.register', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout.register" class="source">
+    <pre><code>def register(self, thread):
+    q = Queue()
+    self.registry[thread] = q
+    return q
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="heuristics.m.html">goulash.heuristics</a></p>
-      
+  </div>
   
-    <div class="desc"><p>goulash.heuristics</p>
-<p>Heuristics typically return answers of some kind, but if the heuristics
-themselves are complex or cascading, simply returning booleans or integers
-or whatever can be confusing.  The objects in this file provide tools
-for wrapping results in such a way that they function as expect...</p></div>
+            
+  <div class="item">
+    <div class="name def" id="goulash.stdout.ThreadedStdout.write">
+    <p>def <span class="ident">write</span>(</p><p>self, data)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="metaclasses.m.html">goulash.metaclasses</a></p>
-      
+    
   
-    <div class="desc"><p>goulash.metaclasses</p>
-<p>random experiments with metaclasses.</p>
-<p>you probably don't want to use this stuff :)</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.stdout.ThreadedStdout.write', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.stdout.ThreadedStdout.write" class="source">
+    <pre><code>def write(self, data):
+    this = threading.current_thread()
+    if this in self.registry:
+        self.registry[this].put(data)
+    else:
+        self.stdout.write(data)
+</code></pre>
+  </div>
+</div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="namespaces.m.html">goulash.namespaces</a></p>
-      
+  </div>
   
-    <div class="desc"><p>goulash.namespaces</p></div>
-
       </div>
-      <div class="item">
-      <p class="name"><a href="net.m.html">goulash.net</a></p>
-      
-  
-    <div class="desc"><p>goulash.net</p>
-<p>This is basically a bunch of neat stuff you can do with
-the socket library, and if I need it I dont want to look
-it up again.  I've also only tested it in linux, so YMMV</p></div>
-
       </div>
-      <div class="item">
-      <p class="name"><a href="parsing.m.html">goulash.parsing</a></p>
-      
-  
-    <div class="desc"><p>goulash.parsing</p></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="projects.m.html">goulash.projects</a></p>
-      
-  
-    <div class="desc"><p>goulash.projects</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="python.m.html">goulash.python</a></p>
-      
-  
-    <div class="desc"><p>goulash.python</p>
-<p>various shortcuts for python utilities</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="reflect.m.html">goulash.reflect</a></p>
-      
-  
-    <div class="desc"><p>Standardized versions of various cool and/or strange things that you can do
-with Python's reflection capabilities.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="set.m.html">goulash.set</a></p>
-      
-  
-    <div class="desc"><p>goulash.set</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="settings.m.html">goulash.settings</a></p>
-      
-  
-    <div class="desc"><p>goulash.settings</p>
-<p>Standard configuration parser suitable to inherit
-for all kinds of applications.  This parses ini files
-and command line options, then combines the information.
-As a result of having all the information it is convenient
-(if not exactly correct) to treat the settings object
-as an "e...</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="stdout.m.html">goulash.stdout</a></p>
-      
-  
-    <div class="desc"><p>goulash.stdout</p>
-<p>NB: used by corkscrew.comet, others</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="util.m.html">goulash.util</a></p>
-      
-  
-    <div class="desc"><p>goulash.util</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="venv.m.html">goulash.venv</a></p>
-      
-  
-    <div class="desc"><p>goulash.venv</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="version.m.html">goulash.version</a></p>
-      
-  
-    <div class="desc"><p>goulash.version</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="wrappers.m.html">goulash.wrappers</a></p>
-      
-  
-    <div class="desc"><p>goulash.wrappers</p></div>
-
-      </div>
   </section>
 
     </article>

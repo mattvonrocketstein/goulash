@@ -3,8 +3,8 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
-    <title>goulash API documentation</title>
-    <meta name="description" content="goulash" />
+    <title>goulash.projects API documentation</title>
+    <meta name="description" content="goulash.projects" />
 
   <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -972,40 +972,22 @@ table {
     <li class="set"><h3><a href="#header-variables">Module variables</a></h3>
       
   <ul>
-    <li class="mono"><a href="#goulash.goulash_data">goulash_data</a></li>
-    <li class="mono"><a href="#goulash.goulash_root">goulash_root</a></li>
+    <li class="mono"><a href="#goulash.projects.VERSION_DELTA">VERSION_DELTA</a></li>
+  </ul>
+
+    </li>
+
+    <li class="set"><h3><a href="#header-functions">Functions</a></h3>
+      
+  <ul>
+    <li class="mono"><a href="#goulash.projects.project_search">project_search</a></li>
+    <li class="mono"><a href="#goulash.projects.pypi_publish">pypi_publish</a></li>
+    <li class="mono"><a href="#goulash.projects.version_bump">version_bump</a></li>
   </ul>
 
     </li>
 
 
-
-    <li class="set"><h3><a href="#header-submodules">Sub-modules</a></h3>
-      <ul>
-        <li class="mono"><a href="allstatic.m.html">goulash.allstatic</a></li>
-        <li class="mono"><a href="ansi.m.html">goulash.ansi</a></li>
-        <li class="mono"><a href="bin/index.html">goulash.bin</a></li>
-        <li class="mono"><a href="cache.m.html">goulash.cache</a></li>
-        <li class="mono"><a href="data/index.html">goulash.data</a></li>
-        <li class="mono"><a href="decorators.m.html">goulash.decorators</a></li>
-        <li class="mono"><a href="fileserver.m.html">goulash.fileserver</a></li>
-        <li class="mono"><a href="heuristics.m.html">goulash.heuristics</a></li>
-        <li class="mono"><a href="metaclasses.m.html">goulash.metaclasses</a></li>
-        <li class="mono"><a href="namespaces.m.html">goulash.namespaces</a></li>
-        <li class="mono"><a href="net.m.html">goulash.net</a></li>
-        <li class="mono"><a href="parsing.m.html">goulash.parsing</a></li>
-        <li class="mono"><a href="projects.m.html">goulash.projects</a></li>
-        <li class="mono"><a href="python.m.html">goulash.python</a></li>
-        <li class="mono"><a href="reflect.m.html">goulash.reflect</a></li>
-        <li class="mono"><a href="set.m.html">goulash.set</a></li>
-        <li class="mono"><a href="settings.m.html">goulash.settings</a></li>
-        <li class="mono"><a href="stdout.m.html">goulash.stdout</a></li>
-        <li class="mono"><a href="util.m.html">goulash.util</a></li>
-        <li class="mono"><a href="venv.m.html">goulash.venv</a></li>
-        <li class="mono"><a href="version.m.html">goulash.version</a></li>
-        <li class="mono"><a href="wrappers.m.html">goulash.wrappers</a></li>
-      </ul>
-    </li>
     </ul>
   </div>
 
@@ -1017,17 +999,122 @@ table {
 
 
   <header id="section-intro">
-  <h1 class="title"><span class="name">goulash</span> module</h1>
-  <p>goulash</p>
+  <h1 class="title"><span class="name">goulash.projects</span> module</h1>
+  <p>goulash.projects</p>
   
-  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash', this);">Show source &equiv;</a></p>
-  <div id="source-goulash" class="source">
-    <pre><code>""" goulash
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.projects', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.projects" class="source">
+    <pre><code>""" goulash.projects
 """
-from .version import __version__
+
 import os
-goulash_root = os.path.dirname(__file__)
-goulash_data = os.path.join(goulash_root, 'data')
+from fabric import api
+from fabric.colors import red, cyan
+from fabric.contrib.console import confirm
+from goulash._inspect import _main_package
+from goulash._fabric import require_bin
+VERSION_DELTA = .01
+
+def project_search(fname, start=None):
+    """ project-based directory tree search, where if the taget file
+    isn't found in the working directory then you proceed upward until
+    the file is found or you hit the file-system root. useful for
+    project-style rc configuration data, say .git or .ackrc, etc.
+    """
+    start = start or os.getcwd()
+    start = os.path.abspath(start)
+    now = start
+    while True:
+        if fname in os.listdir(now):
+            return os.path.join(now, fname)
+        if os.path.dirname(now) == now:
+            return None  # reached the root
+        now = os.path.dirname(now)
+
+def pypi_publish(pkg_root=None, src_root='.'):
+    """ """
+    pkg_root = pkg_root or _main_package(src_root)
+    sandbox = dict()
+    execfile(os.path.join(pkg_root, 'version.py'), sandbox)
+    version_info = sandbox['version']
+    msg = [
+        cyan("refreshing pypi for {0}=={1}".format(
+            pkg_root, version_info)),
+        red("you should have already bumped the "
+            "versions and commited to master!"),]
+    print '\n'.join(msg)
+    user = os.environ.get('USER')
+    home = os.environ.get('HOME')
+    assert user and home # sometimes tox doesnt pass this
+    err = 'To continue, try "pip install {0}" and try again'
+    err = err.format('git+https://github.com/pypa/twine.git')
+    require_bin('twine', err)
+    try:
+        ans = confirm(red('proceed with pypi update?'))
+    except KeyboardInterrupt:
+        print 'aborting.'
+        return
+    if not ans:
+        print 'aborting.'
+        return
+    _pypi_publish(pkg_root, version_info)
+
+def _pypi_publish(pkg_root, version_info):
+    """ """
+    api.local('git checkout -b pypi || git checkout pypi')
+    api.local('git reset --hard master')
+    api.local('python setup.py sdist')
+    api.local('python setup.py register -r pypi')
+    fname = os.path.join(
+        'dist','{0}-{1}.tar.gz'.format(
+            pkg_root,version_info))
+    assert os.path.exists(fname),'no such file: '+fname
+    api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
+    #python setup.py sdist upload -r pypi
+
+def version_bump(pkg_root=None, src_root='.'):
+    """ bump the version number.
+
+        to work, this function requires your version file to work like so:
+
+            1. pkg/version.py exists
+            2. pkg/version.py contains a '__version__' variable
+            3. __version__ should be a number, not a string
+            4. __version__ should be defined on the last line of the file
+    """
+    pkg_root = pkg_root or _main_package(src_root)
+    print red('bumping version number for package "{0}"'.format(
+            pkg_root))
+    sandbox = {}
+    version_file = os.path.join(pkg_root, 'version.py')
+    err = 'Version file not found in expected location: ' + version_file
+    if not os.path.exists(version_file):
+        raise SystemExit(err)
+    execfile(version_file, sandbox)
+    current_version = sandbox['__version__']
+    new_version = current_version + VERSION_DELTA
+    with open(version_file, 'r') as fhandle:
+        version_file_contents = [x for x in fhandle.readlines() if x.strip()]
+    new_file = version_file_contents[:-1] + \
+               ["__version__ = version = {0}\n".format(new_version)]
+    new_file = '\n'.join(new_file)
+    msg = "the current version will be changed to "
+    msg = red(msg)+cyan("{0}\n".format(new_version))
+    msg += red("new version file will look like this:\n\n")
+    msg += cyan(new_file) + '\n'
+    print msg
+    try:
+        ans = confirm(red('proceed with version change?'))
+    except KeyboardInterrupt:
+        print 'aborting.'
+        return
+    else:
+        if not ans:
+            print 'aborting.'
+            return
+        with open(version_file, 'w') as fhandle:
+            fhandle.write(new_file)
+            print 'version has been rewritten.'
 </code></pre>
   </div>
 
@@ -1036,15 +1123,7 @@ goulash_data = os.path.join(goulash_root, 'data')
   <section id="section-items">
     <h2 class="section-title" id="header-variables">Module variables</h2>
       <div class="item">
-      <p id="goulash.goulash_data" class="name">var <span class="ident">goulash_data</span></p>
-      
-  
-  <div class="source_cont">
-</div>
-
-      </div>
-      <div class="item">
-      <p id="goulash.goulash_root" class="name">var <span class="ident">goulash_root</span></p>
+      <p id="goulash.projects.VERSION_DELTA" class="name">var <span class="ident">VERSION_DELTA</span></p>
       
   
   <div class="source_cont">
@@ -1052,182 +1131,159 @@ goulash_data = os.path.join(goulash_root, 'data')
 
       </div>
 
-
-
-    <h2 class="section-title" id="header-submodules">Sub-modules</h2>
-      <div class="item">
-      <p class="name"><a href="allstatic.m.html">goulash.allstatic</a></p>
+    <h2 class="section-title" id="header-functions">Functions</h2>
       
-  
-    <div class="desc"><p>goulash</p></div>
+  <div class="item">
+    <div class="name def" id="goulash.projects.project_search">
+    <p>def <span class="ident">project_search</span>(</p><p>fname, start=None)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="ansi.m.html">goulash.ansi</a></p>
+    
+  
+    <div class="desc"><p>project-based directory tree search, where if the taget file
+isn't found in the working directory then you proceed upward until
+the file is found or you hit the file-system root. useful for
+project-style rc configuration data, say .git or .ackrc, etc.</p></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.projects.project_search', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.projects.project_search" class="source">
+    <pre><code>def project_search(fname, start=None):
+    """ project-based directory tree search, where if the taget file
+    isn't found in the working directory then you proceed upward until
+    the file is found or you hit the file-system root. useful for
+    project-style rc configuration data, say .git or .ackrc, etc.
+    """
+    start = start or os.getcwd()
+    start = os.path.abspath(start)
+    now = start
+    while True:
+        if fname in os.listdir(now):
+            return os.path.join(now, fname)
+        if os.path.dirname(now) == now:
+            return None  # reached the root
+        now = os.path.dirname(now)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
       
-  
-    <div class="desc"><p>goulash.ansi</p></div>
+  <div class="item">
+    <div class="name def" id="goulash.projects.pypi_publish">
+    <p>def <span class="ident">pypi_publish</span>(</p><p>pkg_root=None, src_root=&#39;.&#39;)</p>
+    </div>
+    
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="bin/index.html">goulash.bin</a></p>
+    
+  
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.projects.pypi_publish', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.projects.pypi_publish" class="source">
+    <pre><code>def pypi_publish(pkg_root=None, src_root='.'):
+    """ """
+    pkg_root = pkg_root or _main_package(src_root)
+    sandbox = dict()
+    execfile(os.path.join(pkg_root, 'version.py'), sandbox)
+    version_info = sandbox['version']
+    msg = [
+        cyan("refreshing pypi for {0}=={1}".format(
+            pkg_root, version_info)),
+        red("you should have already bumped the "
+            "versions and commited to master!"),]
+    print '\n'.join(msg)
+    user = os.environ.get('USER')
+    home = os.environ.get('HOME')
+    assert user and home # sometimes tox doesnt pass this
+    err = 'To continue, try "pip install {0}" and try again'
+    err = err.format('git+https://github.com/pypa/twine.git')
+    require_bin('twine', err)
+    try:
+        ans = confirm(red('proceed with pypi update?'))
+    except KeyboardInterrupt:
+        print 'aborting.'
+        return
+    if not ans:
+        print 'aborting.'
+        return
+    _pypi_publish(pkg_root, version_info)
+</code></pre>
+  </div>
+</div>
+
+  </div>
+  
       
+  <div class="item">
+    <div class="name def" id="goulash.projects.version_bump">
+    <p>def <span class="ident">version_bump</span>(</p><p>pkg_root=None, src_root=&#39;.&#39;)</p>
+    </div>
+    
+
+    
+  
+    <div class="desc"><p>bump the version number.</p>
+<p>to work, this function requires your version file to work like so:</p>
+<pre><code>1. pkg/version.py exists
+2. pkg/version.py contains a '__version__' variable
+3. __version__ should be a number, not a string
+4. __version__ should be defined on the last line of the file
+</code></pre></div>
+  <div class="source_cont">
+  <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-goulash.projects.version_bump', this);">Show source &equiv;</a></p>
+  <div id="source-goulash.projects.version_bump" class="source">
+    <pre><code>def version_bump(pkg_root=None, src_root='.'):
+    """ bump the version number.
+
+        to work, this function requires your version file to work like so:
+
+            1. pkg/version.py exists
+            2. pkg/version.py contains a '__version__' variable
+            3. __version__ should be a number, not a string
+            4. __version__ should be defined on the last line of the file
+    """
+    pkg_root = pkg_root or _main_package(src_root)
+    print red('bumping version number for package "{0}"'.format(
+            pkg_root))
+    sandbox = {}
+    version_file = os.path.join(pkg_root, 'version.py')
+    err = 'Version file not found in expected location: ' + version_file
+    if not os.path.exists(version_file):
+        raise SystemExit(err)
+    execfile(version_file, sandbox)
+    current_version = sandbox['__version__']
+    new_version = current_version + VERSION_DELTA
+    with open(version_file, 'r') as fhandle:
+        version_file_contents = [x for x in fhandle.readlines() if x.strip()]
+    new_file = version_file_contents[:-1] + \
+               ["__version__ = version = {0}\n".format(new_version)]
+    new_file = '\n'.join(new_file)
+    msg = "the current version will be changed to "
+    msg = red(msg)+cyan("{0}\n".format(new_version))
+    msg += red("new version file will look like this:\n\n")
+    msg += cyan(new_file) + '\n'
+    print msg
+    try:
+        ans = confirm(red('proceed with version change?'))
+    except KeyboardInterrupt:
+        print 'aborting.'
+        return
+    else:
+        if not ans:
+            print 'aborting.'
+            return
+        with open(version_file, 'w') as fhandle:
+            fhandle.write(new_file)
+            print 'version has been rewritten.'
+</code></pre>
+  </div>
+</div>
+
+  </div>
   
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="cache.m.html">goulash.cache</a></p>
-      
-  
-    <div class="desc"><p>goulash.cache</p>
-<p>dumb lightweight caching decorators, etc.</p>
-<p><code>cached</code> requires werkzeug, but at least avoids a
-memcache dependency.</p>
-<p>see also: goulash.decorators for memoization, etc</p></div>
 
-      </div>
-      <div class="item">
-      <p class="name"><a href="data/index.html">goulash.data</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="decorators.m.html">goulash.decorators</a></p>
-      
-  
-    <div class="desc"><p>goulash.decorators</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="fileserver.m.html">goulash.fileserver</a></p>
-      
-  
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="heuristics.m.html">goulash.heuristics</a></p>
-      
-  
-    <div class="desc"><p>goulash.heuristics</p>
-<p>Heuristics typically return answers of some kind, but if the heuristics
-themselves are complex or cascading, simply returning booleans or integers
-or whatever can be confusing.  The objects in this file provide tools
-for wrapping results in such a way that they function as expect...</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="metaclasses.m.html">goulash.metaclasses</a></p>
-      
-  
-    <div class="desc"><p>goulash.metaclasses</p>
-<p>random experiments with metaclasses.</p>
-<p>you probably don't want to use this stuff :)</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="namespaces.m.html">goulash.namespaces</a></p>
-      
-  
-    <div class="desc"><p>goulash.namespaces</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="net.m.html">goulash.net</a></p>
-      
-  
-    <div class="desc"><p>goulash.net</p>
-<p>This is basically a bunch of neat stuff you can do with
-the socket library, and if I need it I dont want to look
-it up again.  I've also only tested it in linux, so YMMV</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="parsing.m.html">goulash.parsing</a></p>
-      
-  
-    <div class="desc"><p>goulash.parsing</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="projects.m.html">goulash.projects</a></p>
-      
-  
-    <div class="desc"><p>goulash.projects</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="python.m.html">goulash.python</a></p>
-      
-  
-    <div class="desc"><p>goulash.python</p>
-<p>various shortcuts for python utilities</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="reflect.m.html">goulash.reflect</a></p>
-      
-  
-    <div class="desc"><p>Standardized versions of various cool and/or strange things that you can do
-with Python's reflection capabilities.</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="set.m.html">goulash.set</a></p>
-      
-  
-    <div class="desc"><p>goulash.set</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="settings.m.html">goulash.settings</a></p>
-      
-  
-    <div class="desc"><p>goulash.settings</p>
-<p>Standard configuration parser suitable to inherit
-for all kinds of applications.  This parses ini files
-and command line options, then combines the information.
-As a result of having all the information it is convenient
-(if not exactly correct) to treat the settings object
-as an "e...</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="stdout.m.html">goulash.stdout</a></p>
-      
-  
-    <div class="desc"><p>goulash.stdout</p>
-<p>NB: used by corkscrew.comet, others</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="util.m.html">goulash.util</a></p>
-      
-  
-    <div class="desc"><p>goulash.util</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="venv.m.html">goulash.venv</a></p>
-      
-  
-    <div class="desc"><p>goulash.venv</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="version.m.html">goulash.version</a></p>
-      
-  
-    <div class="desc"><p>goulash.version</p></div>
-
-      </div>
-      <div class="item">
-      <p class="name"><a href="wrappers.m.html">goulash.wrappers</a></p>
-      
-  
-    <div class="desc"><p>goulash.wrappers</p></div>
-
-      </div>
   </section>
 
     </article>

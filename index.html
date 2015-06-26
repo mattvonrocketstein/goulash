@@ -9,9 +9,9 @@
         
         <link rel="shortcut icon" href="./img/favicon.ico">
 
-	<title>goulash</title>
+        <title>goulash</title>
 
-        <link href="./css/bootstrap-3.0.3.min.css" rel="stylesheet">
+        <link href="./css/bootstrap-custom.min.css" rel="stylesheet">
         <link href="./css/font-awesome-4.0.3.css" rel="stylesheet">
         <link rel="stylesheet" href="./css/highlight.css">
         <link href="./css/base.css" rel="stylesheet">
@@ -57,19 +57,19 @@
             
             
                 <li >
-                    <a href="commands/">Commands</a>
+                    <a href="usage/">Commands</a>
                 </li>
             
             
             
                 <li >
-                    <a href="decorators/">Decorators</a>
+                    <a href="library/">Library Usage</a>
                 </li>
             
             
             
                 <li >
-                    <a href="api/">API Reference</a>
+                    <a href="API/">API Reference</a>
                 </li>
             
             
@@ -83,13 +83,13 @@
                     </a>
                 </li>
                 <li >
-                    <a rel="prev" href="commands/">
+                    <a rel="prev" href="usage/">
                         Next <i class="fa fa-arrow-right"></i>
                     </a>
                 </li>
                 
                 <li>
-                    <a href="https://github.com/mattvonrocketstein/placeholder.git">
+                    <a href="https://github.com/mattvonrocketstein/goulash.git">
                         
                             <i class="fa fa-github"></i>
                         
@@ -120,8 +120,9 @@
             <div class="col-md-9" role="main">
 
 <h2 id="what-is-goulash"><a href=#intro>What IS goulash?</a></h2>
-<p>What IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.</p>
-<p>Detailed API is available <a href="./api">here</a>, read on for the highlights.</p>
+<p>It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Like the titular foodstuff, this library is a curated froth.   <code>Goulash</code> contains random odds and ends, and stuff that won't stay DRY eventually goes in here after I've rewritten it a few times in different projects.</p>
+<p>More specifically, <code>goulash</code> contains stuff like command-line <a href="#">documentation and python-project boilerplate generation</a> and <a href="#">conspicuously missing utilities from <code>os</code> and <code>fabric</code> modules</a>.  I'll throw in <a href="#">best-in-class decorator patterns</a> and <a href="#">common abstract datastructure</a> copy-pasta from stackoverflow if I end up looking it up too often.</p>
+<p>Detailed API is available <a href="./api">here</a>, API highlights are <a href="#">here</a>, and command-line utilities are described <a href="#">here</a>.</p>
 <h2 id="installing-goulash"><a href=#installation>Installing goulash</a></h2>
 <p>Install with pypi:</p>
 <pre><code class="shell">   $ pip install goulash
@@ -150,13 +151,10 @@
 </code></pre></div>
         </div>
 
-	<footer class="col-md-12">
-		<hr>
-		
-		<center>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</center>
-	</footer>
-
-
+        <footer class="col-md-12">
+            <hr>
+            
+        </footer>
         <script src="./js/jquery-1.10.2.min.js"></script>
         <script src="./js/bootstrap-3.0.3.min.js"></script>
         <script src="./js/highlight.pack.js"></script>

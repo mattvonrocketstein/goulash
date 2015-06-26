@@ -2,12 +2,12 @@
     "docs": [
         {
             "location": "/", 
-            "text": "What IS goulash?\n\n\nWhat IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.\n\n\nDetailed API is available \nhere\n, read on for the highlights.\n\n\nInstalling goulash\n\n\nInstall with pypi:\n\n\n   $ pip install goulash\n\n\n\n\nOr try the bleeding edge:\n\n\n   $ git clone https://github.com/mattvonrocketstein/goulash.git\n   $ cd goulash\n   $ virtualenv venv\n   $ source venv/bin/activate\n   $ python setup.py develop\n\n\n\n\nContributing\n\n\nGithub is \nhere\n.  Pull requests welcome.  You might also like to run the tests:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox\n\n\n\n\nTo rebuild the documentation:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ goulash-docs --refresh", 
+            "text": "What IS goulash?\n\n\nIt's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Like the titular foodstuff, this library is a curated froth.   \nGoulash\n contains random odds and ends, and stuff that won't stay DRY eventually goes in here after I've rewritten it a few times in different projects.\n\n\nMore specifically, \ngoulash\n contains stuff like command-line \ndocumentation and python-project boilerplate generation\n and \nconspicuously missing utilities from \nos\n and \nfabric\n modules\n.  I'll throw in \nbest-in-class decorator patterns\n and \ncommon abstract datastructure\n copy-pasta from stackoverflow if I end up looking it up too often.\n\n\nDetailed API is available \nhere\n, API highlights are \nhere\n, and command-line utilities are described \nhere\n.\n\n\nInstalling goulash\n\n\nInstall with pypi:\n\n\n   $ pip install goulash\n\n\n\n\nOr try the bleeding edge:\n\n\n   $ git clone https://github.com/mattvonrocketstein/goulash.git\n   $ cd goulash\n   $ virtualenv venv\n   $ source venv/bin/activate\n   $ python setup.py develop\n\n\n\n\nContributing\n\n\nGithub is \nhere\n.  Pull requests welcome.  You might also like to run the tests:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox\n\n\n\n\nTo rebuild the documentation:\n\n\n  $ cd goulash\n  $ source venv/bin/activate\n  $ goulash-docs --refresh", 
             "title": "Home"
         }, 
         {
             "location": "/#what-is-goulash", 
-            "text": "What IS goulash?  It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Likewise for this library.  Random odds and ends, common tools and patterns shared by other projects.  Detailed API is available  here , read on for the highlights.", 
+            "text": "It's sort of like soup, but more viscous, and as for what is actually inside the truth is that no one really knows.  Like the titular foodstuff, this library is a curated froth.    Goulash  contains random odds and ends, and stuff that won't stay DRY eventually goes in here after I've rewritten it a few times in different projects.  More specifically,  goulash  contains stuff like command-line  documentation and python-project boilerplate generation  and  conspicuously missing utilities from  os  and  fabric  modules .  I'll throw in  best-in-class decorator patterns  and  common abstract datastructure  copy-pasta from stackoverflow if I end up looking it up too often.  Detailed API is available  here , API highlights are  here , and command-line utilities are described  here .", 
             "title": "What IS goulash?"
         }, 
         {
@@ -21,28 +21,58 @@
             "title": "Contributing"
         }, 
         {
-            "location": "/commands/", 
-            "text": "Commands\n\n\nGoulash contains several utility scripts which you may find useful.\n\n\nBoilerplate generators\n\n\nUnder the \ngoulash/data\n directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source \nhere\n, or you can use the commands in the table below to install the boilerplate in place.\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-boiler --docs $src_root\n\n\nCreate documentation boilerplate in directory \nsrc_root\n\n\n\n\n\n\n\n\nDocumentation helpers\n\n\nGoulash can help with documentation, and it builds clean, static documentation similar to the page you are looking at now.  By default it combines epydoc (for API documentation) and mkdocs (for markdown-based static pages).\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-docs --boilerplate $doc_root\n\n\nSame as \ngoulash-boiler --docs doc_root\n\n\n\n\n\n\ngoulash-docs --refresh doc_root\n\n\nRefresh and rebuild documentation in directory \ndoc_root\n\n\n\n\n\n\ngoulash-docs --show doc_root\n\n\nRebuild documentation, launch server, open in webbrowser", 
+            "location": "/usage/", 
+            "text": "Commands\n\n\nGoulash contains several utility scripts which you may find useful.\n\n\nProject helpers \n Boilerplate generators\n\n\nUnder the \ngoulash/data\n directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source \nhere\n, or you can use the commands in the table below to install the boilerplate in place.\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash boiler --docs $src_root\n\n\nCreate documentation boilerplate in directory \nsrc_root\n\n\n\n\n\n\ngoulash project -b $pkg_root\n\n\nBump the version number in source code at \npkg_root\n.  (Useful for build automation, etc)\n\n\n\n\n\n\n\n\nDocumentation helpers\n\n\nGoulash can help with documentation, and it builds clean, static documentation similar to the page you are looking at now.  By default it combines epydoc (for API documentation) and mkdocs (for markdown-based static pages).\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash-docs --boilerplate $doc_root\n\n\nSame as \ngoulash-boiler --docs doc_root\n\n\n\n\n\n\ngoulash-docs --refresh doc_root\n\n\nRefresh and rebuild documentation in directory \ndoc_root\n\n\n\n\n\n\ngoulash-docs --show doc_root\n\n\nRebuild documentation, launch server, open in webbrowser\n\n\n\n\n\n\n\n\nSimple HTTP fileserver\n\n\n\n\n\n\n\n\nCommand\n\n\nDescription\n\n\n\n\n\n\n\n\n\n\ngoulash serve\n\n\nInstantiates a simple multithreaded directory-indexing HTTP server for the working directory\n\n\n\n\n\n\ngoulash serve --port 8080\n\n\nSame as \ngoulash serve\n but specifies the port\n\n\n\n\n\n\ngoulash serve --port 8080 /tmp\n\n\nSame as \ngoulash serve\n but specifies the port and root directory", 
             "title": "Commands"
         }, 
         {
-            "location": "/commands/#commands", 
-            "text": "Goulash contains several utility scripts which you may find useful.  Boilerplate generators  Under the  goulash/data  directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source  here , or you can use the commands in the table below to install the boilerplate in place.     Command  Description      goulash-boiler --docs $src_root  Create documentation boilerplate in directory  src_root     Documentation helpers  Goulash can help with documentation, and it builds clean, static documentation similar to the page you are looking at now.  By default it combines epydoc (for API documentation) and mkdocs (for markdown-based static pages).     Command  Description      goulash-docs --boilerplate $doc_root  Same as  goulash-boiler --docs doc_root    goulash-docs --refresh doc_root  Refresh and rebuild documentation in directory  doc_root    goulash-docs --show doc_root  Rebuild documentation, launch server, open in webbrowser", 
+            "location": "/usage/#commands", 
+            "text": "Goulash contains several utility scripts which you may find useful.  Project helpers   Boilerplate generators  Under the  goulash/data  directory of the source root, goulash contains boilerplate for various parts of python projects.  You can browse the source  here , or you can use the commands in the table below to install the boilerplate in place.     Command  Description      goulash boiler --docs $src_root  Create documentation boilerplate in directory  src_root    goulash project -b $pkg_root  Bump the version number in source code at  pkg_root .  (Useful for build automation, etc)     Documentation helpers  Goulash can help with documentation, and it builds clean, static documentation similar to the page you are looking at now.  By default it combines epydoc (for API documentation) and mkdocs (for markdown-based static pages).     Command  Description      goulash-docs --boilerplate $doc_root  Same as  goulash-boiler --docs doc_root    goulash-docs --refresh doc_root  Refresh and rebuild documentation in directory  doc_root    goulash-docs --show doc_root  Rebuild documentation, launch server, open in webbrowser     Simple HTTP fileserver     Command  Description      goulash serve  Instantiates a simple multithreaded directory-indexing HTTP server for the working directory    goulash serve --port 8080  Same as  goulash serve  but specifies the port    goulash serve --port 8080 /tmp  Same as  goulash serve  but specifies the port and root directory", 
             "title": "Commands"
         }, 
         {
-            "location": "/decorators/", 
-            "text": "Decorators", 
-            "title": "Decorators"
+            "location": "/library/", 
+            "text": "Goulash as a library\n\n\nApart from command-line usage, \ngoulash\n is also a toolbox/utility module.  Random examples:\n\n\n\n\nThe \ngoulash._os.makedirs\n has \nmkdir -p dir_name\n functionality (almost-but-not-quite what \nos.makedirs\n does \n1\n)\n\n\nThe \ngoulash.reflect\n module has \"import python object from string\" functionality without all the hassle of \n__import__\n or \nimportlib\n \n2\n.\n\n\nHow about that missing \n@classproperty\n decorator? \n3\n \n\n\n\n\nThe entire library will probably never be documented, but this page will just cover some of the highlights.n a lot of cases, I've just adapted\n\n\nOf course the goulash \ncommand-line utilities\n can also be used componentwise from the library.  Or look over \nhere!  It's a\n quick and dirty HTTP fileserver that's actually multithreaded.\n\n\nBut it pretty much goes on like this forever..  \n\n\nMissing from the \nOS\n module\n\n\nDecorator patterns\n\n\n from tunl import api\n\n api.list_tunnels()\n{'mongo': {'local_port': 27000,\n  'remote_host': 'host',\n  'remote_port': 27017,\n  'status': 'down',\n  'user': 'admin'},\n 'jenkins': {'key': '~/.ssh/key.pem',\n  'local_port': 8081,\n  'remote_host': 'jenkins',\n  'remote_port': 8080,\n  'status': 'down',\n  'user': 'ubuntu'}}\n\n start_success = api.start_tunnel('mongo')\ntunl: ssh  -M -S /home/vagrant/.tunl/mongo -fnNT -L 27000:localhost:27017 admin@host\n\n print start_success\nTrue\n\n\n\n\nCaching \n Memoization\n\n\nContributing\n\n\nGithub is \nhere\n.  Pull requests welcome.\n\n\nRunning tests\n\n\nTo run the unittests:\n\n\n  $ cd tunl\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox\n\n\n\n\nBuilding documentation\n\n\nTo rebuild this documentation:\n\n\n  $ cd tunl\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox -e docs_deploy\n\n\n\n\n\n\n\n\n\n\n\n\nos.makedirs\n fails if the target already exists\n\n\n\n\n\n\nimportlib\n and \n__import__\n have to be combined with loops and getattr() calls to fish out objects from modules\n\n\n\n\n\n\ncheck out \ngoulash.decorators", 
+            "title": "Library Usage"
         }, 
         {
-            "location": "/decorators/#decorators", 
-            "text": "", 
-            "title": "Decorators"
+            "location": "/library/#goulash-as-a-library", 
+            "text": "Apart from command-line usage,  goulash  is also a toolbox/utility module.  Random examples:   The  goulash._os.makedirs  has  mkdir -p dir_name  functionality (almost-but-not-quite what  os.makedirs  does  1 )  The  goulash.reflect  module has \"import python object from string\" functionality without all the hassle of  __import__  or  importlib   2 .  How about that missing  @classproperty  decorator?  3     The entire library will probably never be documented, but this page will just cover some of the highlights.n a lot of cases, I've just adapted  Of course the goulash  command-line utilities  can also be used componentwise from the library.  Or look over  here!  It's a  quick and dirty HTTP fileserver that's actually multithreaded.  But it pretty much goes on like this forever..", 
+            "title": "Goulash as a library"
         }, 
         {
-            "location": "/api/", 
+            "location": "/library/#missing-from-the-os-module", 
             "text": "", 
+            "title": "Missing from the OS module"
+        }, 
+        {
+            "location": "/library/#decorator-patterns", 
+            "text": "from tunl import api  api.list_tunnels()\n{'mongo': {'local_port': 27000,\n  'remote_host': 'host',\n  'remote_port': 27017,\n  'status': 'down',\n  'user': 'admin'},\n 'jenkins': {'key': '~/.ssh/key.pem',\n  'local_port': 8081,\n  'remote_host': 'jenkins',\n  'remote_port': 8080,\n  'status': 'down',\n  'user': 'ubuntu'}}  start_success = api.start_tunnel('mongo')\ntunl: ssh  -M -S /home/vagrant/.tunl/mongo -fnNT -L 27000:localhost:27017 admin@host  print start_success\nTrue", 
+            "title": "Decorator patterns"
+        }, 
+        {
+            "location": "/library/#caching-memoization", 
+            "text": "", 
+            "title": "Caching &amp; Memoization"
+        }, 
+        {
+            "location": "/library/#contributing", 
+            "text": "Github is  here .  Pull requests welcome.", 
+            "title": "Contributing"
+        }, 
+        {
+            "location": "/library/#running-tests", 
+            "text": "To run the unittests:    $ cd tunl\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox", 
+            "title": "Running tests"
+        }, 
+        {
+            "location": "/library/#building-documentation", 
+            "text": "To rebuild this documentation:    $ cd tunl\n  $ source venv/bin/activate\n  $ pip install tox\n  $ tox -e docs_deploy      os.makedirs  fails if the target already exists    importlib  and  __import__  have to be combined with loops and getattr() calls to fish out objects from modules    check out  goulash.decorators", 
+            "title": "Building documentation"
+        }, 
+        {
+            "location": "/API/", 
+            "text": "function resizeIframe(obj) {\n    $('.col-md-9').css('width','100%');\n    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';\n    obj.style.width = '100%';\n  }", 
             "title": "API Reference"
         }
     ]
