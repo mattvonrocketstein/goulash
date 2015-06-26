@@ -150,23 +150,23 @@ class Accessor:
     This implementation is for Python 2.1.
     """
 
-    def __setattr__(self, k,v):
-        kstring='set_%s'%k
-        if hasattr(self.__class__,kstring):
-            return getattr(self,kstring)(v)
+    def __setattr__(self, k, v):
+        kstring='set_%s' % k
+        if hasattr(self.__class__, kstring):
+            return getattr(self, kstring)(v)
         else:
-            self.reallySet(k,v)
+            self.reallySet(k, v)
 
     def __getattr__(self, k):
-        kstring='get_%s'%k
-        if hasattr(self.__class__,kstring):
-            return getattr(self,kstring)()
-        raise AttributeError("%s instance has no accessor for: %s" % (qual(self.__class__),k))
+        kstring = 'get_%s' % k
+        if hasattr(self.__class__, kstring):
+            return getattr(self, kstring)()
+        raise AttributeError("%s instance has no accessor for: %s" % (qual(self.__class__), k))
 
     def __delattr__(self, k):
         kstring = 'del_%s' % k
-        if hasattr(self.__class__,kstring):
-            getattr(self,kstring)()
+        if hasattr(self.__class__, kstring):
+            getattr(self, kstring)()
             return
         self.reallyDel(k)
 
@@ -216,9 +216,9 @@ class Summer(Accessor):
                     oldval=getattr(self, attr)
                 except:
                     oldval=0
-                diff=v-oldval
+                diff = v - oldval
                 if hasattr(self, obj):
-                    ob=getattr(self,obj)
+                    ob = getattr(self, obj)
                     if ob is not None:
                         try:
                             oldobjval = getattr(ob, objattr)
@@ -229,7 +229,7 @@ class Summer(Accessor):
             elif k == obj:
                 if hasattr(self, attr):
                     x = getattr(self, attr)
-                    setattr(self,attr,0)
+                    setattr(self, attr, 0)
                     y = getattr(self, k)
                     Accessor.reallySet(self, k, v)
                     setattr(self, attr, x)
@@ -262,25 +262,25 @@ def funcinfo(function):
 
     out = []
 
-    out.append('The function %s accepts %s arguments' % (name ,argc))
+    out.append('The function %s accepts %s arguments' % (name, argc))
     if defaults:
         required = argc - len(defaults)
         out.append('It requires %s arguments' % required)
         out.append('The arguments required are: %s' % argv[:required])
         out.append('additional arguments are:')
         for i in range(argc-required):
-            j=i+required
+            j = i + required
             out.append('%s which has a default of' % (argv[j], defaults[i]))
     return out
 
 
-ISNT=0
-WAS=1
-IS=2
+ISNT = 0
+WAS = 1
+IS = 2
 
 
 def fullFuncName(func):
-    qualName = (str(pickle.whichmodule(func, func.__name__)) +\
+    qualName = (str(pickle.whichmodule(func, func.__name__)) +
                 '.' + func.__name__)
     if namedObject(qualName) is not func:
         raise Exception("Couldn't find %s as %s." % (func, qualName))
@@ -291,7 +291,7 @@ def qual(clazz):
     return clazz.__module__ + '.' + clazz.__name__
 
 def getcurrent(clazz):
-    assert type(clazz) == types.ClassType, 'must be a class...'
+    assert isinstance(clazz, types.ClassType), 'must be a class...'
     module = namedModule(clazz.__module__)
     currclass = getattr(module, clazz.__name__, None)
     if currclass is None:
@@ -310,7 +310,8 @@ def getClass(obj):
 
 # I should really have a better name for this...
 def isinst(inst,clazz):
-    if type(inst) != types.InstanceType or type(clazz)!= types.ClassType:
+    if isinstance(inst, types.InstanceType) or \
+        not isinstance(type(clazz), types.ClassType):
         return isinstance(inst,clazz)
     cl = inst.__class__
     cl2 = getcurrent(cl)
@@ -341,7 +342,7 @@ def namedObject(name):
     module = namedModule('.'.join(classSplit[:-1]))
     return getattr(module, classSplit[-1])
 
-namedClass = namedObject # backwards compat
+namedClass = namedObject  # backwards compat
 
 class _NoModuleFound(Exception):
     """
@@ -694,7 +695,7 @@ def objgrep(start, goal, eq=isLike,
     elif isinstance(start, weakref.ReferenceType):
         objgrep(start(), goal, eq, path + '()', paths,
                 seen, showUnknowns, maxDepth)
-    elif (isinstance(start, types.StringTypes +\
+    elif (isinstance(start, types.StringTypes +
                      (types.IntType, types.FunctionType,
                       types.BuiltinMethodType, RegexType, types.FloatType,
                       types.NoneType, types.FileType)) or

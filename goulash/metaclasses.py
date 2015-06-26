@@ -10,13 +10,14 @@ from collections import defaultdict
 
 from goulash.util import uniq
 
-subclass_registry = defaultdict(lambda:[])
+subclass_registry = defaultdict(lambda: [])
 
 def metaclass_hook(func):
     func.metaclass_hook = True
     return staticmethod(func)
 
-def dynamic_name(): return 'DynMix({U})'.format(U=uniq())
+def dynamic_name():
+    return 'DynMix({U})'.format(U=uniq())
 
 class META(type):
     """ the most generic metaclass.
@@ -42,9 +43,9 @@ class META(type):
             that will be run along with __new___
         """
         # TODO: use Namespace()
-        matches = [ x for x in dir(mcls) if \
-                    getattr(getattr(mcls, x, None),
-                            'metaclass_hook', False) ]
+        matches = [x for x in dir(mcls) if
+                   getattr(getattr(mcls, x, None),
+                           'metaclass_hook', False)]
         return dict([[match, getattr(mcls, match)] for match in matches])
 
     @metaclass_hook
@@ -60,10 +61,10 @@ class META(type):
         """
         try:
             class_obj = type.__new__(mcls, name, bases, dct)
-        except TypeError,e:
+        except TypeError, e:
             # probably the cannot create consistent MRO error
             print dict([[b.__name__,
-                         getattr(b, '__metaclass__',None)] for b in bases])
+                         getattr(b, '__metaclass__', None)] for b in bases])
             raise e
         hooks = mcls.metaclass_hooks if hasattr(mcls, 'metaclass_hooks') else \
                 mcls.enumerate_metaclass_hooks(mcls)
@@ -115,7 +116,7 @@ def supports_class_algebra(kls):
     """ for use as a decorator
     """
     if hasattr(kls, '__metaclass__'):
-        if kls.__metaclass__!=ClassAlgebra:
+        if kls.__metaclass__ != ClassAlgebra:
             raise TypeError("{0} already has a metaclass: '{1}'".
                             format(kls, kls.__metaclass__))
         else:
@@ -142,7 +143,8 @@ def subclass_tracker(*bases, **kargs):
 
     """
     if kargs:
-        assert kargs.keys() == ['namespace'],'only the namespace kw arg is defined'
+        err = 'only the namespace kw arg is defined'
+        assert kargs.keys() == ['namespace'], err
         namespace = kargs.pop('namespace')
     else:
         namespace = {}

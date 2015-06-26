@@ -89,12 +89,13 @@ class Namespace(object):
         try:
             return copy(self.namespace)
         except TypeError:
-            return dict([[name, self.namespace[name]] for name in self.namespace])
+            return dict([[name, self.namespace[name]]
+                         for name in self.namespace])
 
     def intersection(self, other):
         if isinstance(other, (dict, NSPart)):
             other = getattr(other, 'namespace', other)
-            result = [ [k, self[k]] for k in self.namespace if k in other]
+            result = [[k, self[k]] for k in self.namespace if k in other]
         else:
             raise RuntimeError('niy')
         result = dict(result)
@@ -131,7 +132,7 @@ class Namespace(object):
             self.dictionaries = original.dictionaries
 
         elif not NamespaceTests.dictionaryish(obj):
-            if isinstance(obj,dict):
+            if isinstance(obj, dict):
                 err = ("You gave a dictionary, but "
                        "maybe the keys aren't strings?")
                 #warning.warn(err)
@@ -210,7 +211,7 @@ class Namespace(object):
         return self
 
     def with_attr(self, name):
-        result=[]
+        result = []
         for k, v in self.items():
             if hasattr(v, name):
                 result.append([k, v])

@@ -16,7 +16,7 @@ quiet_local = qlocal
 def has_bin(name):
     """ answer whether a given system command
         is available on the path.  posix only """
-    result =  qlocal('which "{0}"'.format(name))
+    result = qlocal('which "{0}"'.format(name))
     return result.succeeded
 
 def require_bin(name, msg=None):

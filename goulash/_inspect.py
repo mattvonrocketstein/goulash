@@ -38,19 +38,19 @@ def getcaller(level=2):
         # not actually an object.
         kls = None
     kls_func = getattr(kls, func_name, None)
-    if type(kls_func)==property:
+    if type(kls_func) == property:
         func = kls_func
     else:
         try:
             func = himself and getattr(himself, func_name)
         except AttributeError:
-            func = func_name+'[nested]'
+            func = func_name + '[nested]'
     out = dict(file=file_name,
                self=himself,
                locals=flocals,
                globals=fglobals,
                func=func,
                func_name=func_name)
-    out.update({'class':kls})
+    out.update({'class': kls})
     return Dict(out)
 get_caller = getcaller

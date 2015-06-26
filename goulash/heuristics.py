@@ -4,8 +4,9 @@
     themselves are complex or cascading, simply returning booleans or integers
     or whatever can be confusing.  The objects in this file provide tools
     for wrapping results in such a way that they function as expected but
-    can optionally include explanations.  More detailed descriptions of available
-    wrappers follow.
+    can optionally include explanations.  More detailed descriptions of
+    available wrappers follow.
+
 
     Answer(obj):
       has a truth value depending on the object itself.

@@ -35,11 +35,11 @@ def pypi_publish(pkg_root=None, src_root='.'):
         cyan("refreshing pypi for {0}=={1}".format(
             pkg_root, version_info)),
         red("you should have already bumped the "
-            "versions and commited to master!"),]
+            "versions and commited to master!")]
     print '\n'.join(msg)
     user = os.environ.get('USER')
     home = os.environ.get('HOME')
-    assert user and home # sometimes tox doesnt pass this
+    assert user and home  # sometimes tox doesnt pass this
     err = 'To continue, try "pip install {0}" and try again'
     err = err.format('git+https://github.com/pypa/twine.git')
     require_bin('twine', err)
@@ -60,9 +60,9 @@ def _pypi_publish(pkg_root, version_info):
     api.local('python setup.py sdist')
     api.local('python setup.py register -r pypi')
     fname = os.path.join(
-        'dist','{0}-{1}.tar.gz'.format(
-            pkg_root,version_info))
-    assert os.path.exists(fname),'no such file: '+fname
+        'dist', '{0}-{1}.tar.gz'.format(
+            pkg_root, version_info))
+    assert os.path.exists(fname), 'no such file: ' + fname
     api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
     #python setup.py sdist upload -r pypi
 
@@ -93,7 +93,7 @@ def version_bump(pkg_root=None, src_root='.'):
                ["__version__ = version = {0}\n".format(new_version)]
     new_file = '\n'.join(new_file)
     msg = "the current version will be changed to "
-    msg = red(msg)+cyan("{0}\n".format(new_version))
+    msg = red(msg) + cyan("{0}\n".format(new_version))
     msg += red("new version file will look like this:\n\n")
     msg += cyan(new_file) + '\n'
     print msg

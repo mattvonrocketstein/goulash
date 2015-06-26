@@ -3,8 +3,7 @@
 """
 
 import os, sys
-from setuptools import setup
-
+from setuptools import setup, find_packages
 # make sure that finding packages works, even
 # when setup.py is invoked from outside this dir
 this_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +18,7 @@ from version import __version__
 sys.path.pop()
 
 base_url = 'https://github.com/mattvonrocketstein/goulash/'
+packages = [x for x in find_packages() if x not in ['tests']]
 setup(
     name         = 'goulash',
     version      = __version__,
@@ -27,7 +27,7 @@ setup(
     author_email = '$author@gmail',
     url          = base_url,
     download_url = base_url + '/tarball/master',
-    packages     = ['goulash'],
+    packages     = packages,
     keywords     = ['goulash'],
     install_requires = [
         'addict',       # dictionary utility
@@ -38,6 +38,7 @@ setup(
         'configparser', # .ini configurations
         'mkdocs',       # static docs generation
         'epydoc',       # static docs generation
+        'Importing'     # lazy module
          ],
     entry_points = dict(
         console_scripts=[

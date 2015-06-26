@@ -4,7 +4,8 @@
 from unittest import TestCase
 
 from goulash.decorators import (
-    arg_types, memoized_property, classproperty)
+    require_module, arg_types,
+    memoized_property, classproperty)
 
 class TestClass(object):
     @classproperty
@@ -17,6 +18,11 @@ class TestClassProperty(TestCase):
 class TestArgTypesDecorator(TestCase):
     def setUp(self):
         self.fxn = lambda x: x
+
+    def test_require_module(self):
+        from smashlib import embed; embed()
+        require_module('sys')
+        require_module('zdfasdasd')
 
     def test_ignores_kargs(self):
         @arg_types(int)

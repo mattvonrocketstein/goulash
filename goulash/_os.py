@@ -5,7 +5,7 @@ import time, stat
 from goulash.python import get_env
 
 # copy-tree with overwrites (unlike shutil.copytree)
-from distutils.dir_util import copy_tree # NOQA
+from distutils.dir_util import copy_tree  # NOQA
 
 def home():
     return get_env('HOME')
@@ -31,14 +31,15 @@ def mkdir_p(path):
     """
     try:
         os.makedirs(path)
-    except OSError as exc: # Python >2.5
+    except OSError as exc:  # Python >2.5
         if exc.errno == errno.EEXIST and os.path.isdir(path):
             pass
-        else: raise
+        else:
+            raise
 makedirs = mkdirs = mkdir_p
 
 def which(name):
-    return os.popen('which '+name).readlines()[0].strip()
+    return os.popen('which ' + name).readlines()[0].strip()
 
 def get_mounts_by_type(mtype):
     tmp = os.popen('mount -l -t {0}'.format(mtype))

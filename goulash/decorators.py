@@ -16,7 +16,7 @@ def require_module(names, exception=None):
             return time.time()
     """
     if isinstance(names, (str, unicode)):
-        names=[names]
+        names = [names]
     def check_module(f):
         def new_f(*args, **kwds):
             for module_name in names:
@@ -46,7 +46,8 @@ class arg_types(object):
           def sum(*args): pass
     """
 
-    class ArgTypeError(TypeError): pass
+    class ArgTypeError(TypeError):
+        pass
 
     def __init__(self, *args):
         err = 'all arguments to arg_types() should be types, got {0}'

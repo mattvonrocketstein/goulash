@@ -5,13 +5,14 @@ import webbrowser
 from argparse import ArgumentParser
 import addict
 from fabric.colors import red
+from peak.util.imports import lazyModule
 
 from goulash import version
-from goulash._inspect import _main_package
-from goulash.fileserver import main as fileserver
-from goulash.projects import version_bump, pypi_publish
-from goulash.bin.boiler import gen_docs, docs_refresh, docs_deploy
 
+fileserver = lazyModule('goulash.fileserver')
+inspect = lazyModule('goulash._inspect')
+projects = lazyModule('goulash.projects')
+boiler = lazyModule('goulash.bin.boiler')
 def get_parser():
     """ build the default parser """
     parser = ArgumentParser()
@@ -91,9 +92,9 @@ def get_parser():
 
 def project_handler(args):
     if args.version_bump:
-        version_bump()
+        projects.version_bump()
     elif args.pypi_publish:
-        pypi_publish()
+        projects.pypi_publish()
     else:
         raise SystemExit("unknown project subcommand")
 
@@ -109,7 +110,7 @@ def entry():
     elif args.subcommand == 'project':
         project_handler(args)
     elif args.subcommand == 'serve':
-        fileserver(args)
+        fileserver.main(args)
     elif args.subcommand == 'docs':
         docs_handler(args)
     else:
@@ -122,7 +123,7 @@ def _get_ctx(args):
     DOCS_URL = 'http://localhost:8000'
     DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
     DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
-    PROJECT_NAME = _main_package(SRC_ROOT)
+    PROJECT_NAME = inspect._main_package(SRC_ROOT)
     ctx = locals().copy()
     ctx.pop('args')
     #raise Exception,ctx
@@ -130,11 +131,11 @@ def _get_ctx(args):
 
 def refresh(args):
     print red('refreshing docs..')
-    docs_refresh(**_get_ctx(args))
+    boiler.docs_refresh(**_get_ctx(args))
 
 def deploy(args):
     print red('deploying docs..')
-    docs_deploy(**_get_ctx(args))
+    boiler.docs_deploy(**_get_ctx(args))
 
 def handle_show(args):
     refresh(args)
@@ -157,7 +158,7 @@ def docs_handler(args):
     elif args.boilerplate:
         args.docroot = os.path.dirname(args.docroot)
         args.dir = os.path.dirname(args.docroot)
-        return gen_docs(args)
+        return boiler.gen_docs(args)
     elif args.refresh:
         return refresh(args)
     elif args.deploy:

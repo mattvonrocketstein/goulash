@@ -18,7 +18,7 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
     from goulash import cache as c
     if not getattr(c, 'CACHE', None):
         c.CACHE = SimpleCache()
-    cache=c.CACHE
+    cache = c.CACHE
     if use_request_vars:
         tmp1 = key_or_fxn
         assert isinstance(key_or_fxn, basestring)
@@ -76,7 +76,9 @@ class MWT(object):
                     raise KeyError
             except KeyError:
                 #print("new") # dbg
-                v = self.cache[key] = f(*args, **kwargs),time.time()
+                v = self.cache[key] = [
+                    f(*args, **kwargs),
+                    time.time()]
             return v[0]
         func.func_name = f.__name__
 
