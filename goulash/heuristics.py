@@ -64,7 +64,7 @@ class NotApplicable(DumbWrapper):
 
     def __str__(self):
         return "(NotApplicable: {0})".format(str(self.obj))
-    __repr__=__str__
+    __repr__ = __str__
 
 class Affirmative(ExplainedAnswer):
     def __init__(self, explanation="no reason given"):

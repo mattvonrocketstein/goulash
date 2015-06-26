@@ -1,8 +1,7 @@
 """ goulash.decorators
 """
-import sys
 import inspect
-
+from goulash._fabric import require_bin
 # SOURCE:
 #  http://code.activestate.com/recipes/578852-decorator-to-check-if-needed-modules-for-method-ar/
 class require_module(object):
@@ -55,8 +54,9 @@ class arg_types(object):
         def wrapped(*args, **kargs):
             for a in args:
                 if not isinstance(a, self.types):
-                    raise self.ArgTypeError("{0} (type={1}) is not in {2}".format(
-                        a, type(a), self.types))
+                    raise self.ArgTypeError(
+                        "{0} (type={1}) is not in {2}".format(
+                            a, type(a), self.types))
             return self.fxn(*args, **kargs)
         return wrapped
 

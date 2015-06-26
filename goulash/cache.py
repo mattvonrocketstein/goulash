@@ -44,7 +44,8 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
         return decorated_function
     return decorator
 
-#taken from http://code.activestate.com/recipes/325905-memoize-decorator-with-timeout/
+# Adapted from:
+#  http://code.activestate.com/recipes/325905-memoize-decorator-with-timeout/
 class MWT(object):
     """Memoize With Timeout"""
     _caches   = {}
@@ -58,7 +59,8 @@ class MWT(object):
         for func in self._caches:
             cache = {}
             for key in self._caches[func]:
-                if (time.time() - self._caches[func][key][1]) < self._timeouts[func]:
+                tmp = self._caches[func][key][1]
+                if (time.time() - tmp) < self._timeouts[func]:
                     cache[key] = self._caches[func][key]
             self._caches[func] = cache
 

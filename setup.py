@@ -42,7 +42,6 @@ setup(
          ],
     entry_points = dict(
         console_scripts=[
-            'goulash-boiler = goulash.bin.boiler:entry',
             'goulash = goulash.bin._goulash:entry',
             ]),
     package_data={'': ['*.*', 'goulash/data/*.*']},

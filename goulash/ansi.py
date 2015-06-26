@@ -16,4 +16,4 @@ class Ansi2HTMLConverter(_Ansi2HTMLConverter):
     def convert(self, *args, **kargs):
         kargs.update(full=False)
         return super(Ansi2HTMLConverter, self).convert(*args, **kargs)
-Ansi2HtmlConverter=Ansi2HTMLConverter
+Ansi2HtmlConverter = Ansi2HTMLConverter

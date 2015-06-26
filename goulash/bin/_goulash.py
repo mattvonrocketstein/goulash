@@ -1,10 +1,8 @@
 """ goulash.bin._goulash
 """
 import os
-import webbrowser
 from argparse import ArgumentParser
-import addict
-from fabric.colors import red
+
 from peak.util.imports import lazyModule
 
 from goulash import version
@@ -13,6 +11,8 @@ fileserver = lazyModule('goulash.fileserver')
 inspect = lazyModule('goulash._inspect')
 projects = lazyModule('goulash.projects')
 boiler = lazyModule('goulash.bin.boiler')
+from goulash.docs import docs_handler
+
 def get_parser():
     """ build the default parser """
     parser = ArgumentParser()
@@ -24,6 +24,35 @@ def get_parser():
     subparsers = parser.add_subparsers(help='commands')
     help_parser = subparsers.add_parser('help', help='show help info')
     help_parser.set_defaults(subcommand='help')
+
+    bparser = subparsers.add_parser('boiler',help='boilerplate generation')
+    bparser.add_argument(
+        "--docs", default=False, dest='docs',
+        action='store_true',
+        help=("create docs boilerplate for python project"))
+    bparser.add_argument(
+        "--tox", default=False, dest='tox',
+        action='store_true',
+        help=("create tox boilerplate for python project"))
+    bparser.add_argument(
+        "--tests", default=False, dest='tests',
+        action='store_true',
+        help=("create test boilerplate for python project"))
+    bparser.add_argument(
+        "--pypi", default=False, dest='tests',
+        action='store_true',
+        help=("create pypi boilerplate for python project"))
+    bparser.add_argument(
+        "--project", default=False, dest='project',
+        action='store_true',
+        help=("create all boilerplate for python project"))
+    #bparser.add_argument(
+    #    "--project", default='', dest='project',
+    #    required=True,
+    #    help=("project name"))
+    bparser.add_argument(
+        'dir', nargs='?', default=os.getcwd(),
+        help=("base directory to generate boilerplate in"))
 
     version_parser = subparsers.add_parser(
         'version', help='show goulash version')
@@ -98,6 +127,8 @@ def project_handler(args):
     else:
         raise SystemExit("unknown project subcommand")
 
+from goulash.boiler import boiler_handler
+
 def entry():
     parser = get_parser()
     args = parser.parse_args()
@@ -113,55 +144,7 @@ def entry():
         fileserver.main(args)
     elif args.subcommand == 'docs':
         docs_handler(args)
+    elif args.boiler:
+        boiler_handler(args)
     else:
         raise SystemExit('unknown subcommand')
-
-def _get_ctx(args):
-    args.docroot = os.path.abspath(args.docroot)
-    DOCS_ROOT = args.docroot
-    SRC_ROOT = os.path.dirname(args.docroot)
-    DOCS_URL = 'http://localhost:8000'
-    DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
-    DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
-    PROJECT_NAME = inspect._main_package(SRC_ROOT)
-    ctx = locals().copy()
-    ctx.pop('args')
-    #raise Exception,ctx
-    return ctx
-
-def refresh(args):
-    print red('refreshing docs..')
-    boiler.docs_refresh(**_get_ctx(args))
-
-def deploy(args):
-    print red('deploying docs..')
-    boiler.docs_deploy(**_get_ctx(args))
-
-def handle_show(args):
-    refresh(args)
-    ctx = _get_ctx(args)
-    if 'docs' in os.listdir(ctx['DOCS_ROOT']):
-        print red('.. found read-the-docs style documentation')
-        webbrowser.open('http://localhost:8000')
-        fileserver(addict.Dict(
-            port=None, dir=os.path.join(
-                args.docroot, 'site')))
-
-    else:
-        print red("Not sure what to do with this style of documentation")
-
-def docs_handler(args):
-    """ """
-    if args.version:
-        print version.__version__
-        raise SystemExit()
-    elif args.boilerplate:
-        args.docroot = os.path.dirname(args.docroot)
-        args.dir = os.path.dirname(args.docroot)
-        return boiler.gen_docs(args)
-    elif args.refresh:
-        return refresh(args)
-    elif args.deploy:
-        return deploy(args)
-    elif args.show:
-        return handle_show(args)

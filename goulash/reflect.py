@@ -161,7 +161,8 @@ class Accessor:
         kstring = 'get_%s' % k
         if hasattr(self.__class__, kstring):
             return getattr(self, kstring)()
-        raise AttributeError("%s instance has no accessor for: %s" % (qual(self.__class__), k))
+        raise AttributeError(
+            "%s instance has no accessor for: %s" % (qual(self.__class__), k))
 
     def __delattr__(self, k):
         kstring = 'del_%s' % k
@@ -170,7 +171,7 @@ class Accessor:
             return
         self.reallyDel(k)
 
-    def reallySet(self, k,v):
+    def reallySet(self, k, v):
         """
         *actually* set self.k to v without incurring side-effects.
         This is a hook to be overridden by subclasses.
@@ -179,7 +180,7 @@ class Accessor:
             self.__dict__.clear()
             self.__dict__.update(v)
         else:
-            self.__dict__[k]=v
+            self.__dict__[k] = v
 
     def reallyDel(self, k):
         """
@@ -309,9 +310,9 @@ def getClass(obj):
 # class graph nonsense
 
 # I should really have a better name for this...
-def isinst(inst,clazz):
+def isinst(inst, clazz):
     if isinstance(inst, types.InstanceType) or \
-        not isinstance(type(clazz), types.ClassType):
+       not isinstance(type(clazz), types.ClassType):
         return isinstance(inst,clazz)
     cl = inst.__class__
     cl2 = getcurrent(cl)
@@ -463,9 +464,6 @@ def namedAny(name):
 
     return obj
 
-
-
-
 def _determineClass(x):
     try:
         return x.__class__
@@ -481,7 +479,6 @@ def _determineClassName(x):
             return str(c)
         except:
             return '<BROKEN CLASS AT %s>' % str(c)
-
 
 def _safeFormat(formatter, o):
     """
@@ -574,7 +571,7 @@ def accumulateMethods(obj, dict, prefix='', curClass=None):
 
     for name, method in curClass.__dict__.items():
         optName = name[len(prefix):]
-        if ((type(method) is types.FunctionType)
+        if isinstance(type(method), types.FunctionType)
             and (name[:len(prefix)] == prefix)
             and (len(optName))):
             dict[optName] = getattr(obj, name)
@@ -664,18 +661,19 @@ def objgrep(start, goal, eq=isLike,
         if maxDepth == 0:
             return
         maxDepth -= 1
-    seen[id(start)] = start
+    seen[id(start)]=start
     if isinstance(start, types.DictionaryType):
         for k, v in start.items():
-            objgrep(k, goal, eq,
-                    path + '{' + repr(v) + '}', paths,
-                    seen, showUnknowns, maxDepth)
-            objgrep(v, goal, eq, path+'[' + repr(k) + ']',
+            objgrep(
+                k, goal, eq,
+                path + '{' + repr(v) + '}', paths,
+                seen, showUnknowns, maxDepth)
+            objgrep(v, goal, eq, path + '[' + repr(k) + ']',
                     paths, seen, showUnknowns, maxDepth)
     elif isinstance(start, (list, tuple, deque)):
         for idx in xrange(len(start)):
             objgrep(
-                start[idx], goal, eq, path+'[' + str(idx) + ']',
+                start[idx], goal, eq, path + '[' + str(idx) + ']',
                 paths, seen, showUnknowns, maxDepth)
     elif isinstance(start, types.MethodType):
         objgrep(start.im_self, goal, eq, path + '.im_self',
@@ -686,7 +684,7 @@ def objgrep(start, goal, eq=isLike,
                 paths, seen, showUnknowns, maxDepth)
     elif hasattr(start, '__dict__'):
         for k, v in start.__dict__.items():
-            objgrep(v, goal, eq, path+'.' + k, paths, seen,
+            objgrep(v, goal, eq, path + '.' + k, paths, seen,
                     showUnknowns, maxDepth)
         if isinstance(start, types.InstanceType):
             objgrep(start.__class__, goal, eq,
