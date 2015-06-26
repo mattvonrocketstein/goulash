@@ -29,7 +29,7 @@ def ipaddr_with_LAN(host="gmail.com"):
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect((host, port))
     result = s.getsockname()
-    if len(result)==2:
+    if len(result) == 2:
         return result[0]
 
 def ipaddr_hosts():

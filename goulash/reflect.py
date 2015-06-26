@@ -40,8 +40,8 @@ class Settable:
         self(**kw)
 
     def __call__(self,**kw):
-        for key,val in kw.items():
-            setattr(self,key,val)
+        for key, val in kw.items():
+            setattr(self, key, val)
         return self
 
 class AccessorType(type):
@@ -164,7 +164,7 @@ class Accessor:
         raise AttributeError("%s instance has no accessor for: %s" % (qual(self.__class__),k))
 
     def __delattr__(self, k):
-        kstring='del_%s'%k
+        kstring = 'del_%s' % k
         if hasattr(self.__class__,kstring):
             getattr(self,kstring)()
             return
@@ -220,19 +220,21 @@ class Summer(Accessor):
                 if hasattr(self, obj):
                     ob=getattr(self,obj)
                     if ob is not None:
-                        try:oldobjval=getattr(ob, objattr)
-                        except:oldobjval=0.0
-                        setattr(ob,objattr,oldobjval+diff)
+                        try:
+                            oldobjval = getattr(ob, objattr)
+                        except:
+                            oldobjval = 0.0
+                        setattr(ob, objattr, oldobjval + diff)
 
             elif k == obj:
                 if hasattr(self, attr):
-                    x=getattr(self,attr)
+                    x = getattr(self, attr)
                     setattr(self,attr,0)
-                    y=getattr(self,k)
-                    Accessor.reallySet(self,k,v)
-                    setattr(self,attr,x)
-                    Accessor.reallySet(self,y,v)
-        Accessor.reallySet(self,k,v)
+                    y = getattr(self, k)
+                    Accessor.reallySet(self, k, v)
+                    setattr(self, attr, x)
+                    Accessor.reallySet(self, y, v)
+        Accessor.reallySet(self, k, v)
 
 
 class QueueMethod:
@@ -252,17 +254,17 @@ def funcinfo(function):
         "[v2.5] Use inspect.getargspec instead of twisted.python.reflect.funcinfo",
         DeprecationWarning,
         stacklevel=2)
-    code=function.func_code
-    name=function.func_name
-    argc=code.co_argcount
-    argv=code.co_varnames[:argc]
-    defaults=function.func_defaults
+    code = function.func_code
+    name = function.func_name
+    argc = code.co_argcount
+    argv = code.co_varnames[:argc]
+    defaults = function.func_defaults
 
     out = []
 
     out.append('The function %s accepts %s arguments' % (name ,argc))
     if defaults:
-        required=argc-len(defaults)
+        required = argc - len(defaults)
         out.append('It requires %s arguments' % required)
         out.append('The arguments required are: %s' % argv[:required])
         out.append('additional arguments are:')
@@ -278,16 +280,15 @@ IS=2
 
 
 def fullFuncName(func):
-    qualName = (str(pickle.whichmodule(func, func.__name__)) + '.' + func.__name__)
+    qualName = (str(pickle.whichmodule(func, func.__name__)) +\
+                '.' + func.__name__)
     if namedObject(qualName) is not func:
         raise Exception("Couldn't find %s as %s." % (func, qualName))
     return qualName
 
-
 def qual(clazz):
     """Return full import path of a class."""
     return clazz.__module__ + '.' + clazz.__name__
-
 
 def getcurrent(clazz):
     assert type(clazz) == types.ClassType, 'must be a class...'
@@ -296,7 +297,6 @@ def getcurrent(clazz):
     if currclass is None:
         return clazz
     return currclass
-
 
 def getClass(obj):
     """Return the class or type of object 'obj'.
@@ -315,7 +315,7 @@ def isinst(inst,clazz):
     cl = inst.__class__
     cl2 = getcurrent(cl)
     clazz = getcurrent(clazz)
-    if issubclass(cl2,clazz):
+    if issubclass(cl2, clazz):
         if cl == cl2:
             return WAS
         else:
@@ -334,7 +334,6 @@ def namedModule(name):
         m = getattr(m, p)
     return m
 
-
 def namedObject(name):
     """Get a fully named module-global object.
     """
@@ -343,8 +342,6 @@ def namedObject(name):
     return getattr(module, classSplit[-1])
 
 namedClass = namedObject # backwards compat
-
-
 
 class _NoModuleFound(Exception):
     """
@@ -393,8 +390,8 @@ def _importAndCheckStack(importName):
             excType, excValue, excTraceback = sys.exc_info()
             while excTraceback:
                 execName = excTraceback.tb_frame.f_globals["__name__"]
-                if (execName is None or # python 2.4+, post-cleanup
-                    execName == importName): # python 2.3, no cleanup
+                if (execName is None or  # python 2.4+, post-cleanup
+                    execName == importName):  # python 2.3, no cleanup
                     raise excType, excValue, excTraceback
                 excTraceback = excTraceback.tb_next
             raise _NoModuleFound()
@@ -402,8 +399,6 @@ def _importAndCheckStack(importName):
         # Necessary for cleaning up modules in 2.3.
         sys.modules.pop(importName, None)
         raise
-
-
 
 def namedAny(name):
     """
@@ -521,14 +516,11 @@ def safe_str(o):
     """
     return _safeFormat(str, o)
 
-
-
 def accumulateBases(classObj, l, baseClass=None):
     for base in classObj.__bases__:
         if baseClass is None or issubclass(base, baseClass):
             l.append(base)
         accumulateBases(base, l, baseClass)
-
 
 def prefixedMethodNames(classObj, prefix):
     """A list of method names with a given prefix in a given class.
@@ -536,7 +528,6 @@ def prefixedMethodNames(classObj, prefix):
     dct = {}
     addMethodNamesToDict(classObj, dct, prefix)
     return dct.keys()
-
 
 def addMethodNamesToDict(classObj, dict, prefix, baseClass=None):
     """
@@ -555,7 +546,7 @@ def addMethodNamesToDict(classObj, dict, prefix, baseClass=None):
     if baseClass is None or baseClass in classObj.__bases__:
         for name, method in classObj.__dict__.items():
             optName = name[len(prefix):]
-            if ((type(method) is types.FunctionType)
+            if ((isinstance(method, types.FunctionType))
                 and (name[:len(prefix)] == prefix)
                 and (len(optName))):
                 dict[optName] = 1
@@ -654,7 +645,9 @@ def isOfType(start, goal):
 def findInstances(start, t):
     return objgrep(start, t, isOfType)
 
-def objgrep(start, goal, eq=isLike, path='', paths=None, seen=None, showUnknowns=0, maxDepth=None):
+def objgrep(start, goal, eq=isLike,
+            path='', paths=None, seen=None,
+            showUnknowns=0, maxDepth=None):
     '''An insanely CPU-intensive process for finding stuff.
     '''
     if paths is None:

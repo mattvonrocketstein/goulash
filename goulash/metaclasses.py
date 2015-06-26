@@ -114,7 +114,7 @@ META1 = ClassAlgebra
 def supports_class_algebra(kls):
     """ for use as a decorator
     """
-    if hasattr(kls,'__metaclass__'):
+    if hasattr(kls, '__metaclass__'):
         if kls.__metaclass__!=ClassAlgebra:
             raise TypeError("{0} already has a metaclass: '{1}'".
                             format(kls, kls.__metaclass__))

@@ -13,6 +13,7 @@ from goulash import version
 from goulash import goulash_data
 from goulash._fabric import require_bin
 from goulash._os import touch, makedirs, copy_tree
+from goulash._inspect import _main_package
 
 root = logging.getLogger()
 root.setLevel(logging.DEBUG)
@@ -44,11 +45,11 @@ def get_parser():
 
 def gen_docs(args):
     print red('generating docs boilerplate..')
-    SRC_ROOT = args.dir
+    SRC_ROOT = args.dir or '.'
     DOCS_ROOT = os.path.join(SRC_ROOT, 'docs')
     DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
     DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
-    PROJECT_NAME = args.project
+    PROJECT_NAME = _main_package(SRC_ROOT)
     ctx = locals().copy()
     ctx.pop('args')
     create_docs(**ctx)
@@ -70,11 +71,10 @@ def create_docs(DOCS_ROOT=None, **ctx):
     _create_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     _create_api_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
 
-def _refresh_api_docs(
-    PROJECT_NAME=None,
-    DOCS_ROOT=None,
-    DOCS_API_ROOT=None,
-    DOCS_SITE_DIR=None, **ctx):
+def _refresh_api_docs(PROJECT_NAME=None,
+                      DOCS_ROOT=None,
+                      DOCS_API_ROOT=None,
+                      DOCS_SITE_DIR=None, **ctx):
     if os.environ.get('GOULASH_DOCS_API', 'true').lower() == 'false':
         print red('skipping API documentation')
         return

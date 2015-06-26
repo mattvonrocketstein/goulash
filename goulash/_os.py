@@ -1,7 +1,7 @@
 """ goulash._os
 """
 import os, errno
-
+import time, stat
 from goulash.python import get_env
 
 # copy-tree with overwrites (unlike shutil.copytree)
@@ -16,6 +16,11 @@ def touch(fname, times=None):
     with open(fname, 'a'):
         os.utime(fname, times)
 touch_file = touch
+
+def file_age_in_seconds(pathname):
+    if not os.path.exists(pathname):
+        return None
+    return time.time() - os.stat(pathname)[stat.ST_MTIME]
 
 # SOURCE:
 #  http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python

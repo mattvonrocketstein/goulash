@@ -1,13 +1,16 @@
 """ goulash.bin._goulash
 """
 import os
+import webbrowser
 from argparse import ArgumentParser
-
-#from fabric.colors import red
+import addict
+from fabric.colors import red
 
 from goulash import version
+from goulash._inspect import _main_package
 from goulash.fileserver import main as fileserver
 from goulash.projects import version_bump, pypi_publish
+from goulash.bin.boiler import gen_docs, docs_refresh, docs_deploy
 
 def get_parser():
     """ build the default parser """
@@ -84,10 +87,7 @@ def get_parser():
         "-v", '--version', default=False, dest='version',
         action='store_true',
         help=("show version information"))
-
-
     return parser
-
 
 def project_handler(args):
     if args.version_bump:
@@ -115,19 +115,6 @@ def entry():
     else:
         raise SystemExit('unknown subcommand')
 
-
-import os
-import webbrowser
-
-from argparse import ArgumentParser
-from fabric.colors import red
-from fabric import api
-
-from goulash import version
-from goulash._inspect import _main_package
-from goulash.fileserver import runserver as fileserver
-from goulash.bin.boiler import gen_docs, docs_refresh, docs_deploy
-
 def _get_ctx(args):
     args.docroot = os.path.abspath(args.docroot)
     DOCS_ROOT = args.docroot
@@ -154,9 +141,10 @@ def handle_show(args):
     ctx = _get_ctx(args)
     if 'docs' in os.listdir(ctx['DOCS_ROOT']):
         print red('.. found read-the-docs style documentation')
-        import webbrowser
         webbrowser.open('http://localhost:8000')
-        fileserver(dir=os.path.join(args.docroot,'site'))#, port=args.port)
+        fileserver(addict.Dict(
+            port=None, dir=os.path.join(
+                args.docroot, 'site')))
 
     else:
         print red("Not sure what to do with this style of documentation")

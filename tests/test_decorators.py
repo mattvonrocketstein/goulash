@@ -10,7 +10,7 @@ class TestClass(object):
     @classproperty
     def test(kls): return 3
 
-class TestClassProperty(unittest.TestCase):
+class TestClassProperty(TestCase):
     def test_classproperty(self):
         self.assertEqual(TestClass.test, 3)
 
