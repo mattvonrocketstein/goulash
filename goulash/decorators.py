@@ -5,35 +5,31 @@ import inspect
 
 # SOURCE:
 #  http://code.activestate.com/recipes/578852-decorator-to-check-if-needed-modules-for-method-ar/
-def require_module(names, exception=None):
-    """
-    Check if needed modules imported before run method
+class require_module(object):
+    """ """
+    def __init__(self, names, msg=None):
+        if isinstance(names, (str, unicode)):
+            self.names = [names]
+        else:
+            self.names = names
+        self.msg = msg
 
-    Example::
+    def __call__(self, f):
+        self.f = f
+        return self.wrapped
 
-        @require_module(['time'],exception=Exception)
-        def get_time():
-            return time.time()
-    """
-    if isinstance(names, (str, unicode)):
-        names = [names]
-    def check_module(f):
-        def new_f(*args, **kwds):
-            for module_name in names:
-                if module_name not in sys.modules.keys():
-                    if exception:
-                        err = ('Module "{0}" is required for {1}.  '
-                               'Try running `pip install {2}` first.')
-                        err = err.format(
-                            module_name, f.func_name, module_name)
-                        raise exception(err)
-                    else:
-                        return None
-            return f(*args, **kwds)
-        new_f.func_name = f.func_name
-        return new_f
-    return check_module
-
+    def wrapped(self, *args, **kargs):
+        for name in self.names:
+            try:
+                __import__(name)
+            except ImportError:
+                if self.msg is None:
+                    self.msg = ('{0} requires {1}.  Try running '
+                                '"pip install {1}" before you continue').format(
+                        self.f.__name__,
+                        name)
+                raise ImportError(self.msg)
+        return self.f(*args, **kargs)
 
 class arg_types(object):
     """ A decorator which enforces the rule that all arguments must be

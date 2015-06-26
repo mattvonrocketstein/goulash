@@ -1,6 +1,6 @@
 """ goulash.tests.test_decorators
 """
-
+import unittest
 from unittest import TestCase
 
 from goulash.decorators import (
@@ -19,10 +19,28 @@ class TestArgTypesDecorator(TestCase):
     def setUp(self):
         self.fxn = lambda x: x
 
-    def test_require_module(self):
-        from smashlib import embed; embed()
-        require_module('sys')
-        require_module('zdfasdasd')
+    def test_require_module_good(self):
+        @require_module('sys')
+        def f():
+            pass
+        f()
+
+    def test_require_module_bad(self):
+        @require_module('zdfasdasd')
+        def f():
+            pass
+        self.assertRaises(ImportError, f)
+
+    def test_require_module_bad_msg(self):
+        @require_module('doesntexist',msg='ohno')
+        def f():
+            pass
+        try:
+            f()
+        except ImportError, e:
+            self.assertEqual(e.message, 'ohno')
+        else:
+            self.fail("require_module failed to rewrite exception with custom mmsg")
 
     def test_ignores_kargs(self):
         @arg_types(int)
@@ -73,3 +91,5 @@ class TestMemoizedProperty(TestCase):
         self.assertEqual(tmp1.example, 3)
         self.assertEqual(tmp2.example, 3)
         self.assertEqual(self.call_count, 2)
+if __name__=='__main__':
+    unittest.main()
