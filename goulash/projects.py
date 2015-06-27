@@ -27,6 +27,13 @@ def project_search(fname, start=None):
 
 def pypi_publish(pkg_root=None, src_root='.'):
     """ """
+    user = os.environ.get('USER')
+    home = os.environ.get('HOME')
+    pypirc = os.path.join(home, '.pypirc')
+    if not os.path.exists(pypirc):
+        err = "FATAL: {0} does not exist, will not be able to publish to PyPi"
+        err = err.format(home)
+        raise SystemExit(err)
     pkg_root = pkg_root or _main_package(src_root)
     version_info = get_version_info(pkg_root)
     msg = [
@@ -35,8 +42,6 @@ def pypi_publish(pkg_root=None, src_root='.'):
         red("you should have already bumped the "
             "versions and commited to master!")]
     print '\n'.join(msg)
-    user = os.environ.get('USER')
-    home = os.environ.get('HOME')
     assert user and home  # sometimes tox doesnt pass this
     err = 'To continue, try "pip install {0}" and try again'
     err = err.format('git+https://github.com/pypa/twine.git')

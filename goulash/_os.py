@@ -1,5 +1,6 @@
 """ goulash._os
 """
+import shutil
 import os, errno
 import time, stat
 from goulash.python import get_env
@@ -7,6 +8,10 @@ from goulash.python import get_env
 # copy-tree with overwrites (unlike shutil.copytree)
 from distutils.dir_util import copy_tree  # NOQA
 from distutils.file_util import copy_file  # NOQA
+
+def rmtree(path):
+    if os.path.exists(path):
+        shutil.rmtree(path)
 
 def home():
     return get_env('HOME')
