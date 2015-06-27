@@ -6,6 +6,7 @@ from goulash.python import get_env
 
 # copy-tree with overwrites (unlike shutil.copytree)
 from distutils.dir_util import copy_tree  # NOQA
+from distutils.file_util import copy_file  # NOQA
 
 def home():
     return get_env('HOME')
@@ -56,3 +57,10 @@ def get_mounts_by_type(mtype):
         mdata.update(name=name, mount_point=mount_point)
         tmp2.append(mdata)
     return tmp2
+
+def summarize_fpath(fpath):
+    """ truncates a filepath to be more suitable for display.
+        every instance of $HOME is replaced with ~
+    """
+    if home():
+        return fpath.replace(home(), '~')

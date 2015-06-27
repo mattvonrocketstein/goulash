@@ -12,7 +12,7 @@ inspect = lazyModule('goulash._inspect')
 projects = lazyModule('goulash.projects')
 boiler = lazyModule('goulash.bin.boiler')
 from goulash.docs import docs_handler
-
+from jinja2 import Template
 def get_parser():
     """ build the default parser """
     parser = ArgumentParser()
@@ -25,7 +25,7 @@ def get_parser():
     help_parser = subparsers.add_parser('help', help='show help info')
     help_parser.set_defaults(subcommand='help')
 
-    bparser = subparsers.add_parser('boiler',help='boilerplate generation')
+    bparser = subparsers.add_parser('boiler', help='boilerplate generation')
     bparser.add_argument(
         "--docs", default=False, dest='docs',
         action='store_true',
@@ -46,6 +46,13 @@ def get_parser():
         "--project", default=False, dest='project',
         action='store_true',
         help=("create all boilerplate for python project"))
+    bparser.add_argument(
+        "--pkg_name", default='', dest='pkg_name',
+        help=("python pkg_name"))
+    bparser.add_argument(
+        "--pkg", default=False, dest='pkg',
+        action='store_true',
+        help=("create all boilerplate for python package"))
     #bparser.add_argument(
     #    "--project", default='', dest='project',
     #    required=True,
@@ -53,6 +60,7 @@ def get_parser():
     bparser.add_argument(
         'dir', nargs='?', default=os.getcwd(),
         help=("base directory to generate boilerplate in"))
+    bparser.set_defaults(subcommand='boiler')
 
     version_parser = subparsers.add_parser(
         'version', help='show goulash version')
@@ -144,7 +152,7 @@ def entry():
         fileserver.main(args)
     elif args.subcommand == 'docs':
         docs_handler(args)
-    elif args.boiler:
+    elif args.subcommand == 'boiler':
         boiler_handler(args)
     else:
         raise SystemExit('unknown subcommand')

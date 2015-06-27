@@ -1,14 +1,8 @@
 """ goulash.util
 """
 import time, uuid
-from goulash._os import home
 
-def summarize_fpath(fpath):
-    """ truncates a filepath to be more suitable for display.
-        every instance of $HOME is replaced with ~
-    """
-    if home():
-        return fpath.replace(home(), '~')
+from goulash._os import home, summarize_fpath  # backwards compat.
 
 def uniq(use_time=False):
     """ """
