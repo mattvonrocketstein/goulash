@@ -28,9 +28,7 @@ def project_search(fname, start=None):
 def pypi_publish(pkg_root=None, src_root='.'):
     """ """
     pkg_root = pkg_root or _main_package(src_root)
-    sandbox = dict()
-    execfile(os.path.join(pkg_root, 'version.py'), sandbox)
-    version_info = sandbox['version']
+    version_info = get_version_info(pkg_root)
     msg = [
         cyan("refreshing pypi for {0}=={1}".format(
             pkg_root, version_info)),
@@ -66,6 +64,20 @@ def _pypi_publish(pkg_root, version_info):
     api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
     #python setup.py sdist upload -r pypi
 
+def get_version_info(pkg_root):
+    sandbox = {}
+    version_file = os.path.join(pkg_root, 'version.py')
+    err = 'Version file not found in expected location: ' + version_file
+    if not os.path.exists(version_file):
+        raise SystemExit(err)
+    execfile(version_file, sandbox)
+    version_info = sandbox.get(
+        'version',
+        sandbox.get('__version__'))
+    err = 'version info not found in version file: {0}'
+    assert version_info is not None, err.format(vfile)
+    return version_info
+
 def version_bump(pkg_root=None, src_root='.'):
     """ bump the version number.
 
@@ -80,12 +92,7 @@ def version_bump(pkg_root=None, src_root='.'):
     print red('bumping version number for package "{0}"'.format(
             pkg_root))
     sandbox = {}
-    version_file = os.path.join(pkg_root, 'version.py')
-    err = 'Version file not found in expected location: ' + version_file
-    if not os.path.exists(version_file):
-        raise SystemExit(err)
-    execfile(version_file, sandbox)
-    current_version = sandbox['__version__']
+    current_version = get_version_info()#sandbox['__version__']
     new_version = current_version + VERSION_DELTA
     with open(version_file, 'r') as fhandle:
         version_file_contents = [x for x in fhandle.readlines() if x.strip()]
