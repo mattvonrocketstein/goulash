@@ -6,12 +6,15 @@ from goulash.namespaces import Namespace
 
 is_property = lambda obj: type(obj).__name__ == 'property'
 is_function = lambda obj: type(obj) == FunctionType
+
+
 def is_nonprivatefunction(name, obj):
     return (not name.startswith('_')) and is_function(obj)
 is_staticmethod = lambda obj: type(obj).__name__ == 'staticmethod'
 
 
 class AllStaticMethods(type):
+
     """ AllStaticMethods:
          set this class as your metaclass in order to build a
          module-like class.. all methods inside the class will
@@ -26,7 +29,7 @@ class AllStaticMethods(type):
                   make sure you know what you're doing if you use it.
         """
         for x, func in Namespace(dct).functions.items():
-                dct[x] = staticmethod(func)
+            dct[x] = staticmethod(func)
         if finished:
             return type.__new__(mcs, name, bases, dct)
         else:

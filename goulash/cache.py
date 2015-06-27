@@ -11,6 +11,7 @@
 import time
 from functools import wraps
 
+
 def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
     """ dumb hack adapted from
         http://flask.pocoo.org/docs/patterns/viewdecorators/ """
@@ -22,6 +23,7 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
     if use_request_vars:
         tmp1 = key_or_fxn
         assert isinstance(key_or_fxn, basestring)
+
         def cache_key_fxn():
             from flask import request
             req = request
@@ -31,6 +33,7 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
             return key
     elif isinstance(key_or_fxn, basestring):
         cache_key_fxn = lambda: key_or_fxn
+
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
@@ -46,9 +49,12 @@ def cached(key_or_fxn, timeout=5 * 60, use_request_vars=False):
 
 # Adapted from:
 #  http://code.activestate.com/recipes/325905-memoize-decorator-with-timeout/
+
+
 class MWT(object):
+
     """Memoize With Timeout"""
-    _caches   = {}
+    _caches = {}
     _timeouts = {}
 
     def __init__(self, timeout=2):
@@ -73,11 +79,11 @@ class MWT(object):
             key = (args, tuple(kw))
             try:
                 v = self.cache[key]
-                #print("cache") # dbg
+                # print("cache") # dbg
                 if (time.time() - v[1]) > self.timeout:
                     raise KeyError
             except KeyError:
-                #print("new") # dbg
+                # print("new") # dbg
                 v = self.cache[key] = [
                     f(*args, **kwargs),
                     time.time()]

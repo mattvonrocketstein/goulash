@@ -4,8 +4,12 @@ import inspect
 from goulash._fabric import require_bin
 # SOURCE:
 #  http://code.activestate.com/recipes/578852-decorator-to-check-if-needed-modules-for-method-ar/
+
+
 class require_module(object):
+
     """ """
+
     def __init__(self, names, msg=None):
         if isinstance(names, (str, unicode)):
             self.names = [names]
@@ -30,7 +34,9 @@ class require_module(object):
                 raise ImportError(self.msg)
         return self.f(*args, **kargs)
 
+
 class arg_types(object):
+
     """ A decorator which enforces the rule that all arguments must be
         of type .  All keyword arguments are ignored. Throws ArgTypeError
         when expectations are violated.
@@ -51,6 +57,7 @@ class arg_types(object):
 
     def __call__(self, fxn):
         self.fxn = fxn
+
         def wrapped(*args, **kargs):
             for a in args:
                 if not isinstance(a, self.types):
@@ -62,8 +69,12 @@ class arg_types(object):
 
 # SOURCE:
 #   http://www.reddit.com/r/Python/comments/ejp25/cached_property_decorator_that_is_memory_friendly/
+
+
 class memoized_property(object):
+
     """ A read-only @property that is only evaluated once. """
+
     def __init__(self, fget, doc=None):
         self.fget = fget
         self.__doc__ = doc or fget.__doc__
@@ -77,7 +88,10 @@ class memoized_property(object):
 
 # SOURCE:
 #  http://stackoverflow.com/questions/128573/using-property-on-classmethods
+
+
 class classproperty(property):
+
     """
         USAGE:
           class constants:
@@ -85,6 +99,7 @@ class classproperty(property):
               def lazy(kls):
                   return "whatevs"
     """
+
     def __init__(self, func):
         return super(classproperty, self).__init__(classmethod(func))
 

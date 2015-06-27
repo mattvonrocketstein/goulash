@@ -1,8 +1,10 @@
 """ goulash._inspect
 """
-import os, inspect
+import os
+import inspect
 from addict import Dict
 from setuptools import find_packages
+
 
 def _main_package(src_root):
     """ typically find_packages() returns something like
@@ -21,6 +23,7 @@ def _main_package(src_root):
         pkg_root = list(packages)[0]
         return pkg_root
 
+
 def getcaller(level=2):
     """ """
     x = inspect.stack()[level]
@@ -31,7 +34,7 @@ def getcaller(level=2):
     func_name = x[3]
     himself = flocals.get('self', None)
     try:
-        kls  = himself and himself.__class__
+        kls = himself and himself.__class__
     except AttributeError:
         # python uses self only by convention, so it's
         # possible there is a "himself" local but it's

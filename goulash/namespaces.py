@@ -4,8 +4,10 @@ from copy import copy
 
 from inspect import isfunction, isclass, ismethod
 
+
 class ValueNotFound(Exception):
     pass
+
 
 def classname(thing):
     """ Return the fully-qualified class
@@ -21,7 +23,9 @@ def classname(thing):
         _ty = str(type(thing))
         raise AssertionError('Must pass class or instance object, got' + _ty)
 
+
 class NamespaceTests:
+
     """ Various boolean tests over objects, packaged thus to be resuable
         TODO: NamespaceTests(StaticMethodsOnly)
     """
@@ -39,8 +43,8 @@ class NamespaceTests:
     def dictionaryish(obj):
         """ """
         return isinstance(obj, dict) and \
-               all([isinstance(k, basestring) for k in obj.keys()])
-#type#hasattr(obj, 'keys') and hasattr(obj.keys,'__call__')
+            all([isinstance(k, basestring) for k in obj.keys()])
+# type#hasattr(obj, 'keys') and hasattr(obj.keys,'__call__')
 
     @staticmethod
     def is_unittest_testcase_class(obj):
@@ -48,10 +52,13 @@ class NamespaceTests:
         import unittest
         return isclass(obj) and issubclass(obj, unittest.TestCase)
 
+
 def grab(obj, k):
     return getattr(obj, k)
 
+
 class Namespace(object):
+
     """ NamespacePartion: introspective operations over dictionary-like objects
 
         NOTE: By default, all operations return dictionaries. Set
@@ -64,8 +71,8 @@ class Namespace(object):
     def __repr__(self):
         return "Namespace({0})".format(str(self.obj))
 
-    ## dictionary compatability
-    ############################################################################
+    # dictionary compatability
+    ##########################################################################
     def items(self):
         return self.namespace.items()
 
@@ -100,7 +107,7 @@ class Namespace(object):
             raise RuntimeError('niy')
         result = dict(result)
         return result if self.dictionaries \
-               else self.__class__(result, original=self)
+            else self.__class__(result, original=self)
 
     def __add__(self, other):
         """ Update this namespace with another.
@@ -135,7 +142,7 @@ class Namespace(object):
             if isinstance(obj, dict):
                 err = ("You gave a dictionary, but "
                        "maybe the keys aren't strings?")
-                #warning.warn(err)
+                # warning.warn(err)
                 self.obj = obj
                 self.namespace = {}
                 return
@@ -154,8 +161,8 @@ class Namespace(object):
             self.namespace = obj
             self.obj = obj
 
-    ## core introspection stuff
-    ############################################################################
+    # core introspection stuff
+    ##########################################################################
     @property
     def nonprivate(self):
         return self._clean()
@@ -163,7 +170,7 @@ class Namespace(object):
     @property
     def properties(self):
         this = self if isclass(self.obj) else \
-               self.__class__(self.obj.__class__)
+            self.__class__(self.obj.__class__)
         return this.generic(NamespaceTests.is_property)
 
     @property
@@ -203,8 +210,8 @@ class Namespace(object):
         result = dict(result)
         return result if self.dictionaries else NSPart(result)
 
-    ## generic methods
-    ############################################################################
+    # generic methods
+    ##########################################################################
     @property
     def subobjects(self):
         """ just sugar. """
@@ -217,7 +224,7 @@ class Namespace(object):
                 result.append([k, v])
         result = dict(result)
         return result if self.dictionaries else \
-               self.__class__(result, original=self)
+            self.__class__(result, original=self)
 
     def _clean(self, pattern='_'):
         """ For dictionary-like objects we'll clean out names that start with
@@ -228,7 +235,7 @@ class Namespace(object):
         bad_names = [x for x in namespace.keys() if x.startswith(pattern)]
         [namespace.pop(name) for name in bad_names]
         return namespace if self.dictionaries else \
-               self.__class__(namespace, original=self)
+            self.__class__(namespace, original=self)
 
     def startswith(self, string):
         return self.generic_key(lambda k: k.startswith(string))
@@ -247,7 +254,7 @@ class Namespace(object):
                 if not test(key):
                     namespace.pop(key)
         return namespace if self.dictionaries else \
-               self.__class__(namespace, original=self)
+            self.__class__(namespace, original=self)
 
     def generic_key(self, test):
         return self.generic(test, value_test=False)
@@ -274,7 +281,7 @@ class Namespace(object):
         keys -= set(self.functions.keys())
         result = dict([[key, self.namespace[key]] for key in keys])
         return result if self.dictionaries else \
-               self.__class__(result, original=self)
+            self.__class__(result, original=self)
 
     @property
     def locals(self):
@@ -286,19 +293,20 @@ class Namespace(object):
         bases = kls.__bases__
         # because some (misbehaving) __gettr__ hacks
         # could possibly return noniterable __bases__
-        #try:
+        # try:
         base_ns = [dir(b) for b in bases]
-        #except TypeError: result = {}
-        #else:
+        # except TypeError: result = {}
+        # else:
         base_ns = set(reduce(lambda x, y: x + y, base_ns))
         keys = keys - base_ns
         result = dict([[k, self.namespace[k]] for k in keys])
-        [result.pop(x, None) for x in ('__dict__', '__module__', '__weakref__')]
+        [result.pop(x, None)
+         for x in ('__dict__', '__module__', '__weakref__')]
         return result if self.dictionaries else \
-               self.__class__(result, original=self)
+            self.__class__(result, original=self)
 
 # Begin aliases, shortcuts
-################################################################################
+##########################################################################
 NSPart = Namespace
 clean_namespace = lambda namespace: Namespace(namespace).cleaned
 Tests = NamespaceTests

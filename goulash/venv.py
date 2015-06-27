@@ -6,9 +6,10 @@ from goulash.python import opj, ope, expanduser, abspath
 
 get_path = lambda: os.environ['PATH']
 get_venv = lambda: os.environ.get('VIRTUAL_ENV', None)
-to_vbin  = lambda venv: opj(venv, 'bin')
-to_vlib  = lambda venv: opj(venv, 'lib')
+to_vbin = lambda venv: opj(venv, 'bin')
+to_vlib = lambda venv: opj(venv, 'lib')
 venv_bin = lambda cmd: opj(to_vbin(get_venv()), cmd)
+
 
 def is_venv(dir):
     """ naive.. but seems to work
@@ -29,6 +30,7 @@ def contains_venv(_dir, **kargs):
     kargs.update(max_venvs=1)
     venvs = find_venvs(_dir, **kargs)
     return venvs and venvs[0]
+
 
 def find_venvs(_dir, report=None, max_venvs=None, ignore_dirs=[]):
     _dir = abspath(expanduser(_dir))

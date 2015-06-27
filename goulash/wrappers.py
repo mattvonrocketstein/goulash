@@ -1,9 +1,11 @@
 """ goulash.wrappers
 """
 
+
 class JSONWrapper(object):
     # convenience wrapper that makes __getattr__
     # work via __getitem__
+
     def __init__(self, data):
         self._data = data
 
@@ -14,8 +16,10 @@ class JSONWrapper(object):
             return getattr(self._data, name)
     __getitem__ = __getattr__
 
+
 class DumbWrapper(object):
     # Simplest wrapper pattern
+
     def __init__(self, wrapped_obj):
         self._wrapped = wrapped_obj
 
@@ -33,6 +37,7 @@ class DumbWrapper(object):
 
 
 class Dictionaryish(DumbWrapper):
+
     def __contains__(self, other):
         """ dictionary compatability """
         return other in self._wrapped

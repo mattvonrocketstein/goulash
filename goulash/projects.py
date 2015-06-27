@@ -9,6 +9,7 @@ from goulash._inspect import _main_package
 from goulash._fabric import require_bin
 VERSION_DELTA = .01
 
+
 def project_search(fname, start=None):
     """ project-based directory tree search, where if the taget file
     isn't found in the working directory then you proceed upward until
@@ -24,6 +25,7 @@ def project_search(fname, start=None):
         if os.path.dirname(now) == now:
             return None  # reached the root
         now = os.path.dirname(now)
+
 
 def pypi_publish(pkg_root=None, src_root='.'):
     """ """
@@ -52,9 +54,10 @@ def pypi_publish(pkg_root=None, src_root='.'):
         print('aborting.')
         return
     if not ans:
-        print( 'aborting.')
+        print('aborting.')
         return
     _pypi_publish(pkg_root, version_info)
+
 
 def _pypi_publish(pkg_root, version_info):
     """ """
@@ -67,9 +70,10 @@ def _pypi_publish(pkg_root, version_info):
             pkg_root, version_info))
     assert os.path.exists(fname), 'no such file: ' + fname
     api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
-    #python setup.py sdist upload -r pypi
+    # python setup.py sdist upload -r pypi
     api.local("git push -f")
     print("leaving you in updated pypi branch")
+
 
 def get_version_info(pkg_root):
     sandbox = {}
@@ -85,6 +89,7 @@ def get_version_info(pkg_root):
     assert version_info is not None, err.format(vfile)
     return version_info
 
+
 def version_bump(pkg_root=None, src_root='.'):
     """ bump the version number.
 
@@ -96,15 +101,15 @@ def version_bump(pkg_root=None, src_root='.'):
             4. __version__ should be defined on the last line of the file
     """
     pkg_root = pkg_root or _main_package(src_root)
-    print( red('bumping version number for package "{0}"'.format(
-            pkg_root)))
+    print(red('bumping version number for package "{0}"'.format(
+        pkg_root)))
     sandbox = {}
-    current_version = get_version_info()#sandbox['__version__']
+    current_version = get_version_info()  # sandbox['__version__']
     new_version = current_version + VERSION_DELTA
     with open(version_file, 'r') as fhandle:
         version_file_contents = [x for x in fhandle.readlines() if x.strip()]
     new_file = version_file_contents[:-1] + \
-               ["__version__ = version = {0}\n".format(new_version)]
+        ["__version__ = version = {0}\n".format(new_version)]
     new_file = '\n'.join(new_file)
     msg = "the current version will be changed to "
     msg = red(msg) + cyan("{0}\n".format(new_version))
@@ -114,12 +119,12 @@ def version_bump(pkg_root=None, src_root='.'):
     try:
         ans = confirm(red('proceed with version change?'))
     except KeyboardInterrupt:
-        print( 'aborting.')
+        print('aborting.')
         return
     else:
         if not ans:
-            print( 'aborting.')
+            print('aborting.')
             return
         with open(version_file, 'w') as fhandle:
             fhandle.write(new_file)
-            print( 'version has been rewritten.')
+            print('version has been rewritten.')

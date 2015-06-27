@@ -7,6 +7,7 @@
 
 import socket
 
+
 def is_port_open(port, ip):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
@@ -15,6 +16,7 @@ def is_port_open(port, ip):
         return True
     except:
         return False
+
 
 def ipaddr_with_LAN(host="gmail.com"):
     """ you need to make an outbound connection to get
@@ -32,13 +34,16 @@ def ipaddr_with_LAN(host="gmail.com"):
     if len(result) == 2:
         return result[0]
 
+
 def ipaddr_hosts():
     """ on linux, uses /etc/hosts, returns something like this:
 
          ('cormac', ['localhost', 'testserver'], ['127.0.0.1'])
     """
-    name, aliaslist, addresslist = socket.gethostbyname_ex(socket.gethostname())
+    name, aliaslist, addresslist = socket.gethostbyname_ex(
+        socket.gethostname())
     return name, aliaslist, addresslist
+
 
 def ipaddr_basic():
     """ two different approaches just for reference purposes..

@@ -1,14 +1,17 @@
 # SOURCE:
 #  http://stackoverflow.com/questions/14088294/multithreaded-web-server-in-python
-import os, sys
+import os
+import sys
 from SocketServer import ThreadingMixIn
 from BaseHTTPServer import HTTPServer
 import SimpleHTTPServer
 
 from fabric.colors import red
 
+
 class ThreadingSimpleServer(ThreadingMixIn, HTTPServer):
     pass
+
 
 def main(args):
     port = int(args.port) if args.port else 8000
@@ -31,6 +34,8 @@ def main(args):
         print "Finished"
 
 import addict
+
+
 def runserver(**kargs):
     args = addict.Dict(**kargs)
     main(args)

@@ -6,12 +6,14 @@ import collections
 # SOURCE:
 #   Ordered set implementation adapted from original at:
 #   http://code.activestate.com/recipes/576694/
+
+
 class OrderedSet(collections.MutableSet, list):
 
     def __init__(self, iterable=None):
         self.end = end = []
-        end += [None, end, end]  #  sentinel node for doubly linked list
-        self.map = {}            #  key --> [key, prev, next]
+        end += [None, end, end]  # sentinel node for doubly linked list
+        self.map = {}  # key --> [key, prev, next]
         if iterable is not None:
             self |= iterable
 

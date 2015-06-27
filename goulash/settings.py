@@ -11,11 +11,14 @@ import os
 import configparser
 from argparse import ArgumentParser
 
+
 class SettingsError(Exception):
     pass
 
+
 class GoulashConfigParser(configparser.ConfigParser):
     pass
+
 
 class Settings(object):
 
@@ -37,11 +40,11 @@ class Settings(object):
             action='store_true',
             help=("show version information"))
         parser.add_argument("--shell", dest="shell",
-                          default=False, help="application shell",
-                          action='store_true')
+                            default=False, help="application shell",
+                            action='store_true')
         parser.add_argument("--config", dest='config',
-                          default="",
-                          help="use config file")
+                            default="",
+                            help="use config file")
         return parser
 
     def get_section(self, k, insist=False):
@@ -86,8 +89,8 @@ class Settings(object):
             _file = self.options.config
         else:
             _file = self._init_filename or \
-                    os.environ.get(self.environ_key) or \
-                    self.default_file
+                os.environ.get(self.environ_key) or \
+                self.default_file
         _file = os.path.expanduser(_file)
         return _file
 

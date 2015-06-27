@@ -13,10 +13,12 @@ projects = lazyModule('goulash.projects')
 boiler = lazyModule('goulash.bin.boiler')
 from goulash.docs import docs_handler
 from jinja2 import Template
+
+
 def get_parser():
     """ build the default parser """
     parser = ArgumentParser()
-    #parser.set_conflict_handler("resolve")
+    # parser.set_conflict_handler("resolve")
     parser.add_argument(
         "-v", '--version', default=False, dest='version',
         action='store_true',
@@ -53,7 +55,7 @@ def get_parser():
         "--pkg", default=False, dest='pkg',
         action='store_true',
         help=("create all boilerplate for python package"))
-    #bparser.add_argument(
+    # bparser.add_argument(
     #    "--project", default='', dest='project',
     #    required=True,
     #    help=("project name"))
@@ -100,9 +102,9 @@ def get_parser():
         "--boiler-plate", '-b', default=False, dest='boilerplate',
         action='store_true',
         help=("create docs boilerplate for a python project"))
-    #docs_parser.add_argument(
+    # docs_parser.add_argument(
     #    "--project", '-p', default='', dest='project',
-    #    help=("Specifies project name (required if $PROJECT_NAME is not set)"))
+    # help=("Specifies project name (required if $PROJECT_NAME is not set)"))
     docs_parser.add_argument(
         "--refresh", '-r',
         default=False, dest='refresh',
@@ -127,6 +129,7 @@ def get_parser():
         help=("show version information"))
     return parser
 
+
 def project_handler(args):
     if args.version_bump:
         projects.version_bump()
@@ -136,6 +139,7 @@ def project_handler(args):
         raise SystemExit("unknown project subcommand")
 
 from goulash.boiler import boiler_handler
+
 
 def entry():
     parser = get_parser()

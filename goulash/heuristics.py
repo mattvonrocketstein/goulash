@@ -34,7 +34,9 @@
 
 from goulash.wrappers import DumbWrapper
 
+
 class Answer(DumbWrapper):
+
     def __str__(self):
         return "({0}: {1})".format(
             self.__class__.__name__,
@@ -45,7 +47,9 @@ class Answer(DumbWrapper):
 
     __repr__ = __str__
 
+
 class ExplainedAnswer(Answer):
+
     def __init__(self, obj, explanation="No explanation given."):
         super(ExplainedAnswer, self).__init__(obj)
         self.explanation = str(explanation)
@@ -55,7 +59,9 @@ class ExplainedAnswer(Answer):
             self.__class__.__name__,
             str(self.explanation))
 
+
 class NotApplicable(DumbWrapper):
+
     def __init__(self, obj=None):
         super(NotApplicable, self).__init__(obj)
 
@@ -66,7 +72,9 @@ class NotApplicable(DumbWrapper):
         return "(NotApplicable: {0})".format(str(self.obj))
     __repr__ = __str__
 
+
 class Affirmative(ExplainedAnswer):
+
     def __init__(self, explanation="no reason given"):
         self.obj = True
         self.explanation = str(explanation)
@@ -74,7 +82,9 @@ class Affirmative(ExplainedAnswer):
     def __nonzero__(self):
         return True
 
+
 class NegativeAnswer(ExplainedAnswer):
+
     def __init__(self, explanation="no reason given"):
         self.obj = False
         self.explanation = str(explanation)

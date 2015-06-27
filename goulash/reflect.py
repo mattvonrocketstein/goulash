@@ -29,6 +29,7 @@ except ImportError:
 
 
 class Settable:
+
     """
     A mixin class for syntactic sugar.  Lets you assign attributes by
     calling with keyword arguments; for example, C{x(a=b,c=d,y=z)} is the
@@ -36,15 +37,18 @@ class Settable:
     where you don't want to name a variable, but you do want to set
     some attributes; for example, C{X()(y=z,a=b)}.
     """
+
     def __init__(self, **kw):
         self(**kw)
 
-    def __call__(self,**kw):
+    def __call__(self, **kw):
         for key, val in kw.items():
             setattr(self, key, val)
         return self
 
+
 class AccessorType(type):
+
     """Metaclass that generates properties automatically.
 
     This is for Python 2.2 and up.
@@ -81,6 +85,7 @@ class AccessorType(type):
             if getter is None:
                 if hasattr(self, name):
                     value = getattr(self, name)
+
                     def getter(this, value=value, name=name):
                         if name in this.__dict__:
                             return this.__dict__[name]
@@ -102,6 +107,7 @@ class AccessorType(type):
 
 
 class PropertyAccessor(object):
+
     """A mixin class for Python 2.2 that uses AccessorType.
 
     This provides compatability with the pre-2.2 Accessor mixin, up
@@ -139,6 +145,7 @@ class PropertyAccessor(object):
 
 
 class Accessor:
+
     """
     Extending this class will give you explicit accessor methods; a
     method called C{set_foo}, for example, is the same as an if statement
@@ -151,7 +158,7 @@ class Accessor:
     """
 
     def __setattr__(self, k, v):
-        kstring='set_%s' % k
+        kstring = 'set_%s' % k
         if hasattr(self.__class__, kstring):
             return getattr(self, kstring)(v)
         else:
@@ -194,6 +201,7 @@ OriginalAccessor = Accessor
 
 
 class Summer(Accessor):
+
     """
     Extend from this class to get the capability to maintain 'related
     sums'.  Have a tuple in your class like the following::
@@ -206,17 +214,17 @@ class Summer(Accessor):
     incremented, similiarly for the debit versions.
     """
 
-    def reallySet(self, k,v):
+    def reallySet(self, k, v):
         "This method does the work."
         for sum in self.sums:
-            attr=sum[0]
-            obj=sum[1]
-            objattr=sum[2]
+            attr = sum[0]
+            obj = sum[1]
+            objattr = sum[2]
             if k == attr:
                 try:
-                    oldval=getattr(self, attr)
+                    oldval = getattr(self, attr)
                 except:
-                    oldval=0
+                    oldval = 0
                 diff = v - oldval
                 if hasattr(self, obj):
                     ob = getattr(self, obj)
@@ -239,10 +247,13 @@ class Summer(Accessor):
 
 
 class QueueMethod:
+
     """ I represent a method that doesn't exist yet."""
+
     def __init__(self, name, calls):
         self.name = name
         self.calls = calls
+
     def __call__(self, *args):
         self.calls.append((self.name, args))
 
@@ -269,7 +280,7 @@ def funcinfo(function):
         out.append('It requires %s arguments' % required)
         out.append('The arguments required are: %s' % argv[:required])
         out.append('additional arguments are:')
-        for i in range(argc-required):
+        for i in range(argc - required):
             j = i + required
             out.append('%s which has a default of' % (argv[j], defaults[i]))
     return out
@@ -287,9 +298,11 @@ def fullFuncName(func):
         raise Exception("Couldn't find %s as %s." % (func, qualName))
     return qualName
 
+
 def qual(clazz):
     """Return full import path of a class."""
     return clazz.__module__ + '.' + clazz.__name__
+
 
 def getcurrent(clazz):
     assert isinstance(clazz, types.ClassType), 'must be a class...'
@@ -298,6 +311,7 @@ def getcurrent(clazz):
     if currclass is None:
         return clazz
     return currclass
+
 
 def getClass(obj):
     """Return the class or type of object 'obj'.
@@ -310,10 +324,12 @@ def getClass(obj):
 # class graph nonsense
 
 # I should really have a better name for this...
+
+
 def isinst(inst, clazz):
     if isinstance(inst, types.InstanceType) or \
        not isinstance(type(clazz), types.ClassType):
-        return isinstance(inst,clazz)
+        return isinstance(inst, clazz)
     cl = inst.__class__
     cl2 = getcurrent(cl)
     clazz = getcurrent(clazz)
@@ -336,6 +352,7 @@ def namedModule(name):
         m = getattr(m, p)
     return m
 
+
 def namedObject(name):
     """Get a fully named module-global object.
     """
@@ -345,19 +362,23 @@ def namedObject(name):
 
 namedClass = namedObject  # backwards compat
 
+
 class _NoModuleFound(Exception):
+
     """
     No module was found because none exists.
     """
 
 
 class InvalidName(ValueError):
+
     """
     The given name is not a dot-separated list of Python objects.
     """
 
 
 class ModuleNotFound(InvalidName):
+
     """
     The module associated with the given name doesn't exist and it can't be
     imported.
@@ -365,6 +386,7 @@ class ModuleNotFound(InvalidName):
 
 
 class ObjectNotFound(InvalidName):
+
     """
     The object associated with the given name doesn't exist and it can't be
     imported.
@@ -401,6 +423,7 @@ def _importAndCheckStack(importName):
         # Necessary for cleaning up modules in 2.3.
         sys.modules.pop(importName, None)
         raise
+
 
 def namedAny(name):
     """
@@ -464,11 +487,13 @@ def namedAny(name):
 
     return obj
 
+
 def _determineClass(x):
     try:
         return x.__class__
     except:
         return type(x)
+
 
 def _determineClassName(x):
     c = _determineClass(x)
@@ -479,6 +504,7 @@ def _determineClassName(x):
             return str(c)
         except:
             return '<BROKEN CLASS AT %s>' % str(c)
+
 
 def _safeFormat(formatter, o):
     """
@@ -514,11 +540,13 @@ def safe_str(o):
     """
     return _safeFormat(str, o)
 
+
 def accumulateBases(classObj, l, baseClass=None):
     for base in classObj.__bases__:
         if baseClass is None or issubclass(base, baseClass):
             l.append(base)
         accumulateBases(base, l, baseClass)
+
 
 def prefixedMethodNames(classObj, prefix):
     """A list of method names with a given prefix in a given class.
@@ -526,6 +554,7 @@ def prefixedMethodNames(classObj, prefix):
     dct = {}
     addMethodNamesToDict(classObj, dct, prefix)
     return dct.keys()
+
 
 def addMethodNamesToDict(classObj, dict, prefix, baseClass=None):
     """
@@ -574,9 +603,9 @@ def accumulateMethods(obj, dict, prefix='', curClass=None):
         if isinstance(type(method), types.FunctionType)
             and (name[:len(prefix)] == prefix)
             and (len(optName))):
-            dict[optName] = getattr(obj, name)
+            dict[optName]=getattr(obj, name)
 
-def accumulateClassDict(classObj, attr, adict, baseClass=None):
+def accumulateClassDict(classObj, attr, adict, baseClass = None):
     """Accumulate all attributes of a given name in a class heirarchy into a single dictionary.
 
     Assuming all class attributes of this name are dictionaries.
@@ -612,7 +641,7 @@ def accumulateClassDict(classObj, attr, adict, baseClass=None):
         adict.update(classObj.__dict__.get(attr, {}))
 
 
-def accumulateClassList(classObj, attr, listObj, baseClass=None):
+def accumulateClassList(classObj, attr, listObj, baseClass = None):
     """Accumulate all attributes of a given name in a class
         heirarchy into a single list. Assuming all class attributes
         of this name are lists.
@@ -643,15 +672,15 @@ def isOfType(start, goal):
 def findInstances(start, t):
     return objgrep(start, t, isOfType)
 
-def objgrep(start, goal, eq=isLike,
-            path='', paths=None, seen=None,
-            showUnknowns=0, maxDepth=None):
+def objgrep(start, goal, eq = isLike,
+            path = '', paths = None, seen = None,
+            showUnknowns = 0, maxDepth = None):
     '''An insanely CPU-intensive process for finding stuff.
     '''
     if paths is None:
-        paths = []
+        paths=[]
     if seen is None:
-        seen = {}
+        seen={}
     if eq(start, goal):
         paths.append(path)
     if id(start) in seen:

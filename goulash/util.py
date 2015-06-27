@@ -1,8 +1,10 @@
 """ goulash.util
 """
-import time, uuid
+import time
+import uuid
 
 from goulash._os import home, summarize_fpath  # backwards compat.
+
 
 def uniq(use_time=False):
     """ """

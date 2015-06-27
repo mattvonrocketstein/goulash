@@ -15,11 +15,12 @@ from goulash._inspect import _main_package
 from goulash.decorators import require_bin
 from goulash.docs import _refresh_docs, _refresh_api_docs
 
+
 def gen_docs(args):
     """ """
     SRC_ROOT = args.dir or '.'
     DOCS_ROOT = os.path.join(SRC_ROOT, 'docs')
-    print(red('.. generating docs boilerplate:'),DOCS_ROOT)
+    print(red('.. generating docs boilerplate:'), DOCS_ROOT)
     DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
     DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
     PROJECT_NAME = args.project or _main_package(SRC_ROOT)
@@ -27,12 +28,13 @@ def gen_docs(args):
     ctx.pop('args')
     create_docs(**ctx)
 
+
 def create_docs(DOCS_ROOT=None, **ctx):
     """ """
     if not os.path.exists(DOCS_ROOT):
         msg = red('..docs root ') +\
-              '"{0}"'.format(DOCS_ROOT) + \
-              red(' does not exist, creating it')
+            '"{0}"'.format(DOCS_ROOT) + \
+            red(' does not exist, creating it')
         print(msg)
         api.local('mkdir -p "{0}"'.format(DOCS_ROOT))
     else:
@@ -44,9 +46,11 @@ def create_docs(DOCS_ROOT=None, **ctx):
     _create_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     _create_api_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
 
+
 def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     mkdocs_config = os.path.join(DOCS_ROOT, 'mkdocs.yml')
     assert PROJECT_NAME is not None
+
     def dl_bp():
         shutil.copy(
             os.path.join(goulash_data,
@@ -61,7 +65,7 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     print(red(".. generating mkdocs: ") + DOCS_ROOT)
     if not os.path.exists(DOCS_ROOT):
         msg = red('.. mkdocs dir at "{0}" '.format(DOCS_ROOT)) + \
-              red(' does not exist, creating it')
+            red(' does not exist, creating it')
         print(msg)
         os.mkdir(DOCS_ROOT)
     cmd = ('mkdocs new {0}').format(DOCS_ROOT)
@@ -91,6 +95,7 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     _refresh_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     print(red(".. finished with mkdocs"))
 
+
 def _create_api_docs(DOCS_API_ROOT=None, **ctx):
     msg = red("..generating api documentation to")
     msg += " {0}".format(DOCS_API_ROOT)
@@ -102,6 +107,7 @@ def _create_api_docs(DOCS_API_ROOT=None, **ctx):
         os.mkdir(DOCS_API_ROOT)
     _refresh_api_docs(DOCS_API_ROOT=DOCS_API_ROOT, **ctx)
 
+
 def gen_project(args):
     SRC_ROOT = args.dir or '.'
     SRC_ROOT = os.path.abspath(SRC_ROOT)
@@ -109,7 +115,7 @@ def gen_project(args):
         makedirs(SRC_ROOT)
         print(red(".. source root created:"), SRC_ROOT)
     else:
-        print(red(".. source root already exists: "),SRC_ROOT)
+        print(red(".. source root already exists: "), SRC_ROOT)
     guess_name = os.path.split(SRC_ROOT)[-1]
     gen_pkg(addict.Dict(
         dir=os.path.join(SRC_ROOT, guess_name),
@@ -118,14 +124,16 @@ def gen_project(args):
         project_name=guess_name))
     #gen_docs(addict.Dict(dir=SRC_ROOT, docs=True))
 
+
 def gen_tox(args):
     pass
+
 
 def gen_pkg(args):
     from goulash import goulash_data
     PKG_ROOT = args.dir
     PKG_ROOT = os.path.abspath(PKG_ROOT)
-    PKG_NAME = args.pkg_name.replace('-','_').replace(' ','')
+    PKG_NAME = args.pkg_name.replace('-', '_').replace(' ', '')
     SRC_ROOT = os.path.dirname(PKG_ROOT)
     if not os.path.exists(PKG_ROOT):
         makedirs(PKG_ROOT)
@@ -136,7 +144,7 @@ def gen_pkg(args):
     dest = os.path.join(PKG_ROOT)
     copy_tree(src, dest, update=True)
     dest = setup_py = os.path.join(SRC_ROOT, 'setup.py')
-    copy_file(os.path.join(goulash_data, 'setup.py'), dest)#, update=True)
+    copy_file(os.path.join(goulash_data, 'setup.py'), dest)  # , update=True)
     print(red(".. copied setup.py: "), dest)
     with open(setup_py, 'rw') as fhandle:
         content = fhandle.read()
@@ -145,9 +153,11 @@ def gen_pkg(args):
             author=args.author,
             project_name=args.project_name,
             pkg_name=args.package_name,
-            )
+        )
         fhandle.write(new_content)
-    print(red(".. filling setup.py from template"),setup_py)
+    print(red(".. filling setup.py from template"), setup_py)
+
+
 def boiler_handler(args):
     """ """
     if args.project:

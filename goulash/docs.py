@@ -16,6 +16,7 @@ from goulash._os import copy_tree
 from goulash.decorators import require_bin
 from goulash.version import __version__ as version
 
+
 def _get_ctx(args):
     args.docroot = os.path.abspath(args.docroot)
     DOCS_ROOT = args.docroot
@@ -27,6 +28,7 @@ def _get_ctx(args):
     ctx = locals().copy()
     ctx.pop('args')
     return ctx
+
 
 def docs_handler(args):
     """ """
@@ -44,6 +46,7 @@ def docs_handler(args):
     elif args.show:
         return handle_show(args)
 
+
 def docs_deploy(DOCS_ROOT=None, **ctx):
     """ """
     import mkdocs
@@ -60,6 +63,7 @@ def docs_deploy(DOCS_ROOT=None, **ctx):
     except mkdocs.exceptions.ConfigurationError as e:
         # Avoid ugly, unhelpful traceback
         raise SystemExit('\n' + str(e))
+
 
 def _refresh_api_docs(PROJECT_NAME=None,
                       DOCS_ROOT=None,
@@ -89,15 +93,19 @@ def _refresh_api_docs(PROJECT_NAME=None,
         copy_tree(src, dest)
     print red(".. finished generating api docs")
 
+
 def _refresh_docs(DOCS_ROOT=None, **ctx):
     with api.lcd(DOCS_ROOT):
         api.local('mkdocs build --clean')
+
 
 def docs_refresh(**ctx):
     _refresh_docs(**ctx)
     _refresh_api_docs(**ctx)
 
 import webbrowser
+
+
 def handle_show(args):
     refresh(args)
     ctx = _get_ctx(args)
@@ -109,9 +117,12 @@ def handle_show(args):
                 args.docroot, 'site')))
     else:
         print red("Not sure what to do with this style of documentation")
+
+
 def refresh(args):
     print red('refreshing docs..')
     boiler.docs_refresh(**_get_ctx(args))
+
 
 def deploy(args):
     print red('deploying docs..')

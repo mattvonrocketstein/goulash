@@ -1,27 +1,33 @@
 """ goulash._os
 """
 import shutil
-import os, errno
-import time, stat
+import os
+import errno
+import time
+import stat
 from goulash.python import get_env
 
 # copy-tree with overwrites (unlike shutil.copytree)
 from distutils.dir_util import copy_tree  # NOQA
 from distutils.file_util import copy_file  # NOQA
 
+
 def rmtree(path):
     if os.path.exists(path):
         shutil.rmtree(path)
 
+
 def home():
     return get_env('HOME')
 get_home = home
+
 
 def touch(fname, times=None):
     """ similar to shell command 'touch' """
     with open(fname, 'a'):
         os.utime(fname, times)
 touch_file = touch
+
 
 def file_age_in_seconds(pathname):
     if not os.path.exists(pathname):
@@ -30,6 +36,8 @@ def file_age_in_seconds(pathname):
 
 # SOURCE:
 #  http://stackoverflow.com/questions/600268/mkdir-p-functionality-in-python
+
+
 def mkdir_p(path):
     """ os.makedirs() is a constant annoyance since it is
         close to having this functionality, but always dies
@@ -46,8 +54,10 @@ def mkdir_p(path):
     return path
 makedirs = mkdirs = mkdir_p
 
+
 def which(name):
     return os.popen('which ' + name).readlines()[0].strip()
+
 
 def get_mounts_by_type(mtype):
     tmp = os.popen('mount -l -t {0}'.format(mtype))
@@ -64,6 +74,7 @@ def get_mounts_by_type(mtype):
         mdata.update(name=name, mount_point=mount_point)
         tmp2.append(mdata)
     return tmp2
+
 
 def summarize_fpath(fpath):
     """ truncates a filepath to be more suitable for display.

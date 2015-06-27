@@ -4,7 +4,8 @@
 
     you probably don't want to use this stuff :)
 """
-import new, copy
+import new
+import copy
 
 from collections import defaultdict
 
@@ -12,14 +13,18 @@ from goulash.util import uniq
 
 subclass_registry = defaultdict(lambda: [])
 
+
 def metaclass_hook(func):
     func.metaclass_hook = True
     return staticmethod(func)
 
+
 def dynamic_name():
     return 'DynMix({U})'.format(U=uniq())
 
+
 class META(type):
+
     """ the most generic metaclass.
 
         all this does is provide support for hooks.  by default the
@@ -67,13 +72,14 @@ class META(type):
                          getattr(b, '__metaclass__', None)] for b in bases])
             raise e
         hooks = mcls.metaclass_hooks if hasattr(mcls, 'metaclass_hooks') else \
-                mcls.enumerate_metaclass_hooks(mcls)
+            mcls.enumerate_metaclass_hooks(mcls)
         for hook in hooks.values():
             hook(mcls, name, bases, dct, class_obj)
         return class_obj
 
 
 class ClassAlgebra(META):
+
     """ a metaclass that tracks it's subclasses. """
 
     def __lshift__(kls, my_mixin):
@@ -83,7 +89,7 @@ class ClassAlgebra(META):
               >>>  my_class = my_class << my_mixin
               >>>  class my_class(my_mixin, my_class): pass
         """
-        name  = dynamic_name()
+        name = dynamic_name()
         bases = (my_mixin, kls)
         return kls.__metaclass__(name, bases, {})
 
@@ -94,7 +100,7 @@ class ClassAlgebra(META):
               >>> my_class = my_class >> my_mixin
               >>> class my_class(my_class,my_mixin): pass
         """
-        name  = dynamic_name()
+        name = dynamic_name()
         bases = (kls, my_mixin)
         return kls.__metaclass__(name, bases, {})
 
@@ -106,11 +112,12 @@ class ClassAlgebra(META):
             # TODO: shouldnt be here, abstract this
             name, dct = kls._subclass_hooks(name=name, **dct)
         name = name or "DynamicSubclassOf{K}_{U}".format(K=kls.__name__,
-                                         U=uniq())
+                                                         U=uniq())
         # why does this behave differently than type() ?
         return new.classobj(name, (kls,), dct)
 
 META1 = ClassAlgebra
+
 
 def supports_class_algebra(kls):
     """ for use as a decorator
@@ -123,9 +130,10 @@ def supports_class_algebra(kls):
             return kls
     else:
         class Temp(kls):
-            __metaclass__  = ClassAlgebra
+            __metaclass__ = ClassAlgebra
         Temp.__name__ = kls.__name__
         return Temp
+
 
 def subclass_tracker(*bases, **kargs):
     """ dynamically generates the subclass tracking class that extends ``bases``.
