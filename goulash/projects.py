@@ -1,6 +1,6 @@
 """ goulash.projects
 """
-
+from __future__ import print_function
 import os
 from fabric import api
 from fabric.colors import red, cyan
@@ -40,8 +40,8 @@ def pypi_publish(pkg_root=None, src_root='.'):
         cyan("refreshing pypi for {0}=={1}".format(
             pkg_root, version_info)),
         red("you should have already bumped the "
-            "versions and commited to master!")]
-    print '\n'.join(msg)
+            "versions and commited to (local) master!")]
+    print('\n'.join(msg))
     assert user and home  # sometimes tox doesnt pass this
     err = 'To continue, try "pip install {0}" and try again'
     err = err.format('git+https://github.com/pypa/twine.git')
@@ -49,10 +49,10 @@ def pypi_publish(pkg_root=None, src_root='.'):
     try:
         ans = confirm(red('proceed with pypi update?'))
     except KeyboardInterrupt:
-        print 'aborting.'
+        print('aborting.')
         return
     if not ans:
-        print 'aborting.'
+        print( 'aborting.')
         return
     _pypi_publish(pkg_root, version_info)
 
@@ -68,6 +68,8 @@ def _pypi_publish(pkg_root, version_info):
     assert os.path.exists(fname), 'no such file: ' + fname
     api.local("twine upload -r pypi --config-file ~/.pypirc {0}".format(fname))
     #python setup.py sdist upload -r pypi
+    api.local("git push -f")
+    print("leaving you in updated pypi branch")
 
 def get_version_info(pkg_root):
     sandbox = {}
@@ -94,8 +96,8 @@ def version_bump(pkg_root=None, src_root='.'):
             4. __version__ should be defined on the last line of the file
     """
     pkg_root = pkg_root or _main_package(src_root)
-    print red('bumping version number for package "{0}"'.format(
-            pkg_root))
+    print( red('bumping version number for package "{0}"'.format(
+            pkg_root)))
     sandbox = {}
     current_version = get_version_info()#sandbox['__version__']
     new_version = current_version + VERSION_DELTA
@@ -108,16 +110,16 @@ def version_bump(pkg_root=None, src_root='.'):
     msg = red(msg) + cyan("{0}\n".format(new_version))
     msg += red("new version file will look like this:\n\n")
     msg += cyan(new_file) + '\n'
-    print msg
+    print(msg)
     try:
         ans = confirm(red('proceed with version change?'))
     except KeyboardInterrupt:
-        print 'aborting.'
+        print( 'aborting.')
         return
     else:
         if not ans:
-            print 'aborting.'
+            print( 'aborting.')
             return
         with open(version_file, 'w') as fhandle:
             fhandle.write(new_file)
-            print 'version has been rewritten.'
+            print( 'version has been rewritten.')

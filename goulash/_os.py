@@ -35,6 +35,7 @@ def mkdir_p(path):
         close to having this functionality, but always dies
         if the argument already exists
     """
+    path = os.path.expanduser(path)
     try:
         os.makedirs(path)
     except OSError as exc:  # Python >2.5
@@ -42,6 +43,7 @@ def mkdir_p(path):
             pass
         else:
             raise
+    return path
 makedirs = mkdirs = mkdir_p
 
 def which(name):
