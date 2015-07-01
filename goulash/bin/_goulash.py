@@ -149,7 +149,7 @@ def entry():
             print version.__version__
         if args.subcommand == 'help':
             parser.print_help()
-        raise SystemExit()
+        raise SystemExit(0)
     elif args.subcommand == 'project':
         project_handler(args)
     elif args.subcommand == 'serve':
