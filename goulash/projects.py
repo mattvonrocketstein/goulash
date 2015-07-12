@@ -74,10 +74,12 @@ def _pypi_publish(pkg_root, version_info):
     api.local("git push -f")
     print("leaving you in updated pypi branch")
 
+def get_version_file(pkg_root):
+    return os.path.join(pkg_root, 'version.py')
 
 def get_version_info(pkg_root):
     sandbox = {}
-    version_file = os.path.join(pkg_root, 'version.py')
+    version_file = get_version_file(pkg_root)
     err = 'Version file not found in expected location: ' + version_file
     if not os.path.exists(version_file):
         raise SystemExit(err)
@@ -104,8 +106,9 @@ def version_bump(pkg_root=None, src_root='.'):
     print(red('bumping version number for package "{0}"'.format(
         pkg_root)))
     sandbox = {}
-    current_version = get_version_info()  # sandbox['__version__']
+    current_version = get_version_info(pkg_root)  # sandbox['__version__']
     new_version = current_version + VERSION_DELTA
+    version_file = get_version_file(pkg_root)
     with open(version_file, 'r') as fhandle:
         version_file_contents = [x for x in fhandle.readlines() if x.strip()]
     new_file = version_file_contents[:-1] + \
