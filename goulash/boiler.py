@@ -23,13 +23,15 @@ def gen_docs(args):
     print(red('.. generating docs boilerplate:'), DOCS_ROOT)
     DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
     DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
-    PROJECT_NAME = args.project or _main_package(SRC_ROOT)
+    PROJECT_NAME = _main_package(
+        SRC_ROOT, default=os.path.dirname(os.path.abspath(SRC_ROOT)))
+    assert PROJECT_NAME
     ctx = locals().copy()
     ctx.pop('args')
     create_docs(**ctx)
 
 
-def create_docs(DOCS_ROOT=None, **ctx):
+def create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     """ """
     if not os.path.exists(DOCS_ROOT):
         msg = red('..docs root ') +\
@@ -43,14 +45,17 @@ def create_docs(DOCS_ROOT=None, **ctx):
     shutil.copy(
         os.path.join(goulash_data, 'docs_requirements.txt'),
         os.path.join(DOCS_ROOT, 'requirements.txt'))
-    _create_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
-    _create_api_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
+    _create_docs(PROJECT_NAME=PROJECT_NAME,
+                 DOCS_ROOT=DOCS_ROOT, **ctx)
+    _create_api_docs(
+        DOCS_ROOT=DOCS_ROOT,
+        PROJECT_NAME=PROJECT_NAME,
+        **ctx)
 
 
 def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     mkdocs_config = os.path.join(DOCS_ROOT, 'mkdocs.yml')
-    assert PROJECT_NAME is not None
-
+    assert PROJECT_NAME
     def dl_bp():
         shutil.copy(
             os.path.join(goulash_data,
@@ -94,9 +99,10 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     print(red(".. refreshing docs"))
     _refresh_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     print(red(".. finished with mkdocs"))
-
-
+from goulash.docs import skip_api_docs
 def _create_api_docs(DOCS_API_ROOT=None, **ctx):
+    if skip_api_docs():
+        return
     msg = red("..generating api documentation to")
     msg += " {0}".format(DOCS_API_ROOT)
     print(msg)

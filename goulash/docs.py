@@ -24,7 +24,8 @@ def _get_ctx(args):
     DOCS_URL = 'http://localhost:8000'
     DOCS_API_ROOT = os.path.join(DOCS_ROOT, 'api')
     DOCS_SITE_DIR = os.path.join(DOCS_ROOT, 'site')
-    PROJECT_NAME = inspect._main_package(SRC_ROOT)
+    PROJECT_NAME = inspect._main_package(
+        SRC_ROOT, default=os.path.dirname(os.path.abspath(SRC_ROOT)))
     ctx = locals().copy()
     ctx.pop('args')
     return ctx
@@ -64,13 +65,17 @@ def docs_deploy(DOCS_ROOT=None, **ctx):
         # Avoid ugly, unhelpful traceback
         raise SystemExit('\n' + str(e))
 
+def skip_api_docs():
+    if os.environ.get('GOULASH_DOCS_API', 'true').lower() == 'false':
+        print red('skipping API documentation')
+        return True
+    return False
 
 def _refresh_api_docs(PROJECT_NAME=None,
                       DOCS_ROOT=None,
                       DOCS_API_ROOT=None,
                       DOCS_SITE_DIR=None, **ctx):
-    if os.environ.get('GOULASH_DOCS_API', 'true').lower() == 'false':
-        print red('skipping API documentation')
+    if skip_api_docs():
         return
     err = ('Missing required command.  '
            '"pip install pdoc" and try again')
@@ -121,9 +126,9 @@ def handle_show(args):
 
 def refresh(args):
     print red('refreshing docs..')
-    boiler.docs_refresh(**_get_ctx(args))
+    docs_refresh(**_get_ctx(args))
 
 
 def deploy(args):
     print red('deploying docs..')
-    boiler.docs_deploy(**_get_ctx(args))
+    docs_deploy(**_get_ctx(args))
