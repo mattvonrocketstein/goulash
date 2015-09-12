@@ -74,8 +74,10 @@ def _pypi_publish(pkg_root, version_info):
     api.local("git push -f")
     print("leaving you in updated pypi branch")
 
+
 def get_version_file(pkg_root):
     return os.path.join(pkg_root, 'version.py')
+
 
 def get_version_info(pkg_root):
     sandbox = {}

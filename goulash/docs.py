@@ -65,11 +65,13 @@ def docs_deploy(DOCS_ROOT=None, **ctx):
         # Avoid ugly, unhelpful traceback
         raise SystemExit('\n' + str(e))
 
+
 def skip_api_docs():
     if os.environ.get('GOULASH_DOCS_API', 'true').lower() == 'false':
         print red('skipping API documentation')
         return True
     return False
+
 
 def _refresh_api_docs(PROJECT_NAME=None,
                       DOCS_ROOT=None,

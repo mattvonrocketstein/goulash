@@ -56,6 +56,7 @@ def create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
 def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     mkdocs_config = os.path.join(DOCS_ROOT, 'mkdocs.yml')
     assert PROJECT_NAME
+
     def dl_bp():
         shutil.copy(
             os.path.join(goulash_data,
@@ -100,6 +101,8 @@ def _create_docs(PROJECT_NAME=None, DOCS_ROOT=None, **ctx):
     _refresh_docs(DOCS_ROOT=DOCS_ROOT, **ctx)
     print(red(".. finished with mkdocs"))
 from goulash.docs import skip_api_docs
+
+
 def _create_api_docs(DOCS_API_ROOT=None, **ctx):
     if skip_api_docs():
         return
