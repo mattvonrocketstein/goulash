@@ -17,7 +17,9 @@ def get_term_size():
     env = os.environ
     def ioctl_GWINSZ(fd):
         try:
-            import fcntl, termios, struct, os
+            import fcntl
+            import struct
+            import termios
             cr = struct.unpack('hh', fcntl.ioctl(fd, termios.TIOCGWINSZ,
         '1234'))
         except:

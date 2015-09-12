@@ -96,7 +96,6 @@ class Settings(object):
 
     def pre_run(self):
         """ hook for subclassers.. """
-        pass
 
     def load(self, file, config={}):
         """ returns a dictionary with key's of the form

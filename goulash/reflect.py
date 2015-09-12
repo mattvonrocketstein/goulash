@@ -600,8 +600,8 @@ def accumulateMethods(obj, dict, prefix='', curClass=None):
 
     for name, method in curClass.__dict__.items():
         optName = name[len(prefix):]
-        if isinstance(type(method), types.FunctionType)
-            and (name[:len(prefix)] == prefix)
+        if isinstance(type(method), types.FunctionType) \
+            and (name[:len(prefix)] == prefix) \
             and (len(optName))):
             dict[optName]=getattr(obj, name)
 
